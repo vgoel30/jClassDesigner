@@ -8,6 +8,7 @@ package jcd.gui;
 import java.awt.Color;
 import javafx.scene.control.Button;
 import java.io.IOException;
+import java.util.ArrayList;
 import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tooltip;
@@ -20,6 +21,8 @@ import static jcd.PropertyType.ADD_INTERFACE_ICON;
 import static jcd.PropertyType.ADD_INTERFACE_TOOLTIP;
 import static jcd.PropertyType.CODE_ICON;
 import static jcd.PropertyType.CODE_TOOLTIP;
+import static jcd.PropertyType.GRID_ICON;
+import static jcd.PropertyType.GRID_TOOLTIP;
 import static jcd.PropertyType.PHOTO_ICON;
 import static jcd.PropertyType.PHOTO_TOOLTIP;
 import static jcd.PropertyType.REDO_ICON;
@@ -30,6 +33,8 @@ import static jcd.PropertyType.RESIZE_ICON;
 import static jcd.PropertyType.RESIZE_TOOLTIP;
 import static jcd.PropertyType.SELECTION_TOOL_ICON;
 import static jcd.PropertyType.SELECTION_TOOL_TOOLTIP;
+import static jcd.PropertyType.SNAP_ICON;
+import static jcd.PropertyType.SNAP_TOOLTIP;
 import static jcd.PropertyType.UNDO_ICON;
 import static jcd.PropertyType.UNDO_TOOLTIP;
 import static jcd.PropertyType.ZOOM_IN_ICON;
@@ -54,6 +59,8 @@ public final class Workspace extends AppWorkspaceComponent {
 
     // IT KNOWS THE GUI IT IS PLACED INSIDE
     AppGUI gui;
+    
+    //ArrayList<Button> toolbarButtons = new ArrayList<>();
 
     Button selectionButton;
     Button resizeButton;
@@ -70,6 +77,11 @@ public final class Workspace extends AppWorkspaceComponent {
     HBox gridButtonContainer;
     Button gridButton;
     CheckBox gridCheckBox;
+    
+    HBox snapButtonContainer;
+    Button snapButton;
+    CheckBox snapCheckBox;
+    
     public Workspace(AppTemplate initApp) throws IOException {
         // KEEP THIS FOR LATER
         app = initApp;
@@ -98,8 +110,18 @@ public final class Workspace extends AppWorkspaceComponent {
         codeButton = gui.initChildButton(toolBarPane, CODE_ICON.toString(), CODE_TOOLTIP.toString(), true);
         
         gridButtonContainer = new HBox();
+        toolBarPane.getChildren().add(gridButtonContainer);
+        gridCheckBox = new CheckBox();
+        gridCheckBox.setDisable(true);
+        gridButtonContainer.getChildren().add(gridCheckBox);
+        gridButton = gui.initChildButton(gridButtonContainer, GRID_ICON.toString(), GRID_TOOLTIP.toString(), true);
         
-
+        snapButtonContainer = new HBox();
+        toolBarPane.getChildren().add(snapButtonContainer);
+       snapCheckBox = new CheckBox();
+       snapCheckBox.setDisable(true);
+        snapButtonContainer.getChildren().add(snapCheckBox);
+        snapButton = gui.initChildButton(snapButtonContainer, SNAP_ICON.toString(), SNAP_TOOLTIP.toString(), true);
     }
 
 //    public void activateRequiredButtons() {
@@ -130,6 +152,11 @@ public final class Workspace extends AppWorkspaceComponent {
         zoomOutButton.getStyleClass().add(CLASS_FILE_BUTTON);
         screenshotButton.getStyleClass().add(CLASS_FILE_BUTTON);
         codeButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        gridButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        snapButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        
+        gridCheckBox.getStyleClass().add(CHECKBOX);
+        snapCheckBox.getStyleClass().add(CHECKBOX);
     }
 
 }

@@ -18,6 +18,8 @@
         <property name="ZOOM_OUT_ICON"		value="zoom_out.png"></property>
         <property name="PHOTO_ICON"		value="photo.png"></property>
         <property name="CODE_ICON"		value="code.png"></property>
+        <property name="GRID_ICON"		value="grid.png"></property>
+        <property name="SNAP_ICON"		value="snap.png"></property>
         
         <!-- TOOLTIPS FOR BUTTONS -->
 	<property name="SELECTION_TOOL_TOOLTIP"	    value="Use Diagram Selection Tool"></property>
@@ -31,6 +33,8 @@
         <property name="ZOOM_OUT_TOOLTIP"		value="Zoom Out"></property>
         <property name="PHOTO_TOOLTIP"	    value="Screenshot"></property>
         <property name="CODE_TOOLTIP"	    value="Convert to code"></property>
+         <property name="GRID_TOOLTIP"	    value="Render grid"></property>
+         <property name="SNAP_TOOLTIP"	    value="Snap to grid"></property>
 	
         <!--
         <property name="FILL_TOOLTIP"		    value="Select Fill Color"></property>

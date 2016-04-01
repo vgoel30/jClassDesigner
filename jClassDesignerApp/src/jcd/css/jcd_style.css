@@ -34,7 +34,7 @@ and open the template in the editor.
     -fx-background-color: purple;
     -fx-background-radius: 5.0;
     -fx-padding: 15;
-    -fx-spacing: 10;
+    -fx-spacing: 5;
     -fx-border-width: 2px;
     -fx-border-color: #7777dd;
 }
@@ -49,6 +49,9 @@ and open the template in the editor.
     -fx-font-size:20;     
 }
 
+.checkbox{
+  -fx-padding: 10 0 0 10;
+}
 
 
 /*CSS CLASS FOR OUR BIG PANES*/

@@ -173,7 +173,7 @@ public class AppGUI implements AppStyleArbiter {
     private void initFileToolbar(AppTemplate app) {
         fileToolbarPane = new FlowPane();
 
-        fileToolbarPane.setHgap(15);
+        fileToolbarPane.setHgap(5);
 
         // HERE ARE OUR FILE TOOLBAR BUTTONS, NOTE THAT SOME WILL
         // START AS ENABLED (false), WHILE OTHERS DISABLED (true)
@@ -324,15 +324,15 @@ public class AppGUI implements AppStyleArbiter {
         buttonContainer.setOnMouseEntered((MouseEvent mouseEnteredEvent) -> {
             buttonContainer.getStyleClass().remove(CLASS_FILE_BUTTON_CONTAINER);
             buttonContainer.getStyleClass().add(CLASS_FILE_BUTTON_CONTAINER_HOVERED);
-            buttonContainer.getChildren().get(0).getStyleClass().remove(CLASS_FILE_BUTTON);
-            buttonContainer.getChildren().get(0).getStyleClass().add(CLASS_FILE_BUTTON_HOVERED);
+            buttonContainer.getChildren().get(1).getStyleClass().remove(CLASS_FILE_BUTTON);
+            buttonContainer.getChildren().get(1).getStyleClass().add(CLASS_FILE_BUTTON_HOVERED);
         });
 
         buttonContainer.setOnMouseExited(mouseExitedEvent -> {
             buttonContainer.getStyleClass().add(CLASS_FILE_BUTTON_CONTAINER);
             buttonContainer.getStyleClass().remove(CLASS_FILE_BUTTON_CONTAINER_HOVERED);
-            buttonContainer.getChildren().get(0).getStyleClass().add(CLASS_FILE_BUTTON);
-            buttonContainer.getChildren().get(0).getStyleClass().remove(CLASS_FILE_BUTTON_HOVERED);
+            buttonContainer.getChildren().get(1).getStyleClass().add(CLASS_FILE_BUTTON);
+            buttonContainer.getChildren().get(1).getStyleClass().remove(CLASS_FILE_BUTTON_HOVERED);
         });
         
 
