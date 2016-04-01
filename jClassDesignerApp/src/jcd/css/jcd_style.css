@@ -1,0 +1,60 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 30, 2016, 4:36:08 PM
+    Author     : varungoel
+*/
+
+
+
+.toolbar_container{
+    -fx-background-color: red;
+    -fx-padding: 5px;
+}
+
+.toolbar_container_hovered{
+    -fx-background-color: #990000;
+    -fx-padding: 5px;
+}
+
+.edit_toolbar_row {
+    -fx-padding: 0px;
+    -fx-spacing: 10;
+    -fx-background-color: purple;
+    -fx-background-radius: 5.0;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-border-width: 2px;
+    -fx-border-color: #7777dd;
+}
+
+.color_chooser_pane {
+    -fx-background-color:seashell;
+    -fx-padding: 0px;
+}
+
+.color_chooser_control {
+    -fx-font-weight:bold;
+    -fx-font-size:20;     
+}
+
+.file_button{
+   -fx-background-color:red; 
+}
+
+.file_button_hovered{
+   -fx-background-color:#990000; 
+}
+
+/*CSS CLASS FOR OUR BIG PANES*/
+.bordered_pane {
+    -fx-background-color: red;
+    -fx-background-radius: 5.0;
+    -fx-padding: 0 8 8 8;
+    -fx-spacing: 0;
+    -fx-border-width: 2px;
+    -fx-border-color: black;
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    This XML file allows us to easily customize the look and language used
+    in our program's user interface. Note that this properties file is only
+    for the workspace controls, which are custom for each application
+-->
+<properties>
+    <property_list>
+        <!-- PROGRAM ICON FILES -->
+	<property name="SELECTION_TOOL_ICON"	value="select.png"></property>
+	<property name="RESIZE_ICON"		value="resize.png"></property>
+        <property name="ADD_CLASS_ICON"		value="class.png"></property>
+	<property name="ADD_INTERFACE_ICON"		value="interface.png"></property>
+	<property name="REMOVE_ICON"	value="remove.png"></property>
+	<property name="UNDO_ICON"	value="undo.png"></property>
+	<property name="REDO_ICON"		value="redo.png"></property>
+        <property name="ZOOM_IN_ICON"		value="zoom_in.png"></property>
+        <property name="ZOOM_OUT_ICON"		value="zoom_out.png"></property>
+        <property name="PHOTO_ICON"		value="photo.png"></property>
+        <property name="CODE_ICON"		value="code.png"></property>
+        
+        <!-- TOOLTIPS FOR BUTTONS -->
+	<property name="SELECTION_TOOL_TOOLTIP"	    value="Use Diagram Selection Tool"></property>
+        <property name="RESIZE_TOOLTIP"	    value="Resize Diagram"></property>
+	<property name="ADD_CLASS_TOOLTIP"	    value="Add Class"></property>
+	<property name="ADD_INTERFACE_TOOLTIP"	    value="Add Interface"></property>
+	<property name="REMOVE_TOOLTIP"	    value="Remove"></property>
+	<property name="UNDO_TOOLTIP"	    value="Undo"></property>
+	<property name="REDO_TOOLTIP"	    value="Redo"></property>
+        <property name="ZOOM_IN_TOOLTIP"		value="Zoom In"></property>
+        <property name="ZOOM_OUT_TOOLTIP"		value="Zoom Out"></property>
+        <property name="PHOTO_TOOLTIP"	    value="Screenshot"></property>
+        <property name="CODE_TOOLTIP"	    value="Convert to code"></property>
+	
+        <!--
+        <property name="FILL_TOOLTIP"		    value="Select Fill Color"></property>
+	<property name="OUTLINE_TOOLTIP"	    value="Select Outline Color"></property>
+	<property name="SNAPSHOT_TOOLTIP"	    value="Take Snapshot"></property> -->
+	
+	<!-- MESSAGES -->
+	<property name="REMOVE_ELEMENT_MESSAGE"	    value="Are you sure you wish to remove that element?"></property>
+		
+	<!-- ERROR MESSAGES AND TITLES FOR THEIR DIALOGS -->
+	<property name="ATTRIBUTE_UPDATE_ERROR_MESSAGE"	    value="WARNING: An error occured updating the element's attribute."></property>
+	<property name="ATTRIBUTE_UPDATE_ERROR_TITLE"	    value="Attribute Update Error"></property>
+	<property name="UPDATE_ERROR_MESSAGE"		    value="An error occured updating the UI"></property>
+	<property name="UPDATE_ERROR_TITLE"		    value="UI Update Error"></property>
+    </property_list>
+    <property_options_list>
+    </property_options_list>
+</properties>
