@@ -129,18 +129,17 @@ public abstract class AppTemplate extends Application {
      * controls, that must be done separately.
      */
     public void initStylesheet() {
-        //System.out.println("intStylesheet was invoked");
         // SELECT THE STYLESHEET
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         String stylesheet = props.getProperty(APP_PATH_CSS);
-        
         stylesheet += props.getProperty(APP_CSS);
-       // System.out.println("STYLESHEET: " + stylesheet);
+        
         URL stylesheetURL = getClass().getResource(stylesheet);
-         System.out.println("STYLESHEET URL: " + stylesheetURL);
+        
+        System.out.println("STYLESHEET URL: " + stylesheetURL);
         String stylesheetPath = stylesheetURL.toExternalForm();
+        System.out.println("STYLESHEET: " + stylesheet);
         getGUI().getPrimaryScene().getStylesheets().add(stylesheetPath);
-        //System.out.println(stylesheetPath);
     }
     
     /**

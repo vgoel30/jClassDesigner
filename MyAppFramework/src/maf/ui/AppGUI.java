@@ -8,6 +8,7 @@ package maf.ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -45,6 +46,8 @@ import properties_manager.PropertiesManager;
 public class AppGUI implements AppStyleArbiter {
     // THIS HANDLES INTERACTIONS WITH FILE-RELATED CONTROLS
 
+    boolean workspaceActive;
+
     protected AppFileController fileController;
 
     // THIS IS THE APPLICATION WINDOW
@@ -65,9 +68,7 @@ public class AppGUI implements AppStyleArbiter {
     protected Button saveAsButton;
     protected Button exitButton;
 
-    //ALL THE BUTTONS IN THE FILE TOOLBAR
-    protected ArrayList<Button> fileToolbarButtons = new ArrayList<>(
-            Arrays.asList(newButton, loadButton, saveButton, saveAsButton, exitButton));
+  
 
     // HERE ARE OUR DIALOGS
     protected AppYesNoCancelDialogSingleton yesNoCancelDialog;
@@ -95,8 +96,12 @@ public class AppGUI implements AppStyleArbiter {
 
         // AND FINALLY START UP THE WINDOW (WITHOUT THE WORKSPACE)
         initWindow();
-        
+
         System.out.println("Called");
+    }
+
+    public boolean getWorkspaceActive() {
+        return workspaceActive;
     }
 
     /**
@@ -167,7 +172,7 @@ public class AppGUI implements AppStyleArbiter {
      */
     private void initFileToolbar(AppTemplate app) {
         fileToolbarPane = new FlowPane();
-        
+
         fileToolbarPane.setHgap(15);
 
         // HERE ARE OUR FILE TOOLBAR BUTTONS, NOTE THAT SOME WILL
@@ -181,6 +186,7 @@ public class AppGUI implements AppStyleArbiter {
         // AND NOW SETUP THEIR EVENT HANDLERS
         fileController = new AppFileController(app);
         newButton.setOnAction(e -> {
+            workspaceActive = true;
             fileController.handleNewRequest();
         });
         loadButton.setOnAction(e -> {
@@ -266,11 +272,11 @@ public class AppGUI implements AppStyleArbiter {
         buttonContainer.getStyleClass().add(CLASS_FILE_BUTTON_CONTAINER);
         toolbar.getChildren().add(buttonContainer);
         buttonContainer.getChildren().add(button);
-        
+
         buttonContainer.setMaxHeight(55);
         buttonContainer.setMinHeight(55);
         buttonContainer.setPrefHeight(55);
-        
+
         //if the user hovers over a button, change the background. It shall be lit.
         buttonContainer.setOnMouseEntered((MouseEvent mouseEnteredEvent) -> {
             buttonContainer.getStyleClass().remove(CLASS_FILE_BUTTON_CONTAINER);
@@ -278,7 +284,7 @@ public class AppGUI implements AppStyleArbiter {
             buttonContainer.getChildren().get(0).getStyleClass().remove(CLASS_FILE_BUTTON);
             buttonContainer.getChildren().get(0).getStyleClass().add(CLASS_FILE_BUTTON_HOVERED);
         });
-        
+
         buttonContainer.setOnMouseExited(mouseExitedEvent -> {
             buttonContainer.getStyleClass().add(CLASS_FILE_BUTTON_CONTAINER);
             buttonContainer.getStyleClass().remove(CLASS_FILE_BUTTON_CONTAINER_HOVERED);
@@ -286,10 +292,11 @@ public class AppGUI implements AppStyleArbiter {
             buttonContainer.getChildren().get(0).getStyleClass().remove(CLASS_FILE_BUTTON_HOVERED);
         });
 
-        // AND RETURN THE COMPLETED BUTTON
+        // AND RETURN THE COMPLETED 
+        
         return button;
     }
-    
+
     public Button initChildButton(HBox buttonContainer, String icon, String tooltip, boolean disabled) {
         PropertiesManager props = PropertiesManager.getPropertiesManager();
 
@@ -308,11 +315,11 @@ public class AppGUI implements AppStyleArbiter {
         //HBox buttonContainer = new HBox();
         buttonContainer.getStyleClass().add(CLASS_FILE_BUTTON_CONTAINER);
         buttonContainer.getChildren().add(button);
-        
+
         buttonContainer.setMaxHeight(55);
         buttonContainer.setMinHeight(55);
         buttonContainer.setPrefHeight(55);
-        
+
         //if the user hovers over a button, change the background. It shall be lit.
         buttonContainer.setOnMouseEntered((MouseEvent mouseEnteredEvent) -> {
             buttonContainer.getStyleClass().remove(CLASS_FILE_BUTTON_CONTAINER);
@@ -320,15 +327,15 @@ public class AppGUI implements AppStyleArbiter {
             buttonContainer.getChildren().get(0).getStyleClass().remove(CLASS_FILE_BUTTON);
             buttonContainer.getChildren().get(0).getStyleClass().add(CLASS_FILE_BUTTON_HOVERED);
         });
-        
+
         buttonContainer.setOnMouseExited(mouseExitedEvent -> {
             buttonContainer.getStyleClass().add(CLASS_FILE_BUTTON_CONTAINER);
             buttonContainer.getStyleClass().remove(CLASS_FILE_BUTTON_CONTAINER_HOVERED);
             buttonContainer.getChildren().get(0).getStyleClass().add(CLASS_FILE_BUTTON);
             buttonContainer.getChildren().get(0).getStyleClass().remove(CLASS_FILE_BUTTON_HOVERED);
         });
+        
 
-        // AND RETURN THE COMPLETED BUTTON
         return button;
     }
 
@@ -347,11 +354,14 @@ public class AppGUI implements AppStyleArbiter {
 //        for (Button button : fileToolbarButtons) {
 //            button.getStyleClass().add(CLASS_FILE_BUTTON);
 //        }
-        
-	newButton.getStyleClass().add(CLASS_FILE_BUTTON);
-	loadButton.getStyleClass().add(CLASS_FILE_BUTTON);
-	saveButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        newButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        loadButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        saveButton.getStyleClass().add(CLASS_FILE_BUTTON);
         saveAsButton.getStyleClass().add(CLASS_FILE_BUTTON);
-	exitButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        exitButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        
+       
     }
+
+    
 }

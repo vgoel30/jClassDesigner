@@ -12,12 +12,20 @@ and open the template in the editor.
 
 .toolbar_container{
     -fx-background-color: red;
-    -fx-padding: 5px;
+    -fx-padding: 6.5px;
 }
 
 .toolbar_container_hovered{
     -fx-background-color: #990000;
     -fx-padding: 5px;
+}
+
+.file_button{
+   -fx-background-color:red; 
+}
+
+.file_button_hovered{
+   -fx-background-color:#990000; 
 }
 
 .edit_toolbar_row {
@@ -41,13 +49,7 @@ and open the template in the editor.
     -fx-font-size:20;     
 }
 
-.file_button{
-   -fx-background-color:red; 
-}
 
-.file_button_hovered{
-   -fx-background-color:#990000; 
-}
 
 /*CSS CLASS FOR OUR BIG PANES*/
 .bordered_pane {

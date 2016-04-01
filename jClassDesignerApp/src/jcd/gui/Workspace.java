@@ -5,10 +5,13 @@
  */
 package jcd.gui;
 
+import java.awt.Color;
 import javafx.scene.control.Button;
 import java.io.IOException;
+import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import static jcd.PropertyType.ADD_CLASS_ICON;
@@ -41,7 +44,7 @@ import maf.ui.AppGUI;
  *
  * @author varungoel
  */
-public class Workspace extends AppWorkspaceComponent {
+public final class Workspace extends AppWorkspaceComponent {
 
     static final int BUTTON_TAG_WIDTH = 75;
     static final String CLASS_GRID_CANVAS = "grid_canvas";
@@ -51,7 +54,7 @@ public class Workspace extends AppWorkspaceComponent {
 
     // IT KNOWS THE GUI IT IS PLACED INSIDE
     AppGUI gui;
-    
+
     Button selectionButton;
     Button resizeButton;
     Button addClassButton;
@@ -63,11 +66,10 @@ public class Workspace extends AppWorkspaceComponent {
     Button zoomOutButton;
     Button screenshotButton;
     Button codeButton;
-    
-//    HBox gridButtonContainer;
-//    Button gridButton;
-//    CheckBox gridCheckBox;
 
+    HBox gridButtonContainer;
+    Button gridButton;
+    CheckBox gridCheckBox;
     public Workspace(AppTemplate initApp) throws IOException {
         // KEEP THIS FOR LATER
         app = initApp;
@@ -75,17 +77,18 @@ public class Workspace extends AppWorkspaceComponent {
         // KEEP THE GUI FOR LATER        
         gui = app.getGUI();
 
-	layoutGUI();
+        layoutGUI();
 //	setupHandlers();
     }
 
     public void layoutGUI() {
         FlowPane toolBarPane = gui.getToolbarPane();
-        
+
         selectionButton = gui.initChildButton(toolBarPane, SELECTION_TOOL_ICON.toString(), SELECTION_TOOL_TOOLTIP.toString(), true);
         resizeButton = gui.initChildButton(toolBarPane, RESIZE_ICON.toString(), RESIZE_TOOLTIP.toString(), true);
-        addClassButton = gui.initChildButton(toolBarPane, ADD_CLASS_ICON.toString(), ADD_CLASS_TOOLTIP.toString(), true);
-        addInterfaceButton = gui.initChildButton(toolBarPane, ADD_INTERFACE_ICON.toString(), ADD_INTERFACE_TOOLTIP.toString(), true);
+        addClassButton = gui.initChildButton(toolBarPane, ADD_CLASS_ICON.toString(), ADD_CLASS_TOOLTIP.toString(), false);
+       addClassButton.getStylesheets().add(CLASS_FILE_BUTTON);
+        addInterfaceButton = gui.initChildButton(toolBarPane, ADD_INTERFACE_ICON.toString(), ADD_INTERFACE_TOOLTIP.toString(), false);
         removeButton = gui.initChildButton(toolBarPane, REMOVE_ICON.toString(), REMOVE_TOOLTIP.toString(), true);
         undoButton = gui.initChildButton(toolBarPane, UNDO_ICON.toString(), UNDO_TOOLTIP.toString(), true);
         redoButton = gui.initChildButton(toolBarPane, REDO_ICON.toString(), REDO_TOOLTIP.toString(), true);
@@ -94,15 +97,19 @@ public class Workspace extends AppWorkspaceComponent {
         screenshotButton = gui.initChildButton(toolBarPane, PHOTO_ICON.toString(), PHOTO_TOOLTIP.toString(), true);
         codeButton = gui.initChildButton(toolBarPane, CODE_ICON.toString(), CODE_TOOLTIP.toString(), true);
         
+        gridButtonContainer = new HBox();
         
+
     }
-    
-//    public void activateRequiredButtons(){
-//        addClassButton.setDisable(false);
-//        addInterfaceButton.setDisable(false);
-//        zoomInButton.setDisable(false);
-//        zoomOutButton.setDisable(false);
-//        screenshotButton.setDisable(false);
+
+//    public void activateRequiredButtons() {
+//        if (gui.getWorkspaceActive()) {
+//            addClassButton.setDisable(false);
+//            addInterfaceButton.setDisable(false);
+//            zoomInButton.setDisable(false);
+//            zoomOutButton.setDisable(false);
+//            screenshotButton.setDisable(false);
+//        }
 //    }
 
     @Override
@@ -112,7 +119,17 @@ public class Workspace extends AppWorkspaceComponent {
 
     @Override
     public void initStyle() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        selectionButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        resizeButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        addClassButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        addInterfaceButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        removeButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        undoButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        redoButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        zoomInButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        zoomOutButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        screenshotButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        codeButton.getStyleClass().add(CLASS_FILE_BUTTON);
     }
 
 }
