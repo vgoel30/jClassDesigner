@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -103,7 +104,11 @@ public final class Workspace extends AppWorkspaceComponent {
     Label packageNameLabel;
     TextField packageNameField;
     
-    
+    //3rd row
+    HBox parentSelectionContainer;
+    Label parentNameLabel;
+    ChoiceBox parentNamePicker;
+     
     //THE AREA WHERE ALL THE STUFF WILL BE RENDERED
     Pane canvas;
 
@@ -168,6 +173,15 @@ public final class Workspace extends AppWorkspaceComponent {
         packageNameContainer.getChildren().add(packageNameField);
         containers.add(packageNameContainer);
         editToolbar.getChildren().add(packageNameContainer);
+        
+        //the third row
+        parentSelectionContainer = new HBox(75);
+        parentNameLabel = new Label("Parent         ");
+        parentNamePicker = new ChoiceBox();
+        parentSelectionContainer.getChildren().add(parentNameLabel);
+        parentSelectionContainer.getChildren().add(parentNamePicker);
+        containers.add(parentSelectionContainer);
+        editToolbar.getChildren().add(parentSelectionContainer);
 
         // AND NOW SETUP THE WORKSPACE
         workspace = new BorderPane();
