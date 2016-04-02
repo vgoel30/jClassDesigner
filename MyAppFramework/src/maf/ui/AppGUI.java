@@ -345,9 +345,9 @@ public class AppGUI implements AppStyleArbiter {
      */
     @Override
     public void initStyle() {
-        fileToolbarPane.setMaxHeight(59);
-        fileToolbarPane.setMinHeight(59);
-        fileToolbarPane.setPrefHeight(59);
+        fileToolbarPane.setMaxHeight(55);
+        fileToolbarPane.setMinHeight(55);
+        fileToolbarPane.setPrefHeight(55);
         fileToolbarPane.getStyleClass().add(CLASS_BORDERED_PANE);
 
         //ADD THE STYLE CLASSES FOR ALL THE BUTTON

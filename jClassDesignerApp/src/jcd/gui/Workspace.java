@@ -9,12 +9,18 @@ import java.awt.Color;
 import javafx.scene.control.Button;
 import java.io.IOException;
 import java.util.ArrayList;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import static jcd.PropertyType.ADD_CLASS_ICON;
 import static jcd.PropertyType.ADD_CLASS_TOOLTIP;
 import static jcd.PropertyType.ADD_INTERFACE_ICON;
@@ -60,8 +66,10 @@ public final class Workspace extends AppWorkspaceComponent {
     // IT KNOWS THE GUI IT IS PLACED INSIDE
     AppGUI gui;
     
-    //ArrayList<Button> toolbarButtons = new ArrayList<>();
+    //all the rows in the editing toolbar
+    ArrayList<HBox> containers = new ArrayList<>();
 
+    //ArrayList<Button> toolbarButtons = new ArrayList<>();
     Button selectionButton;
     Button resizeButton;
     Button addClassButton;
@@ -77,11 +85,28 @@ public final class Workspace extends AppWorkspaceComponent {
     HBox gridButtonContainer;
     Button gridButton;
     CheckBox gridCheckBox;
-    
+
     HBox snapButtonContainer;
     Button snapButton;
     CheckBox snapCheckBox;
+
+    // HAS ALL THE CONTROLS FOR EDITING
+    VBox editToolbar;
     
+    //1st row
+    HBox classNameContainer;
+    Label classNameLabel;
+    TextField classNameField;
+    
+    //2nd row
+    HBox packageNameContainer;
+    Label packageNameLabel;
+    TextField packageNameField;
+    
+    
+    //THE AREA WHERE ALL THE STUFF WILL BE RENDERED
+    Pane canvas;
+
     public Workspace(AppTemplate initApp) throws IOException {
         // KEEP THIS FOR LATER
         app = initApp;
@@ -96,10 +121,11 @@ public final class Workspace extends AppWorkspaceComponent {
     public void layoutGUI() {
         FlowPane toolBarPane = gui.getToolbarPane();
 
+        //SETTING UP ALL THE BUTTONS
         selectionButton = gui.initChildButton(toolBarPane, SELECTION_TOOL_ICON.toString(), SELECTION_TOOL_TOOLTIP.toString(), true);
         resizeButton = gui.initChildButton(toolBarPane, RESIZE_ICON.toString(), RESIZE_TOOLTIP.toString(), true);
         addClassButton = gui.initChildButton(toolBarPane, ADD_CLASS_ICON.toString(), ADD_CLASS_TOOLTIP.toString(), false);
-       addClassButton.getStylesheets().add(CLASS_FILE_BUTTON);
+        addClassButton.getStylesheets().add(CLASS_FILE_BUTTON);
         addInterfaceButton = gui.initChildButton(toolBarPane, ADD_INTERFACE_ICON.toString(), ADD_INTERFACE_TOOLTIP.toString(), false);
         removeButton = gui.initChildButton(toolBarPane, REMOVE_ICON.toString(), REMOVE_TOOLTIP.toString(), true);
         undoButton = gui.initChildButton(toolBarPane, UNDO_ICON.toString(), UNDO_TOOLTIP.toString(), true);
@@ -108,31 +134,48 @@ public final class Workspace extends AppWorkspaceComponent {
         zoomOutButton = gui.initChildButton(toolBarPane, ZOOM_OUT_ICON.toString(), ZOOM_OUT_TOOLTIP.toString(), true);
         screenshotButton = gui.initChildButton(toolBarPane, PHOTO_ICON.toString(), PHOTO_TOOLTIP.toString(), true);
         codeButton = gui.initChildButton(toolBarPane, CODE_ICON.toString(), CODE_TOOLTIP.toString(), true);
-        
+
         gridButtonContainer = new HBox();
         toolBarPane.getChildren().add(gridButtonContainer);
         gridCheckBox = new CheckBox();
         gridCheckBox.setDisable(true);
         gridButtonContainer.getChildren().add(gridCheckBox);
         gridButton = gui.initChildButton(gridButtonContainer, GRID_ICON.toString(), GRID_TOOLTIP.toString(), true);
-        
+
         snapButtonContainer = new HBox();
         toolBarPane.getChildren().add(snapButtonContainer);
-       snapCheckBox = new CheckBox();
-       snapCheckBox.setDisable(true);
+        snapCheckBox = new CheckBox();
+        snapCheckBox.setDisable(true);
         snapButtonContainer.getChildren().add(snapCheckBox);
         snapButton = gui.initChildButton(snapButtonContainer, SNAP_ICON.toString(), SNAP_TOOLTIP.toString(), true);
-    }
+        
+        //setting up the editing toolbar
+        editToolbar = new VBox();
+        //the first row
+        classNameContainer = new HBox(75);
+        classNameLabel = new Label("Class Name");
+        classNameField = new TextField();
+        classNameContainer.getChildren().add(classNameLabel);
+        classNameContainer.getChildren().add(classNameField);
+        containers.add(classNameContainer);
+        editToolbar.getChildren().add(classNameContainer);
+        
+        //the second row
+        packageNameContainer = new HBox(75);
+        packageNameLabel = new Label("Package      ");
+        packageNameField = new TextField();
+        packageNameContainer.getChildren().add(packageNameLabel);
+        packageNameContainer.getChildren().add(packageNameField);
+        containers.add(packageNameContainer);
+        editToolbar.getChildren().add(packageNameContainer);
 
-//    public void activateRequiredButtons() {
-//        if (gui.getWorkspaceActive()) {
-//            addClassButton.setDisable(false);
-//            addInterfaceButton.setDisable(false);
-//            zoomInButton.setDisable(false);
-//            zoomOutButton.setDisable(false);
-//            screenshotButton.setDisable(false);
-//        }
-//    }
+        // AND NOW SETUP THE WORKSPACE
+        workspace = new BorderPane();
+        ((BorderPane) workspace).setRight(editToolbar);
+        ((BorderPane) workspace).setCenter(canvas);
+        
+        
+    }
 
     @Override
     public void reloadWorkspace() {
@@ -154,9 +197,21 @@ public final class Workspace extends AppWorkspaceComponent {
         codeButton.getStyleClass().add(CLASS_FILE_BUTTON);
         gridButton.getStyleClass().add(CLASS_FILE_BUTTON);
         snapButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        
+
         gridCheckBox.getStyleClass().add(CHECKBOX);
         snapCheckBox.getStyleClass().add(CHECKBOX);
+        
+        //editToolbar.getStyleClass().add(EDIT_TOOLBAR);
+//        classNameContainer.getStyleClass().add(EDIT_TOOLBAR_ROW);
+//        classNameContainer.setMinHeight(90);
+//        
+//        classNameLabel.getStyleClass().add(LABEL);
+//        editToolbar.setMaxWidth(270);
+//        editToolbar.setMinWidth(270);
+//        editToolbar.setMaxHeight(1050);
+        for(HBox container: containers){
+            container.getStyleClass().add(EDIT_TOOLBAR_ROW);
+        }
     }
 
 }

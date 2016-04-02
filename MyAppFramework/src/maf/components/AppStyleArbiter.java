@@ -23,6 +23,9 @@ public interface AppStyleArbiter {
     public static final String CLASS_FILE_BUTTON_HOVERED = "file_button_hovered";
     public static final String CLASS_FILE_BUTTON_CONTAINER_HOVERED = "toolbar_container_hovered";
     public static final String CHECKBOX = "checkbox";
+    public static final String EDIT_TOOLBAR = "edit_toolbar"; //the toolbar on the right side
+    public static final String EDIT_TOOLBAR_ROW = "edit_toolbar_row"; //each row in the toolbar
+    public static final String LABEL = "label";
     
     public void initStyle();
 }

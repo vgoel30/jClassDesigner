@@ -140,6 +140,7 @@ public abstract class AppTemplate extends Application {
         String stylesheetPath = stylesheetURL.toExternalForm();
         System.out.println("STYLESHEET: " + stylesheet);
         getGUI().getPrimaryScene().getStylesheets().add(stylesheetPath);
+        getGUI().getPrimaryScene().getStylesheets().add("http://fonts.googleapis.com/css?family=Gafata");
     }
     
     /**

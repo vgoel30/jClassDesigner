@@ -11,55 +11,54 @@ and open the template in the editor.
 
 
 .toolbar_container{
-    -fx-background-color: red;
+    -fx-background-color: #F22613;
     -fx-padding: 6.5px;
 }
 
 .toolbar_container_hovered{
-    -fx-background-color: #990000;
+    -fx-background-color: #CC0000;
     -fx-padding: 5px;
 }
 
 .file_button{
-   -fx-background-color:red; 
+    -fx-background-color:#F22613; 
 }
 
 .file_button_hovered{
-   -fx-background-color:#990000; 
+    -fx-background-color:#CC0000; 
 }
+
+.edit_toolbar{
+    -fx-background-color: #4D8FAC;
+    -fx-font-family: Gafata;
+}
+
 
 .edit_toolbar_row {
-    -fx-padding: 0px;
-    -fx-spacing: 10;
-    -fx-background-color: purple;
-    -fx-background-radius: 5.0;
-    -fx-padding: 15;
-    -fx-spacing: 5;
-    -fx-border-width: 2px;
-    -fx-border-color: #7777dd;
+    -fx-background-color: #1F4788;
+    -fx-padding: 10;
+    -fx-font-size:22px;
+    -fx-font-family: Gafata;
+    -fx-border-color: #89C4F4 ;
+     -fx-border-width: 0 0 3 3;
 }
 
-.color_chooser_pane {
-    -fx-background-color:seashell;
-    -fx-padding: 0px;
-}
-
-.color_chooser_control {
-    -fx-font-weight:bold;
-    -fx-font-size:20;     
+.label{
+    -fx-text-fill: white;
+    /*-fx-margin-top:50;*/
 }
 
 .checkbox{
-  -fx-padding: 10 0 0 10;
+    -fx-padding: 10 0 0 10;
 }
 
 
 /*CSS CLASS FOR OUR BIG PANES*/
 .bordered_pane {
-    -fx-background-color: red;
-    -fx-background-radius: 5.0;
+    -fx-background-color: #F22613;
+    /*-fx-background-radius: 5.0;*/
     -fx-padding: 0 8 8 8;
     -fx-spacing: 0;
-    -fx-border-width: 2px;
-    -fx-border-color: black;
+    /*-fx-border-width: 3px;*/
+    /*-fx-border-color: black;*/
 }
