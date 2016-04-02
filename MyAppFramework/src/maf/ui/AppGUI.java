@@ -338,6 +338,30 @@ public class AppGUI implements AppStyleArbiter {
 
         return button;
     }
+    
+    public Button putButtonInContainer(HBox buttonContainer, String icon, String tooltip, boolean disabled) {
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+
+        // LOAD THE ICON FROM THE PROVIDED FILE
+        String imagePath = FILE_PROTOCOL + PATH_IMAGES + props.getProperty(icon);
+        Image buttonImage = new Image(imagePath);
+
+        // NOW MAKE THE BUTTON
+        Button button = new Button();
+        button.setDisable(disabled);
+        button.setGraphic(new ImageView(buttonImage));
+        Tooltip buttonTooltip = new Tooltip(props.getProperty(tooltip));
+        button.setTooltip(buttonTooltip);
+
+        // PUT THE BUTTON IN THE CONTAINER
+        buttonContainer.getChildren().add(button);
+        button.getStyleClass().add(CONTAINER_BUTTON);
+        
+        button.setMaxHeight(35);
+        button.setMinHeight(35);
+        button.setPrefHeight(35);
+        return button;
+    }
 
     /**
      * This function specifies the CSS style classes for the controls managed by

@@ -5,18 +5,14 @@
  */
 package jcd.gui;
 
-import java.awt.Color;
 import javafx.scene.control.Button;
 import java.io.IOException;
 import java.util.ArrayList;
-import javafx.geometry.Insets;
-import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -28,8 +24,12 @@ import static jcd.PropertyType.ADD_INTERFACE_ICON;
 import static jcd.PropertyType.ADD_INTERFACE_TOOLTIP;
 import static jcd.PropertyType.CODE_ICON;
 import static jcd.PropertyType.CODE_TOOLTIP;
+import static jcd.PropertyType.DECREMENT_ICON;
+import static jcd.PropertyType.DECREMENT_TOOLTIP;
 import static jcd.PropertyType.GRID_ICON;
 import static jcd.PropertyType.GRID_TOOLTIP;
+import static jcd.PropertyType.INCREMENT_ICON;
+import static jcd.PropertyType.INCREMENT_TOOLTIP;
 import static jcd.PropertyType.PHOTO_ICON;
 import static jcd.PropertyType.PHOTO_TOOLTIP;
 import static jcd.PropertyType.REDO_ICON;
@@ -66,7 +66,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
     // IT KNOWS THE GUI IT IS PLACED INSIDE
     AppGUI gui;
-    
+
     //all the rows in the editing toolbar
     ArrayList<HBox> containers = new ArrayList<>();
 
@@ -93,22 +93,31 @@ public final class Workspace extends AppWorkspaceComponent {
 
     // HAS ALL THE CONTROLS FOR EDITING
     VBox editToolbar;
-    
+
     //1st row
     HBox classNameContainer;
     Label classNameLabel;
     TextField classNameField;
-    
+
     //2nd row
     HBox packageNameContainer;
     Label packageNameLabel;
     TextField packageNameField;
-    
+
     //3rd row
     HBox parentSelectionContainer;
     Label parentNameLabel;
     ChoiceBox parentNamePicker;
-     
+    
+    //4th row which has the variables increase/decrease control and the table
+    VBox fourthRow;
+    HBox variablesContainer;
+    Label variablesLabel;
+    Button variablesIncrementButton;
+    Button variablesDecrementButton;
+    TableView variablesTable;
+           
+    
     //THE AREA WHERE ALL THE STUFF WILL BE RENDERED
     Pane canvas;
 
@@ -153,7 +162,7 @@ public final class Workspace extends AppWorkspaceComponent {
         snapCheckBox.setDisable(true);
         snapButtonContainer.getChildren().add(snapCheckBox);
         snapButton = gui.initChildButton(snapButtonContainer, SNAP_ICON.toString(), SNAP_TOOLTIP.toString(), true);
-        
+
         //setting up the editing toolbar
         editToolbar = new VBox();
         //the first row
@@ -164,7 +173,7 @@ public final class Workspace extends AppWorkspaceComponent {
         classNameContainer.getChildren().add(classNameField);
         containers.add(classNameContainer);
         editToolbar.getChildren().add(classNameContainer);
-        
+
         //the second row
         packageNameContainer = new HBox(75);
         packageNameLabel = new Label("Package      ");
@@ -173,7 +182,7 @@ public final class Workspace extends AppWorkspaceComponent {
         packageNameContainer.getChildren().add(packageNameField);
         containers.add(packageNameContainer);
         editToolbar.getChildren().add(packageNameContainer);
-        
+
         //the third row
         parentSelectionContainer = new HBox(75);
         parentNameLabel = new Label("Parent         ");
@@ -182,13 +191,26 @@ public final class Workspace extends AppWorkspaceComponent {
         parentSelectionContainer.getChildren().add(parentNamePicker);
         containers.add(parentSelectionContainer);
         editToolbar.getChildren().add(parentSelectionContainer);
+        
+        //the 4th row
+        fourthRow = new VBox(10);
+        variablesContainer = new HBox(78);
+        variablesLabel = new Label("Variables: ");
+        variablesContainer.getChildren().add(variablesLabel);
+        variablesIncrementButton = gui.putButtonInContainer(variablesContainer, INCREMENT_ICON.toString(), INCREMENT_TOOLTIP.toString(), false);
+        variablesDecrementButton = gui.putButtonInContainer(variablesContainer, DECREMENT_ICON.toString(), DECREMENT_TOOLTIP.toString(), false);
+        
+        //variablesContainer.getChildren().add(variablesIncrementButton);
+       // variablesContainer.getChildren().add(variablesDecrementButton);
+        fourthRow.getChildren().add(variablesContainer);
+        //containers.add(fourthRow);
+        editToolbar.getChildren().add(fourthRow);
 
         // AND NOW SETUP THE WORKSPACE
         workspace = new BorderPane();
         ((BorderPane) workspace).setRight(editToolbar);
         ((BorderPane) workspace).setCenter(canvas);
-        
-        
+
     }
 
     @Override
@@ -214,7 +236,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         gridCheckBox.getStyleClass().add(CHECKBOX);
         snapCheckBox.getStyleClass().add(CHECKBOX);
-        
+
         //editToolbar.getStyleClass().add(EDIT_TOOLBAR);
 //        classNameContainer.getStyleClass().add(EDIT_TOOLBAR_ROW);
 //        classNameContainer.setMinHeight(90);
@@ -223,9 +245,10 @@ public final class Workspace extends AppWorkspaceComponent {
 //        editToolbar.setMaxWidth(270);
 //        editToolbar.setMinWidth(270);
 //        editToolbar.setMaxHeight(1050);
-        for(HBox container: containers){
+        for (HBox container : containers) {
             container.getStyleClass().add(EDIT_TOOLBAR_ROW);
         }
+        fourthRow.getStyleClass().add(EDIT_TOOLBAR_ROW);
     }
 
 }

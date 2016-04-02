@@ -44,6 +44,11 @@ and open the template in the editor.
      -fx-border-width: 0 0 3 3;
 }
 
+.container_button{
+    -fx-background-color: #1F4788;
+}
+
+
 .label{
     -fx-text-fill: white;
     /*-fx-margin-top:50;*/

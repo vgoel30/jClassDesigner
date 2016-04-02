@@ -20,6 +20,8 @@
         <property name="CODE_ICON"		value="code.png"></property>
         <property name="GRID_ICON"		value="grid.png"></property>
         <property name="SNAP_ICON"		value="snap.png"></property>
+        <property name="INCREMENT_ICON"		value="increase.png"></property>
+        <property name="DECREMENT_ICON"		value="decrease.png"></property>
         
         <!-- TOOLTIPS FOR BUTTONS -->
 	<property name="SELECTION_TOOL_TOOLTIP"	    value="Use Diagram Selection Tool"></property>
@@ -35,6 +37,8 @@
         <property name="CODE_TOOLTIP"	    value="Convert to code"></property>
          <property name="GRID_TOOLTIP"	    value="Render grid"></property>
          <property name="SNAP_TOOLTIP"	    value="Snap to grid"></property>
+         <property name="INCREMENT_TOOLTIP"		value="Add"></property>
+        <property name="DECREMENT_TOOLTIP"		value="Remove"></property>
 	
         <!--
         <property name="FILL_TOOLTIP"		    value="Select Fill Color"></property>
