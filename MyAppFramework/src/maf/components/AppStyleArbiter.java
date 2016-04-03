@@ -27,6 +27,8 @@ public interface AppStyleArbiter {
     public static final String EDIT_TOOLBAR_ROW = "edit_toolbar_row"; //each row in the toolbar
     public static final String LABEL = "label";
     public static final String CONTAINER_BUTTON = "container_button";
+    public static final String RENDERING_CANVAS = "rendering_canvas";
+    public static final String TABLES = "table";
     
     public void initStyle();
 }

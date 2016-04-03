@@ -41,7 +41,7 @@ and open the template in the editor.
     -fx-font-size:22px;
     -fx-font-family: Gafata;
     -fx-border-color: #89C4F4 ;
-     -fx-border-width: 0 0 3 3;
+     -fx-border-width: 0 0 3 0;
 }
 
 .container_button{
@@ -58,6 +58,13 @@ and open the template in the editor.
     -fx-padding: 10 0 0 10;
 }
 
+.rendering_canvas{
+    -fx-background-color: white;
+}
+
+.table{
+    -fx-background-color: grey;
+}
 
 /*CSS CLASS FOR OUR BIG PANES*/
 .bordered_pane {

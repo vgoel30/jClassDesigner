@@ -11,8 +11,12 @@ import java.util.ArrayList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -108,7 +112,7 @@ public final class Workspace extends AppWorkspaceComponent {
     HBox parentSelectionContainer;
     Label parentNameLabel;
     ChoiceBox parentNamePicker;
-    
+
     //4th row which has the variables increase/decrease control and the table
     VBox fourthRow;
     HBox variablesContainer;
@@ -116,10 +120,18 @@ public final class Workspace extends AppWorkspaceComponent {
     Button variablesIncrementButton;
     Button variablesDecrementButton;
     TableView variablesTable;
-           
-    
+
+    //5th row which has the methods increase/decrease control and the table
+    VBox fifthRow;
+    HBox methodsContainer;
+    Label methodsLabel;
+    Button methodsIncrementButton;
+    Button methodsDecrementButton;
+    TableView methodsTable;
+
     //THE AREA WHERE ALL THE STUFF WILL BE RENDERED
     Pane canvas;
+    ScrollPane canvasScrollPane;
 
     public Workspace(AppTemplate initApp) throws IOException {
         // KEEP THIS FOR LATER
@@ -191,7 +203,7 @@ public final class Workspace extends AppWorkspaceComponent {
         parentSelectionContainer.getChildren().add(parentNamePicker);
         containers.add(parentSelectionContainer);
         editToolbar.getChildren().add(parentSelectionContainer);
-        
+
         //the 4th row
         fourthRow = new VBox(10);
         variablesContainer = new HBox(78);
@@ -199,17 +211,36 @@ public final class Workspace extends AppWorkspaceComponent {
         variablesContainer.getChildren().add(variablesLabel);
         variablesIncrementButton = gui.putButtonInContainer(variablesContainer, INCREMENT_ICON.toString(), INCREMENT_TOOLTIP.toString(), false);
         variablesDecrementButton = gui.putButtonInContainer(variablesContainer, DECREMENT_ICON.toString(), DECREMENT_TOOLTIP.toString(), false);
-        
-        //variablesContainer.getChildren().add(variablesIncrementButton);
-       // variablesContainer.getChildren().add(variablesDecrementButton);
         fourthRow.getChildren().add(variablesContainer);
-        //containers.add(fourthRow);
         editToolbar.getChildren().add(fourthRow);
+        variablesTable = new TableView();
+        variablesTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Type"), new TableColumn("Static"),new TableColumn("Access"));
+        fourthRow.getChildren().add(variablesTable);
+
+        //the 5th and final row
+        fifthRow = new VBox(10);
+        methodsContainer = new HBox(78);
+        methodsLabel = new Label("Methods:  ");
+        methodsContainer.getChildren().add(methodsLabel);
+        methodsIncrementButton = gui.putButtonInContainer(methodsContainer, INCREMENT_ICON.toString(), INCREMENT_TOOLTIP.toString(), false);
+        methodsDecrementButton = gui.putButtonInContainer(methodsContainer, DECREMENT_ICON.toString(), DECREMENT_TOOLTIP.toString(), false);
+        fifthRow.getChildren().add(methodsContainer);
+        editToolbar.getChildren().add(fifthRow);
+        fifthRow.getChildren().add(new TableView());
 
         // AND NOW SETUP THE WORKSPACE
         workspace = new BorderPane();
+
+        canvas = new Pane();
+        canvasScrollPane = new ScrollPane();
+
         ((BorderPane) workspace).setRight(editToolbar);
         ((BorderPane) workspace).setCenter(canvas);
+        canvasScrollPane.setContent(canvas);
+
+        canvasScrollPane.setOnMouseDragged(mouseEvent -> {
+            System.out.println("DRAGGY");
+        });
 
     }
 
@@ -249,6 +280,23 @@ public final class Workspace extends AppWorkspaceComponent {
             container.getStyleClass().add(EDIT_TOOLBAR_ROW);
         }
         fourthRow.getStyleClass().add(EDIT_TOOLBAR_ROW);
+        fifthRow.getStyleClass().add(EDIT_TOOLBAR_ROW);
+        canvas.getStyleClass().add(RENDERING_CANVAS);
+        canvasScrollPane.getStyleClass().add(RENDERING_CANVAS);
+
+        double canvasWidth = canvas.getWidth();
+        double canvasHeight = canvas.getHeight();
+
+//        canvasScrollPane.setPrefSize(canvasWidth, canvasHeight);
+//        canvasScrollPane.setMinSize(canvasWidth, canvasHeight);
+//        canvasScrollPane.setMaxSize(canvasWidth, canvasHeight);
+        canvasScrollPane.setPrefSize(926.5, 645);
+        canvasScrollPane.setMinSize(926.5, 645);
+        canvasScrollPane.setMaxSize(926.5, 645);
+        canvasScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
+        canvasScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+        
+        
     }
 
 }
