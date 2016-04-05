@@ -74,7 +74,7 @@ public final class Workspace extends AppWorkspaceComponent {
     //all the rows in the editing toolbar
     ArrayList<HBox> containers = new ArrayList<>();
 
-    //ArrayList<Button> toolbarButtons = new ArrayList<>();
+    ArrayList<Button> toolbarButtons = new ArrayList<>();
     Button selectionButton;
     Button resizeButton;
     Button addClassButton;
@@ -149,17 +149,27 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //SETTING UP ALL THE BUTTONS
         selectionButton = gui.initChildButton(toolBarPane, SELECTION_TOOL_ICON.toString(), SELECTION_TOOL_TOOLTIP.toString(), true);
+        toolbarButtons.add(selectionButton);
         resizeButton = gui.initChildButton(toolBarPane, RESIZE_ICON.toString(), RESIZE_TOOLTIP.toString(), true);
+        toolbarButtons.add(resizeButton);
         addClassButton = gui.initChildButton(toolBarPane, ADD_CLASS_ICON.toString(), ADD_CLASS_TOOLTIP.toString(), false);
-        addClassButton.getStylesheets().add(CLASS_FILE_BUTTON);
+        toolbarButtons.add(addClassButton);
         addInterfaceButton = gui.initChildButton(toolBarPane, ADD_INTERFACE_ICON.toString(), ADD_INTERFACE_TOOLTIP.toString(), false);
+        toolbarButtons.add(addInterfaceButton);
         removeButton = gui.initChildButton(toolBarPane, REMOVE_ICON.toString(), REMOVE_TOOLTIP.toString(), true);
+        toolbarButtons.add(removeButton);
         undoButton = gui.initChildButton(toolBarPane, UNDO_ICON.toString(), UNDO_TOOLTIP.toString(), true);
+        toolbarButtons.add(undoButton);
         redoButton = gui.initChildButton(toolBarPane, REDO_ICON.toString(), REDO_TOOLTIP.toString(), true);
+        toolbarButtons.add(redoButton);
         zoomInButton = gui.initChildButton(toolBarPane, ZOOM_IN_ICON.toString(), ZOOM_IN_TOOLTIP.toString(), true);
+        toolbarButtons.add(zoomInButton);
         zoomOutButton = gui.initChildButton(toolBarPane, ZOOM_OUT_ICON.toString(), ZOOM_OUT_TOOLTIP.toString(), true);
+        toolbarButtons.add(zoomOutButton);
         screenshotButton = gui.initChildButton(toolBarPane, PHOTO_ICON.toString(), PHOTO_TOOLTIP.toString(), true);
+        toolbarButtons.add(screenshotButton);
         codeButton = gui.initChildButton(toolBarPane, CODE_ICON.toString(), CODE_TOOLTIP.toString(), true);
+        toolbarButtons.add(codeButton);
 
         gridButtonContainer = new HBox();
         toolBarPane.getChildren().add(gridButtonContainer);
@@ -167,6 +177,7 @@ public final class Workspace extends AppWorkspaceComponent {
         gridCheckBox.setDisable(true);
         gridButtonContainer.getChildren().add(gridCheckBox);
         gridButton = gui.initChildButton(gridButtonContainer, GRID_ICON.toString(), GRID_TOOLTIP.toString(), true);
+        toolbarButtons.add(gridButton);
 
         snapButtonContainer = new HBox();
         toolBarPane.getChildren().add(snapButtonContainer);
@@ -174,6 +185,7 @@ public final class Workspace extends AppWorkspaceComponent {
         snapCheckBox.setDisable(true);
         snapButtonContainer.getChildren().add(snapCheckBox);
         snapButton = gui.initChildButton(snapButtonContainer, SNAP_ICON.toString(), SNAP_TOOLTIP.toString(), true);
+        toolbarButtons.add(snapButton);
 
         //setting up the editing toolbar
         editToolbar = new VBox();
@@ -251,19 +263,12 @@ public final class Workspace extends AppWorkspaceComponent {
 
     @Override
     public void initStyle() {
-        selectionButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        resizeButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        addClassButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        addInterfaceButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        removeButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        undoButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        redoButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        zoomInButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        zoomOutButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        screenshotButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        codeButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        gridButton.getStyleClass().add(CLASS_FILE_BUTTON);
-        snapButton.getStyleClass().add(CLASS_FILE_BUTTON);
+        System.out.println(toolbarButtons.size());
+        
+        //stylize the buttons in the toolbar
+        for(Button button: toolbarButtons){
+            button.getStyleClass().add(CLASS_FILE_BUTTON);
+        }
 
         gridCheckBox.getStyleClass().add(CHECKBOX);
         snapCheckBox.getStyleClass().add(CHECKBOX);
