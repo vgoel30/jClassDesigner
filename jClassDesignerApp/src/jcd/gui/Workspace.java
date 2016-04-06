@@ -53,6 +53,10 @@ import static jcd.PropertyType.ZOOM_IN_TOOLTIP;
 import static jcd.PropertyType.ZOOM_OUT_ICON;
 import static jcd.PropertyType.ZOOM_OUT_TOOLTIP;
 import maf.AppTemplate;
+import static maf.components.AppStyleArbiter.CHECKBOX;
+import static maf.components.AppStyleArbiter.CLASS_FILE_BUTTON;
+import static maf.components.AppStyleArbiter.EDIT_TOOLBAR_ROW;
+import static maf.components.AppStyleArbiter.RENDERING_CANVAS;
 import maf.components.AppWorkspaceComponent;
 import maf.ui.AppGUI;
 
@@ -133,6 +137,9 @@ public final class Workspace extends AppWorkspaceComponent {
     Pane canvas;
     ScrollPane canvasScrollPane;
 
+    
+    Button selected;
+
     public Workspace(AppTemplate initApp) throws IOException {
         // KEEP THIS FOR LATER
         app = initApp;
@@ -193,6 +200,10 @@ public final class Workspace extends AppWorkspaceComponent {
         classNameContainer = new HBox(75);
         classNameLabel = new Label("Class Name");
         classNameField = new TextField();
+        //testing the event handler for text field
+//        classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+//            System.out.println("textfield changed from " + oldValue + " to " + newValue);
+//        });
         classNameContainer.getChildren().add(classNameLabel);
         classNameContainer.getChildren().add(classNameField);
         containers.add(classNameContainer);
@@ -226,7 +237,7 @@ public final class Workspace extends AppWorkspaceComponent {
         fourthRow.getChildren().add(variablesContainer);
         editToolbar.getChildren().add(fourthRow);
         variablesTable = new TableView();
-        variablesTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Type"), new TableColumn("Static"),new TableColumn("Access"));
+        variablesTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Type"), new TableColumn("Static"), new TableColumn("Access"));
         fourthRow.getChildren().add(variablesTable);
 
         //the 5th and final row
@@ -256,6 +267,10 @@ public final class Workspace extends AppWorkspaceComponent {
 
     }
 
+    public void setUpHandlers() {
+
+    }
+
     @Override
     public void reloadWorkspace() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -264,23 +279,27 @@ public final class Workspace extends AppWorkspaceComponent {
     @Override
     public void initStyle() {
         System.out.println(toolbarButtons.size());
-        
+
         //stylize the buttons in the toolbar
-        for(Button button: toolbarButtons){
+        for (Button button : toolbarButtons) {
             button.getStyleClass().add(CLASS_FILE_BUTTON);
+            button.setOnMouseClicked(e -> {
+                if (selected == null) {
+                    selected = button;
+                    selected.getStyleClass().add(BUTTON_PRESSED);
+                }
+                else{
+                    selected.getStyleClass().remove("pressed");
+                    selected = button;
+                    selected.getStyleClass().add("pressed");
+                }
+            });
+
         }
 
         gridCheckBox.getStyleClass().add(CHECKBOX);
         snapCheckBox.getStyleClass().add(CHECKBOX);
 
-        //editToolbar.getStyleClass().add(EDIT_TOOLBAR);
-//        classNameContainer.getStyleClass().add(EDIT_TOOLBAR_ROW);
-//        classNameContainer.setMinHeight(90);
-//        
-//        classNameLabel.getStyleClass().add(LABEL);
-//        editToolbar.setMaxWidth(270);
-//        editToolbar.setMinWidth(270);
-//        editToolbar.setMaxHeight(1050);
         for (HBox container : containers) {
             container.getStyleClass().add(EDIT_TOOLBAR_ROW);
         }
@@ -300,8 +319,7 @@ public final class Workspace extends AppWorkspaceComponent {
         canvasScrollPane.setMaxSize(926.5, 645);
         canvasScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
         canvasScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-        
-        
+
     }
 
 }
