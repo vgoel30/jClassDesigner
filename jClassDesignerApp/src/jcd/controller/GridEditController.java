@@ -5,10 +5,26 @@
  */
 package jcd.controller;
 
+import javafx.scene.layout.Pane;
+import jcd.data.ClassDiagramObject;
+
 /**
  *
  * @author varungoel
  */
 public class GridEditController {
+
+    public static void addClassDiagram(Pane canvas) {
+        canvas.setOnMouseClicked(e -> {
+            double x = e.getX();
+            double y = e.getY();
+            
+            System.out.println(canvas.getWidth());
+
+           ClassDiagramObject objectToPut = new ClassDiagramObject(canvas,x,y);
+
+
+        });
+    }
     
 }

@@ -52,6 +52,7 @@ import static jcd.PropertyType.ZOOM_IN_ICON;
 import static jcd.PropertyType.ZOOM_IN_TOOLTIP;
 import static jcd.PropertyType.ZOOM_OUT_ICON;
 import static jcd.PropertyType.ZOOM_OUT_TOOLTIP;
+import jcd.controller.GridEditController;
 import maf.AppTemplate;
 import static maf.components.AppStyleArbiter.CHECKBOX;
 import static maf.components.AppStyleArbiter.CLASS_FILE_BUTTON;
@@ -137,7 +138,6 @@ public final class Workspace extends AppWorkspaceComponent {
     Pane canvas;
     ScrollPane canvasScrollPane;
 
-    
     Button selected;
 
     public Workspace(AppTemplate initApp) throws IOException {
@@ -148,14 +148,14 @@ public final class Workspace extends AppWorkspaceComponent {
         gui = app.getGUI();
 
         layoutGUI();
-//	setupHandlers();
+        setupHandlers();
     }
 
     public void layoutGUI() {
         FlowPane toolBarPane = gui.getToolbarPane();
 
         //SETTING UP ALL THE BUTTONS
-        selectionButton = gui.initChildButton(toolBarPane, SELECTION_TOOL_ICON.toString(), SELECTION_TOOL_TOOLTIP.toString(), true);
+        selectionButton = gui.initChildButton(toolBarPane, SELECTION_TOOL_ICON.toString(), SELECTION_TOOL_TOOLTIP.toString(), false);
         toolbarButtons.add(selectionButton);
         resizeButton = gui.initChildButton(toolBarPane, RESIZE_ICON.toString(), RESIZE_TOOLTIP.toString(), true);
         toolbarButtons.add(resizeButton);
@@ -257,7 +257,7 @@ public final class Workspace extends AppWorkspaceComponent {
         canvas = new Pane();
         canvasScrollPane = new ScrollPane();
 
-        ((BorderPane) workspace).setRight(editToolbar);
+        ((BorderPane) workspace).setLeft(editToolbar);
         ((BorderPane) workspace).setCenter(canvas);
         canvasScrollPane.setContent(canvas);
 
@@ -267,8 +267,12 @@ public final class Workspace extends AppWorkspaceComponent {
 
     }
 
-    public void setUpHandlers() {
-
+    public void setupHandlers() {
+        //when the user wants to add a class
+        addClassButton.setOnAction(e -> {
+            System.out.println("Add class was clicked");
+            GridEditController.addClassDiagram(canvas);
+        });
     }
 
     @Override
@@ -287,8 +291,7 @@ public final class Workspace extends AppWorkspaceComponent {
                 if (selected == null) {
                     selected = button;
                     selected.getStyleClass().add(BUTTON_PRESSED);
-                }
-                else{
+                } else {
                     selected.getStyleClass().remove("pressed");
                     selected = button;
                     selected.getStyleClass().add("pressed");
