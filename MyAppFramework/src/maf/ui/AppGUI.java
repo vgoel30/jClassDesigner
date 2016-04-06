@@ -291,7 +291,7 @@ public class AppGUI implements AppStyleArbiter {
             buttonContainer.getChildren().get(0).getStyleClass().add(CLASS_FILE_BUTTON);
             buttonContainer.getChildren().get(0).getStyleClass().remove(CLASS_FILE_BUTTON_HOVERED);
         });
-        
+
         // AND RETURN THE COMPLETED 
         
         return button;

@@ -22,13 +22,11 @@ and open the template in the editor.
 }
 
 .file_button{
-    -fx-background-color:#F22613;
-    -fx-border-width: 0 0 0 0;
+    -fx-background-color:#F22613; 
 }
 
 .file_button_hovered{
     -fx-background-color:#CC0000; 
-    -fx-border-width: 0 0 0 0;
 }
 
 .edit_toolbar{
@@ -36,10 +34,6 @@ and open the template in the editor.
     -fx-font-family: Gafata;
 }
 
-.pressed{
-    -fx-border-color: black ;
-     -fx-border-width: 0 0 3 0;
-}
 
 .edit_toolbar_row {
     -fx-background-color: #1F4788;
