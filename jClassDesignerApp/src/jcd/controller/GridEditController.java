@@ -19,7 +19,10 @@ public class GridEditController {
             double x = e.getX();
             double y = e.getY();
             
-            System.out.println(canvas.getWidth());
+            if(x > canvas.getWidth() - 150)
+                canvas.setMinWidth(canvas.getWidth() + 500);
+            if(y > canvas.getHeight() - 300)
+                canvas.setMinHeight(canvas.getHeight() + 500);
 
            ClassDiagramObject objectToPut = new ClassDiagramObject(canvas,x,y);
 

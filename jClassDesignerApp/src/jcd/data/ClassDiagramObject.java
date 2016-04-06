@@ -42,6 +42,7 @@ public class ClassDiagramObject extends Pane {
         classNameText = new Text("Dummy Is To Dummy What dummy is to moron");
         nameContainer = new VBox(classNameText);
         nameContainer.setStyle("-fx-background-color:red");
+        classNameText.setStyle("-fx-font-family:Tahoma");
 
         //The second container which has all the variables and stuff
         variablesNameText = new Text("Yummy Dummy Is To Dummy What dummy is to moron Dummy Is To Dummy What dummy is to moron");

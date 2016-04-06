@@ -258,10 +258,12 @@ public final class Workspace extends AppWorkspaceComponent {
         canvasScrollPane = new ScrollPane();
 
         ((BorderPane) workspace).setLeft(editToolbar);
-        ((BorderPane) workspace).setCenter(canvas);
+        ((BorderPane) workspace).setCenter(canvasScrollPane);
         canvasScrollPane.setContent(canvas);
 
-        canvasScrollPane.setOnMouseDragged(mouseEvent -> {
+        System.out.println(canvasScrollPane.getContent());
+
+        canvas.setOnMouseDragged(mouseEvent -> {
             System.out.println("DRAGGY");
         });
 
@@ -311,15 +313,8 @@ public final class Workspace extends AppWorkspaceComponent {
         canvas.getStyleClass().add(RENDERING_CANVAS);
         canvasScrollPane.getStyleClass().add(RENDERING_CANVAS);
 
-        double canvasWidth = canvas.getWidth();
-        double canvasHeight = canvas.getHeight();
-
-//        canvasScrollPane.setPrefSize(canvasWidth, canvasHeight);
-//        canvasScrollPane.setMinSize(canvasWidth, canvasHeight);
-//        canvasScrollPane.setMaxSize(canvasWidth, canvasHeight);
-        canvasScrollPane.setPrefSize(926.5, 645);
-        canvasScrollPane.setMinSize(926.5, 645);
-        canvasScrollPane.setMaxSize(926.5, 645);
+        canvasScrollPane.setFitToHeight(true);
+        canvasScrollPane.setFitToWidth(true);
         canvasScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
         canvasScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
 
