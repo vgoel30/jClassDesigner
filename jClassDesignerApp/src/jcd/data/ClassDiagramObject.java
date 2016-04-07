@@ -94,6 +94,10 @@ public class ClassDiagramObject extends Pane {
     public VBox getRootContainer(){
         return this.rootContainer;
     }
+    
+    public Text getClassNameText(){
+        return this.classNameText;
+    }
 
     //set the style for the diagram
     private void initStyle() {

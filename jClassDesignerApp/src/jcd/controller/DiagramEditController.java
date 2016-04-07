@@ -26,6 +26,14 @@ public class DiagramEditController {
     public static void restoreSelectedProperties(ClassDiagramObject selectedClassDiagram) {
         selectedClassDiagram.getRootContainer().getStyleClass().remove(SELECTED_DIAGRAM_CONTAINER);
     }
+    
+    public static void changeClassName(String oldValue, String newValue){
+        if (Workspace.selectionActive) {
+            if (selectedClassDiagram != null) {
+                    selectedClassDiagram.getClassNameText().setText(newValue);
+                }
+        }
+    }
 
     public static void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
         diagram.getRootContainer().setOnMouseClicked(mouseClicked -> {
@@ -37,6 +45,8 @@ public class DiagramEditController {
                     restoreSelectedProperties(selectedClassDiagram);
                 }
                 selectedClassDiagram = diagram;
+                //reflect the selected changes
+                Workspace.classNameField.setText(diagram.getClassNameText().getText());
 
                 Workspace.disableButtons(false);
             }

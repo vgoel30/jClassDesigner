@@ -52,6 +52,7 @@ import static jcd.PropertyType.ZOOM_IN_ICON;
 import static jcd.PropertyType.ZOOM_IN_TOOLTIP;
 import static jcd.PropertyType.ZOOM_OUT_ICON;
 import static jcd.PropertyType.ZOOM_OUT_TOOLTIP;
+import jcd.controller.DiagramEditController;
 import jcd.controller.GridEditController;
 import maf.AppTemplate;
 import static maf.components.AppStyleArbiter.CHECKBOX;
@@ -106,12 +107,12 @@ public final class Workspace extends AppWorkspaceComponent {
     //1st row
     HBox classNameContainer;
     Label classNameLabel;
-    static TextField classNameField;
+    public static TextField classNameField;
 
     //2nd row
     HBox packageNameContainer;
     Label packageNameLabel;
-    static TextField packageNameField;
+    public static TextField packageNameField;
 
     //3rd row
     HBox parentSelectionContainer;
@@ -287,6 +288,12 @@ public final class Workspace extends AppWorkspaceComponent {
             drawingActive = false;
             selectionActive = true;
             System.out.println("Selection was clicked");
+        });
+        
+        //testing the event handler for text field
+        classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("textfield changed from " + oldValue + " to " + newValue);
+            DiagramEditController.changeClassName(oldValue,newValue);
         });
     }
 
