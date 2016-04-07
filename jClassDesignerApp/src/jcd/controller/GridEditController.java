@@ -23,17 +23,16 @@ public class GridEditController {
 
     public static void addClassDiagram(Pane canvas) {
         if (selectedClassDiagram != null) {
-            restoreSelectedProperties();
+            DiagramEditController.restoreSelectedProperties(selectedClassDiagram);
             selectedClassDiagram = null;
-            //disable the appropriate buttons
-            Workspace.changeControlsAbility(true);
+            Workspace.disableButtons(true);
         }
 
         canvas.setOnMouseClicked(e -> {
-            double x = e.getX();
-            double y = e.getY();
-            
             if (Workspace.drawingActive) {
+                double x = e.getX();
+                double y = e.getY();
+
                 //dynamic scrolling 
                 if (x > canvas.getWidth() - 150) {
                     canvas.setMinWidth(canvas.getWidth() + 500);
@@ -44,21 +43,11 @@ public class GridEditController {
 
                 ClassDiagramObject objectToPut = new ClassDiagramObject(canvas, x, y);
                 DiagramEditController.attachClassDiagramEventHandlers(objectToPut);
+                Workspace.disableButtons(true);
             }
 
         });
 
-    }
-
-    /**
-     * Restores the appearance of the selected button after it has been
-     * deselected
-     */
-    public static void restoreSelectedProperties() {
-        if (selectedClassDiagram != null) {
-            //remove the highlighting effect
-            selectedClassDiagram.getRootContainer().getStyleClass().remove(SELECTED_DIAGRAM_CONTAINER);
-        }
     }
 
 }

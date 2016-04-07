@@ -72,6 +72,10 @@ and open the template in the editor.
     -fx-background-color: black;
 }
 
+.diagram_container{
+     -fx-border-width: 0 0 0 0;
+}
+
 .selected_diagram_container{
     -fx-border-color: #22A7F0 ;
      -fx-border-width: 4 4 4 4;
@@ -92,4 +96,9 @@ and open the template in the editor.
     -fx-spacing: 0;
     /*-fx-border-width: 3px;*/
     /*-fx-border-color: black;*/
+}
+
+.diagram_text_field{
+    -fx-font-size:16px;
+    -fx-font-family: Gafata;
 }

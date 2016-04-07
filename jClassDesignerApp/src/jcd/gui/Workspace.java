@@ -269,9 +269,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         System.out.println(canvasScrollPane.getContent());
 
-        canvas.setOnMouseDragged(mouseEvent -> {
-            System.out.println("DRAGGY");
-        });
+        
 
     }
 
@@ -298,20 +296,17 @@ public final class Workspace extends AppWorkspaceComponent {
     }
 
     /**
-     * Method to disable/enable the controls in the right toolbar (they are only
-     * required if a button is selected)
-     *
-     * @param selectionInactive tells is selection is inactive. If inactive,
-     * disable all the controls
+     * 
+     * @param disable 
      */
-    public static void changeControlsAbility(boolean selectionInactive) {
-        classNameField.setDisable(selectionInactive);
-        packageNameField.setDisable(selectionInactive);
-        parentNamePicker.setDisable(selectionInactive);
-        variablesIncrementButton.setDisable(selectionInactive);
-        variablesDecrementButton.setDisable(selectionInactive);
-        methodsIncrementButton.setDisable(selectionInactive);
-        methodsDecrementButton.setDisable(selectionInactive);
+    public static void disableButtons(boolean disable) {
+        classNameField.setDisable(disable);
+        packageNameField.setDisable(disable);
+        parentNamePicker.setDisable(disable);
+        variablesIncrementButton.setDisable(disable);
+        variablesDecrementButton.setDisable(disable);
+        methodsIncrementButton.setDisable(disable);
+        methodsDecrementButton.setDisable(disable);
     }
 
     @Override
@@ -350,6 +345,7 @@ public final class Workspace extends AppWorkspaceComponent {
         canvasScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
         canvasScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
 
+        Workspace.disableButtons(true);
     }
 
 }

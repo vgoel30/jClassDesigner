@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINER;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINERS;
+import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
 
 /**
  *
@@ -41,11 +42,11 @@ public class ClassDiagramObject extends Pane {
         rootContainer.setLayoutY(y);
 
         //The first container which has the class name
-        classNameText = new Text("Dummy Is To Dummy What dummy is to moron");
+        classNameText = new Text("Class Name");
         nameContainer = new VBox(classNameText);
 
         //The second container which has all the variables and stuff
-        variablesNameText = new Text("Yummy Dummy Is To Dummy What dummy is to moron Dummy Is To Dummy What dummy is to moron");
+        variablesNameText = new Text("Variables");
         variablesContainer = new VBox(variablesNameText);
         //variablesContainer.setStyle("-fx-background-color:purple");
 
@@ -99,6 +100,10 @@ public class ClassDiagramObject extends Pane {
         nameContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
         variablesContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
         methodsContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
+        
+       classNameText.getStyleClass().add(DIAGRAM_TEXT_FIELD);
+       methodsNameText.getStyleClass().add(DIAGRAM_TEXT_FIELD);
+       variablesNameText.getStyleClass().add(DIAGRAM_TEXT_FIELD);
         
        rootContainer.getStyleClass().add(DIAGRAM_CONTAINER);
         

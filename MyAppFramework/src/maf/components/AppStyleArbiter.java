@@ -33,7 +33,7 @@ public interface AppStyleArbiter {
     public static final String DIAGRAM_CONTAINER = "diagram_container";
     public static final String SELECTED_DIAGRAM_CONTAINER = "selected_diagram_container";
     public static final String DIAGRAM_CONTAINERS = "diagram_containers";
-    public static final String DIAGRAM_TEXT = "diagram_text";
+    public static final String DIAGRAM_TEXT_FIELD = "diagram_text_field";
             
     
     public void initStyle();
