@@ -43,16 +43,16 @@ public class DiagramEditController {
         });
 
         //FOR MOVING THE diagram
-//        diagram.getRootContainer().setOnMouseDragged(rectangleDraggedEvent -> {
-//            if (selectedClassDiagram != null) {
-//                if (selectedClassDiagram.equals(diagram) && Workspace.selectionActive) {
-//                    Workspace.drawingActive = false;
-//                    diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getY());
-//                    diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getX());
-//                            
-//                }
-//            }
-//        });
+        diagram.getRootContainer().setOnMouseDragged(rectangleDraggedEvent -> {
+            if (selectedClassDiagram != null) {
+                if (selectedClassDiagram.equals(diagram) && Workspace.selectionActive) {
+                    Workspace.drawingActive = false;
+                    diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getSceneY()-50);
+                    diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX()-400);
+                            
+                }
+            }
+        });
     }
 
 }
