@@ -106,39 +106,45 @@ public final class Workspace extends AppWorkspaceComponent {
     //1st row
     HBox classNameContainer;
     Label classNameLabel;
-    TextField classNameField;
+    static TextField classNameField;
 
     //2nd row
     HBox packageNameContainer;
     Label packageNameLabel;
-    TextField packageNameField;
+    static TextField packageNameField;
 
     //3rd row
     HBox parentSelectionContainer;
     Label parentNameLabel;
-    ChoiceBox parentNamePicker;
+    static ChoiceBox parentNamePicker;
 
     //4th row which has the variables increase/decrease control and the table
     VBox fourthRow;
     HBox variablesContainer;
     Label variablesLabel;
-    Button variablesIncrementButton;
-    Button variablesDecrementButton;
+    static Button variablesIncrementButton;
+    static Button variablesDecrementButton;
     TableView variablesTable;
 
     //5th row which has the methods increase/decrease control and the table
     VBox fifthRow;
     HBox methodsContainer;
     Label methodsLabel;
-    Button methodsIncrementButton;
-    Button methodsDecrementButton;
+    static Button methodsIncrementButton;
+    static Button methodsDecrementButton;
     TableView methodsTable;
 
     //THE AREA WHERE ALL THE STUFF WILL BE RENDERED
     Pane canvas;
     ScrollPane canvasScrollPane;
 
+    //keep track of the current selected button
     Button selected;
+    
+    //BOOLEAN TO SEE IF SELECTION IS ACTIVE
+    public static boolean selectionActive;
+    //DRAWING SHAPES
+    public static boolean drawingActive;
 
     public Workspace(AppTemplate initApp) throws IOException {
         // KEEP THIS FOR LATER
@@ -272,14 +278,40 @@ public final class Workspace extends AppWorkspaceComponent {
     public void setupHandlers() {
         //when the user wants to add a class
         addClassButton.setOnAction(e -> {
+            drawingActive = true;
+            selectionActive = false;
             System.out.println("Add class was clicked");
             GridEditController.addClassDiagram(canvas);
+        });
+        
+        //when the selection button is clicked
+        selectionButton.setOnAction(selectionButtonClicked -> {
+            drawingActive = false;
+            selectionActive = true;
+            System.out.println("Selection was clicked");
         });
     }
 
     @Override
     public void reloadWorkspace() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * Method to disable/enable the controls in the right toolbar (they are only
+     * required if a button is selected)
+     *
+     * @param selectionInactive tells is selection is inactive. If inactive,
+     * disable all the controls
+     */
+    public static void changeControlsAbility(boolean selectionInactive) {
+        classNameField.setDisable(selectionInactive);
+        packageNameField.setDisable(selectionInactive);
+        parentNamePicker.setDisable(selectionInactive);
+        variablesIncrementButton.setDisable(selectionInactive);
+        variablesDecrementButton.setDisable(selectionInactive);
+        methodsIncrementButton.setDisable(selectionInactive);
+        methodsDecrementButton.setDisable(selectionInactive);
     }
 
     @Override

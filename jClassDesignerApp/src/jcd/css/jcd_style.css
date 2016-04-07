@@ -69,8 +69,20 @@ and open the template in the editor.
 }
 
 .table{
-    -fx-background-color: grey;
+    -fx-background-color: black;
 }
+
+.selected_diagram_container{
+    -fx-border-color: #22A7F0 ;
+     -fx-border-width: 4 4 4 4;
+}
+
+.diagram_containers{
+    -fx-border-color: black ;
+     -fx-border-width: 1.5 3 1.5 2.5;
+}
+
+
 
 /*CSS CLASS FOR OUR BIG PANES*/
 .bordered_pane {

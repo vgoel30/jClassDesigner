@@ -8,6 +8,8 @@ package jcd.data;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINER;
+import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINERS;
 
 /**
  *
@@ -41,18 +43,16 @@ public class ClassDiagramObject extends Pane {
         //The first container which has the class name
         classNameText = new Text("Dummy Is To Dummy What dummy is to moron");
         nameContainer = new VBox(classNameText);
-        nameContainer.setStyle("-fx-background-color:red");
-        classNameText.setStyle("-fx-font-family:Tahoma");
 
         //The second container which has all the variables and stuff
         variablesNameText = new Text("Yummy Dummy Is To Dummy What dummy is to moron Dummy Is To Dummy What dummy is to moron");
         variablesContainer = new VBox(variablesNameText);
-        variablesContainer.setStyle("-fx-background-color:purple");
+        //variablesContainer.setStyle("-fx-background-color:purple");
 
         //The third container which has all the methods and stuff
         methodsNameText = new Text("Methods");
         methodsContainer = new VBox(methodsNameText);
-        methodsContainer.setStyle("-fx-background-color:pink");
+        //methodsContainer.setStyle("-fx-background-color:pink");
 
         //putting it all in
         rootContainer.getChildren().add(nameContainer);
@@ -62,6 +62,7 @@ public class ClassDiagramObject extends Pane {
         root.getChildren().add(rootContainer);
         setStandardDimensions();
 
+        initStyle();
     }
 
     //sets the standard dimensions for the containers inside the boxes
@@ -71,21 +72,15 @@ public class ClassDiagramObject extends Pane {
         rootContainer.setMaxWidth(400);
 
         nameContainer.setMinHeight(50);
-//        nameContainer.setMinWidth(17);
-//        nameContainer.setMaxWidth(17);
         //binding will allow easier resizing
         nameContainer.minWidthProperty().bind(rootContainer.minWidthProperty());
         nameContainer.maxWidthProperty().bind(rootContainer.maxWidthProperty());
 
         variablesContainer.setMinHeight(100);
-//        variablesContainer.setMinWidth(175);
-//        variablesContainer.setMaxWidth(200);
         variablesContainer.minWidthProperty().bind(rootContainer.minWidthProperty());
         variablesContainer.maxWidthProperty().bind(rootContainer.maxWidthProperty());
 
         methodsContainer.setMinHeight(100);
-//        methodsContainer.setMinWidth(175);
-//        methodsContainer.setMaxWidth(200);
         methodsContainer.minWidthProperty().bind(rootContainer.minWidthProperty());
         methodsContainer.maxWidthProperty().bind(rootContainer.maxWidthProperty());
 
@@ -93,6 +88,20 @@ public class ClassDiagramObject extends Pane {
         classNameText.setWrappingWidth(rootContainer.getMinWidth());
         methodsNameText.setWrappingWidth(rootContainer.getMinWidth());
         variablesNameText.setWrappingWidth(rootContainer.getMinWidth());
+    }
+    
+    public VBox getRootContainer(){
+        return this.rootContainer;
+    }
+
+    //set the style for the diagram
+    private void initStyle() {
+        nameContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
+        variablesContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
+        methodsContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
+        
+       rootContainer.getStyleClass().add(DIAGRAM_CONTAINER);
+        
     }
 
 }

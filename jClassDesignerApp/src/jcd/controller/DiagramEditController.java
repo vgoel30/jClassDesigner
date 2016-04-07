@@ -5,10 +5,20 @@
  */
 package jcd.controller;
 
+import jcd.data.ClassDiagramObject;
+import jcd.gui.Workspace;
+
 /**
  *
  * @author varungoel
  */
 public class DiagramEditController {
+    
+    public static void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
+        diagram.setOnMouseClicked(mouseClicked -> {
+            if(Workspace.selectionActive)
+                System.out.println("Do something");
+        });
+    }
     
 }
