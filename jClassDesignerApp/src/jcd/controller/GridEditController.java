@@ -5,8 +5,14 @@
  */
 package jcd.controller;
 
+import java.io.File;
+import java.io.IOException;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
+import javax.imageio.ImageIO;
 import jcd.data.ClassDiagramObject;
 import jcd.gui.Workspace;
 import static maf.components.AppStyleArbiter.SELECTED_DIAGRAM_CONTAINER;
@@ -50,4 +56,15 @@ public class GridEditController {
 
     }
 
+    public static void processSnapshot() {
+	Pane canvas = Workspace.getCanvas();
+	WritableImage image = canvas.snapshot(new SnapshotParameters(), null);
+	File file = new File("Pose.png");
+	try {
+	    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+	}
+	catch(IOException ioe) {
+	    ioe.printStackTrace();
+	}
+    }
 }

@@ -5,9 +5,14 @@
  */
 package jcd.gui;
 
+import java.awt.Canvas;
 import javafx.scene.control.Button;
 import java.io.IOException;
 import java.util.ArrayList;
+import javafx.scene.Cursor;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -77,6 +82,8 @@ public final class Workspace extends AppWorkspaceComponent {
     // IT KNOWS THE GUI IT IS PLACED INSIDE
     AppGUI gui;
 
+    Scene mainScene;
+
     //all the rows in the editing toolbar
     ArrayList<HBox> containers = new ArrayList<>();
 
@@ -85,7 +92,7 @@ public final class Workspace extends AppWorkspaceComponent {
     Button resizeButton;
     Button addClassButton;
     Button addInterfaceButton;
-    Button removeButton;
+    static Button removeButton;
     Button undoButton;
     Button redoButton;
     Button zoomInButton;
@@ -136,12 +143,12 @@ public final class Workspace extends AppWorkspaceComponent {
     TableView methodsTable;
 
     //THE AREA WHERE ALL THE STUFF WILL BE RENDERED
-    Pane canvas;
+    static Pane canvas;
     ScrollPane canvasScrollPane;
 
     //keep track of the current selected button
     Button selected;
-    
+
     //BOOLEAN TO SEE IF SELECTION IS ACTIVE
     public static boolean selectionActive;
     //DRAWING SHAPES
@@ -156,6 +163,12 @@ public final class Workspace extends AppWorkspaceComponent {
 
         layoutGUI();
         setupHandlers();
+
+        mainScene = new Scene(workspace);
+    }
+
+    public static Pane getCanvas() {
+        return canvas;
     }
 
     public void layoutGUI() {
@@ -180,7 +193,7 @@ public final class Workspace extends AppWorkspaceComponent {
         toolbarButtons.add(zoomInButton);
         zoomOutButton = gui.initChildButton(toolBarPane, ZOOM_OUT_ICON.toString(), ZOOM_OUT_TOOLTIP.toString(), true);
         toolbarButtons.add(zoomOutButton);
-        screenshotButton = gui.initChildButton(toolBarPane, PHOTO_ICON.toString(), PHOTO_TOOLTIP.toString(), true);
+        screenshotButton = gui.initChildButton(toolBarPane, PHOTO_ICON.toString(), PHOTO_TOOLTIP.toString(), false);
         toolbarButtons.add(screenshotButton);
         codeButton = gui.initChildButton(toolBarPane, CODE_ICON.toString(), CODE_TOOLTIP.toString(), true);
         toolbarButtons.add(codeButton);
@@ -270,8 +283,6 @@ public final class Workspace extends AppWorkspaceComponent {
 
         System.out.println(canvasScrollPane.getContent());
 
-        
-
     }
 
     public void setupHandlers() {
@@ -282,18 +293,32 @@ public final class Workspace extends AppWorkspaceComponent {
             System.out.println("Add class was clicked");
             GridEditController.addClassDiagram(canvas);
         });
-        
+
         //when the selection button is clicked
         selectionButton.setOnAction(selectionButtonClicked -> {
             drawingActive = false;
             selectionActive = true;
             System.out.println("Selection was clicked");
+            mainScene.getRoot().setCursor(Cursor.MOVE);
         });
-        
+
+        screenshotButton.setOnAction(screenshotButtonClicked -> {
+            if (canvas.getChildren().size() > 0) {
+                GridEditController.processSnapshot();
+            } else {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Empty Canvas");
+                alert.setHeaderText(null);
+                alert.setContentText("Canvas is empty!");
+
+                alert.showAndWait();
+            }
+        });
+
         //testing the event handler for text field
         classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println("textfield changed from " + oldValue + " to " + newValue);
-            DiagramEditController.changeClassName(oldValue,newValue);
+            DiagramEditController.changeClassName(oldValue, newValue);
         });
     }
 
@@ -303,8 +328,8 @@ public final class Workspace extends AppWorkspaceComponent {
     }
 
     /**
-     * 
-     * @param disable 
+     *
+     * @param disable
      */
     public static void disableButtons(boolean disable) {
         classNameField.setDisable(disable);
@@ -314,6 +339,7 @@ public final class Workspace extends AppWorkspaceComponent {
         variablesDecrementButton.setDisable(disable);
         methodsIncrementButton.setDisable(disable);
         methodsDecrementButton.setDisable(disable);
+        removeButton.setDisable(disable);
     }
 
     @Override
