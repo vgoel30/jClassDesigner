@@ -316,6 +316,8 @@ public final class Workspace extends AppWorkspaceComponent {
         screenshotButton.setOnAction(screenshotButtonClicked -> {
             if (canvas.getChildren().size() > 0) {
                 gridEditController.processSnapshot();
+                drawingActive = false;
+                selectionActive = false;
             } else {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Empty Canvas");
@@ -326,10 +328,7 @@ public final class Workspace extends AppWorkspaceComponent {
             }
         });
 
-        //when the enter key is clicked, validate the name of the class
-//        classNameField.setOnAction((event) -> {
-//            diagramEditController.validateClassName(classNameField.getText(), classNameField);
-//        });
+        
         //testing the event handler for text field
         classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
             diagramEditController.doFancyNameShitForClass(oldValue, newValue, packageNameField.getText());

@@ -86,26 +86,24 @@ public class DiagramEditController {
     }
     
     public void validatePackageName(String newPackageName, TextField packageNameField, String oldValue, String className){
+        String thePackageName = classPackageCombos.get(classPackageCombos.size() - 1).split(":")[1];
+        classPackageCombos.remove(className + ":" + oldValue);
+        
+        if (classPackageCombos.contains(className + ":" + thePackageName) && (classPackageCombos.indexOf(className + ":" + thePackageName) != classPackageCombos.size() - 1)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Package name error");
+            alert.setHeaderText(null);
+            alert.setContentText("Package with this class already exists");
+            alert.showAndWait();
+            selectedClassDiagram.getClassNameText().setText("Class Name");
+            packageNameField.setText("Package Name");
+        }
+        else {
+            selectedClassDiagram.getPackageNameText().setText(newPackageName);
+            classPackageCombos.add(className + ":" + newPackageName);
+        }
+
     }
-//    
-//    public void validatePackageName(String newName, TextField packageNameField,String oldValue,) {
-//        classPackageCombos.remove(classPackageCombos.size() - 1);
-//        classPackageCombos.remove(oldValue + ":" + classPackageName);
-//        
-//        if (packageNames.contains(newName)) {
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Package name error");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Package already exists!");
-//            alert.showAndWait();
-//            selectedClassDiagram.getPackageNameText().setText("Package");
-//            packageNameField.setText("Package");
-//        } else {
-//            System.out.println(newName);
-//            selectedClassDiagram.getPackageNameText().setText(newName);
-//            packageNames.add(newName);
-//        }
-//    }
     
     
 
