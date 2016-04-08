@@ -17,4 +17,9 @@ public class MethodObject {
     boolean isAbstract;
     ArrayList<String> arguments;
     String returnType;
+    String protection;
+    
+    public String toString(){
+        return protection + name + "(" + arguments + "):" + returnType;
+    }
 }

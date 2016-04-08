@@ -28,6 +28,7 @@ public class GridEditController {
     static ClassDiagramObject selectedClassDiagram = null;
     static ArrayList<String> classNames = new ArrayList<>();
     static ArrayList<String> packageNames = new ArrayList<>();
+    static ArrayList<String> classPackageCombos = new ArrayList<>();
 
     AppTemplate app;
 

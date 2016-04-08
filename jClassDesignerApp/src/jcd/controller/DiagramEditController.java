@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import static jcd.controller.GridEditController.selectedClassDiagram;
 import static jcd.controller.GridEditController.classNames;
 import static jcd.controller.GridEditController.packageNames;
+import static jcd.controller.GridEditController.classPackageCombos;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
 import jcd.gui.Workspace;
@@ -49,9 +50,12 @@ public class DiagramEditController {
     /**
      * Validates the name to see if it already exists
      * @param newName
-     * @param classNameField 
+     * @param classNameField
+     * @param oldValue
      */
-    public void validateClassName(String newName, TextField classNameField) {
+    public void validateClassName(String newName, TextField classNameField, String oldValue) {
+        //remove the old class name from the classes name tag
+        classNames.remove(oldValue);
         if (classNames.contains(newName)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Class name error");
@@ -65,9 +69,8 @@ public class DiagramEditController {
             System.out.println(newName);
             selectedClassDiagram.getClassNameText().setText(newName);
             classNames.add(newName);
-        }
-    }
-    
+    }}
+
     public void validatePackageName(String newName, TextField packageNameField) {
         if (packageNames.contains(newName)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -82,12 +85,11 @@ public class DiagramEditController {
             System.out.println(newName);
             selectedClassDiagram.getPackageNameText().setText(newName);
             packageNames.add(newName);
-        }
-    }
+    }}
 
     public void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        
+
         diagram.getRootContainer().setOnMouseClicked(mouseClicked -> {
             if (workspace.selectionActive) {
                 System.out.println("Clicked on class diagram object");
