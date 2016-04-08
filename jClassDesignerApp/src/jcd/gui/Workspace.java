@@ -344,8 +344,10 @@ public final class Workspace extends AppWorkspaceComponent {
         packageNameField.textProperty().addListener((observable, oldValue, newValue) -> {
             diagramEditController.doFancyNameShitForPackage(oldValue, newValue, classNameField.getText());
             
+            
             packageNameField.setOnAction((event) -> {
-                diagramEditController.validatePackageName(packageNameField.getText(), packageNameField);
+//                diagramEditController.validatePackageName(packageNameField.getText(), packageNameField, oldValue, classNameField.getText());
+                   diagramEditController.validatePackageName(packageNameField.getText(), packageNameField, oldValue, classNameField.getText());
             });
         });
     }

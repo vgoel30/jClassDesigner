@@ -50,6 +50,7 @@ public class DiagramEditController {
     public void doFancyNameShitForClass(String oldValue, String newValue, String classPackageName) {
         classPackageCombos.remove(oldValue + ":" + classPackageName);
         classPackageCombos.add(newValue + ":" + classPackageName);
+        System.out.println(classPackageCombos);
     }
 
     /**
@@ -60,11 +61,11 @@ public class DiagramEditController {
      * @param oldValue
      */
     public void validateClassName(String newName, TextField classNameField, String oldValue, String classPackageName) {
-        classPackageCombos.remove(classPackageCombos.size() - 1);
-        System.out.println("OLD VALUE : " + oldValue + ":" + classPackageName);
+        String theClassName = classPackageCombos.get(classPackageCombos.size() - 1).split(":")[0];
+        //classPackageCombos.remove(classPackageCombos.size() - 1)   
         classPackageCombos.remove(oldValue + ":" + classPackageName);
 
-        if (classPackageCombos.contains(newName + ":" + classPackageName)) {
+        if (classPackageCombos.contains(theClassName + ":" + classPackageName) && (classPackageCombos.indexOf(theClassName + ":" + classPackageName) != classPackageCombos.size() - 1)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Class name error");
             alert.setHeaderText(null);
@@ -73,49 +74,40 @@ public class DiagramEditController {
             selectedClassDiagram.getClassNameText().setText("Class Name");
             classNameField.setText("Class Name");
         } else {
-            //System.out.println(newName+":" + classPackageName);
             selectedClassDiagram.getClassNameText().setText(newName);
             classPackageCombos.add(newName + ":" + classPackageName);
         }
-        System.out.println(classPackageCombos);
-
-        //remove the old class name from the classes name tag
-//        classNames.remove(oldValue);
-//        if (classNames.contains(newName)) {
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Class name error");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Class already exists!");
-//            alert.showAndWait();
-//            selectedClassDiagram.getClassNameText().setText("Class Name");
-//            classNameField.setText("Class Name");
-//        } else {
-//            //System.out.println(newName);
-//            selectedClassDiagram.getClassNameText().setText(newName);
-//            classNames.add(newName);
-//        }
     }
 
     public void doFancyNameShitForPackage(String oldValue, String newValue, String className) {
         classPackageCombos.remove(className + ":" + oldValue);
         classPackageCombos.add(className + ":" + newValue);
+        System.out.println(classPackageCombos);
     }
     
-    public void validatePackageName(String newName, TextField packageNameField) {
-        if (packageNames.contains(newName)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Package name error");
-            alert.setHeaderText(null);
-            alert.setContentText("Package already exists!");
-            alert.showAndWait();
-            selectedClassDiagram.getPackageNameText().setText("Package");
-            packageNameField.setText("Package");
-        } else {
-            System.out.println(newName);
-            selectedClassDiagram.getPackageNameText().setText(newName);
-            packageNames.add(newName);
-        }
+    public void validatePackageName(String newPackageName, TextField packageNameField, String oldValue, String className){
     }
+//    
+//    public void validatePackageName(String newName, TextField packageNameField,String oldValue,) {
+//        classPackageCombos.remove(classPackageCombos.size() - 1);
+//        classPackageCombos.remove(oldValue + ":" + classPackageName);
+//        
+//        if (packageNames.contains(newName)) {
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Package name error");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Package already exists!");
+//            alert.showAndWait();
+//            selectedClassDiagram.getPackageNameText().setText("Package");
+//            packageNameField.setText("Package");
+//        } else {
+//            System.out.println(newName);
+//            selectedClassDiagram.getPackageNameText().setText(newName);
+//            packageNames.add(newName);
+//        }
+//    }
+    
+    
 
     public void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
