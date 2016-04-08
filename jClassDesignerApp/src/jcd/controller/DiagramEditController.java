@@ -9,6 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import static jcd.controller.GridEditController.selectedClassDiagram;
 import static jcd.controller.GridEditController.classNames;
+import static jcd.controller.GridEditController.packageNames;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
 import jcd.gui.Workspace;
@@ -66,9 +67,27 @@ public class DiagramEditController {
             classNames.add(newName);
         }
     }
+    
+    public void validatePackageName(String newName, TextField packageNameField) {
+        if (packageNames.contains(newName)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Package name error");
+            alert.setHeaderText(null);
+            alert.setContentText("Package already exists!");
+            alert.showAndWait();
+            selectedClassDiagram.getPackageNameText().setText("Package");
+            packageNameField.setText("Package");
+        }
+        else{
+            System.out.println(newName);
+            selectedClassDiagram.getPackageNameText().setText(newName);
+            packageNames.add(newName);
+        }
+    }
 
     public void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        
         diagram.getRootContainer().setOnMouseClicked(mouseClicked -> {
             if (workspace.selectionActive) {
                 System.out.println("Clicked on class diagram object");
@@ -80,6 +99,7 @@ public class DiagramEditController {
                 selectedClassDiagram = diagram;
                 //reflect the selected changes
                 workspace.classNameField.setText(diagram.getClassNameText().getText());
+                workspace.packageNameField.setText(diagram.getPackageNameText().getText());
 
                 workspace.disableButtons(false);
             }

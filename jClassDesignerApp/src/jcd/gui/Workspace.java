@@ -325,11 +325,16 @@ public final class Workspace extends AppWorkspaceComponent {
                 alert.showAndWait();
             }
         });
-        
-        //when the enter key is clicked, validate the name
+
+        //when the enter key is clicked, validate the name of the class
         classNameField.setOnAction((event) -> {
-            diagramEditController.validateClassName(classNameField.getText(),classNameField);
-});
+            diagramEditController.validateClassName(classNameField.getText(), classNameField);
+        });
+        
+        //when the enter key is clicked, validate the name of the package
+        packageNameField.setOnAction((event) -> {
+            diagramEditController.validatePackageName(packageNameField.getText(), packageNameField);
+        });
     }
 
     @Override

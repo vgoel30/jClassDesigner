@@ -26,8 +26,8 @@ public class GridEditController {
 
     //THE CURRENT SELECTED CLASS DIAGRAM
     static ClassDiagramObject selectedClassDiagram = null;
-    //THE CURRENT SELECTED INTERFACE DIAGRAM
     static ArrayList<String> classNames = new ArrayList<>();
+    static ArrayList<String> packageNames = new ArrayList<>();
 
     AppTemplate app;
 
