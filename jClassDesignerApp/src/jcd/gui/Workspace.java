@@ -330,20 +330,23 @@ public final class Workspace extends AppWorkspaceComponent {
 //        classNameField.setOnAction((event) -> {
 //            diagramEditController.validateClassName(classNameField.getText(), classNameField);
 //        });
-        
         //testing the event handler for text field
         classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("textfield changed from " + oldValue + " to " + newValue);
-            
+            diagramEditController.doFancyNameShitForClass(oldValue, newValue, packageNameField.getText());
+
             //when the enter key is clicked, validate the name of the class
-        classNameField.setOnAction((event) -> {
-            diagramEditController.validateClassName(classNameField.getText(), classNameField,oldValue);
+            classNameField.setOnAction((event) -> {
+                diagramEditController.validateClassName(classNameField.getText(), classNameField, oldValue, packageNameField.getText());
+            });
         });
-        });
-        
+
         //when the enter key is clicked, validate the name of the package
-        packageNameField.setOnAction((event) -> {
-            diagramEditController.validatePackageName(packageNameField.getText(), packageNameField);
+        packageNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            diagramEditController.doFancyNameShitForPackage(oldValue, newValue, classNameField.getText());
+            
+            packageNameField.setOnAction((event) -> {
+                diagramEditController.validatePackageName(packageNameField.getText(), packageNameField);
+            });
         });
     }
 
