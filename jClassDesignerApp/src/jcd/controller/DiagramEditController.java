@@ -7,8 +7,9 @@ package jcd.controller;
 
 import static jcd.controller.GridEditController.selectedClassDiagram;
 import jcd.data.ClassDiagramObject;
+import jcd.data.DataManager;
 import jcd.gui.Workspace;
-import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINER;
+import maf.AppTemplate;
 import static maf.components.AppStyleArbiter.SELECTED_DIAGRAM_CONTAINER;
 
 /**
@@ -17,27 +18,38 @@ import static maf.components.AppStyleArbiter.SELECTED_DIAGRAM_CONTAINER;
  */
 public class DiagramEditController {
 
+    AppTemplate app;
+
+    DataManager dataManager;
+
+    public DiagramEditController(AppTemplate initApp) {
+        app = initApp;
+        dataManager = (DataManager) app.getDataComponent();
+    }
+
     /**
      * Restores the appearance of the selected diagram after it has been
      * deselected
      *
      * @param selectedClassDiagram
      */
-    public static void restoreSelectedProperties(ClassDiagramObject selectedClassDiagram) {
+    public void restoreSelectedProperties(ClassDiagramObject selectedClassDiagram) {
         selectedClassDiagram.getRootContainer().getStyleClass().remove(SELECTED_DIAGRAM_CONTAINER);
     }
-    
-    public static void changeClassName(String oldValue, String newValue){
-        if (Workspace.selectionActive) {
+
+    public void changeClassName(String oldValue, String newValue) {
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        if (workspace.selectionActive) {
             if (selectedClassDiagram != null) {
-                    selectedClassDiagram.getClassNameText().setText(newValue);
-                }
+                selectedClassDiagram.getClassNameText().setText(newValue);
+            }
         }
     }
 
-    public static void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
+    public void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
         diagram.getRootContainer().setOnMouseClicked(mouseClicked -> {
-            if (Workspace.selectionActive) {
+            if (workspace.selectionActive) {
                 System.out.println("Clicked on class diagram object");
                 diagram.getRootContainer().getStyleClass().add(SELECTED_DIAGRAM_CONTAINER);
 
@@ -46,20 +58,21 @@ public class DiagramEditController {
                 }
                 selectedClassDiagram = diagram;
                 //reflect the selected changes
-                Workspace.classNameField.setText(diagram.getClassNameText().getText());
+                workspace.classNameField.setText(diagram.getClassNameText().getText());
 
-                Workspace.disableButtons(false);
+                workspace.disableButtons(false);
             }
         });
 
         //FOR MOVING THE diagram
         diagram.getRootContainer().setOnMouseDragged(rectangleDraggedEvent -> {
+            
             if (selectedClassDiagram != null) {
-                if (selectedClassDiagram.equals(diagram) && Workspace.selectionActive) {
-                    Workspace.drawingActive = false;
-                    diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getSceneY()-50);
-                    diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX()-400);
-                            
+                if (selectedClassDiagram.equals(diagram) && workspace.selectionActive) {
+                    workspace.drawingActive = false;
+                    diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getSceneY() - 50);
+                    diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX() - 400);
+
                 }
             }
         });

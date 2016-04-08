@@ -5,6 +5,7 @@
  */
 package jcd.data;
 
+import jcd.gui.Workspace;
 import maf.AppTemplate;
 import maf.components.AppDataComponent;
 
@@ -30,6 +31,6 @@ public class DataManager implements AppDataComponent{
 
     @Override
     public void reset() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ((Workspace)app.getWorkspaceComponent()).getCanvas().getChildren().clear();
     }
 }

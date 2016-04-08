@@ -92,7 +92,7 @@ public final class Workspace extends AppWorkspaceComponent {
     Button resizeButton;
     Button addClassButton;
     Button addInterfaceButton;
-    static Button removeButton;
+    Button removeButton;
     Button undoButton;
     Button redoButton;
     Button zoomInButton;
@@ -114,45 +114,49 @@ public final class Workspace extends AppWorkspaceComponent {
     //1st row
     HBox classNameContainer;
     Label classNameLabel;
-    public static TextField classNameField;
+    public TextField classNameField;
 
     //2nd row
     HBox packageNameContainer;
     Label packageNameLabel;
-    public static TextField packageNameField;
+    public TextField packageNameField;
 
     //3rd row
     HBox parentSelectionContainer;
     Label parentNameLabel;
-    static ChoiceBox parentNamePicker;
+    public ChoiceBox parentNamePicker;
 
     //4th row which has the variables increase/decrease control and the table
     VBox fourthRow;
     HBox variablesContainer;
     Label variablesLabel;
-    static Button variablesIncrementButton;
-    static Button variablesDecrementButton;
+    Button variablesIncrementButton;
+    Button variablesDecrementButton;
     TableView variablesTable;
 
     //5th row which has the methods increase/decrease control and the table
     VBox fifthRow;
     HBox methodsContainer;
     Label methodsLabel;
-    static Button methodsIncrementButton;
-    static Button methodsDecrementButton;
+    Button methodsIncrementButton;
+    Button methodsDecrementButton;
     TableView methodsTable;
 
     //THE AREA WHERE ALL THE STUFF WILL BE RENDERED
-    static Pane canvas;
+     Pane canvas;
     ScrollPane canvasScrollPane;
 
     //keep track of the current selected button
     Button selected;
 
     //BOOLEAN TO SEE IF SELECTION IS ACTIVE
-    public static boolean selectionActive;
+    public boolean selectionActive;
     //DRAWING SHAPES
-    public static boolean drawingActive;
+    public boolean drawingActive;
+
+    // HERE ARE THE CONTROLLERS
+    GridEditController gridEditController;
+    DiagramEditController diagramEditController;
 
     public Workspace(AppTemplate initApp) throws IOException {
         // KEEP THIS FOR LATER
@@ -167,7 +171,7 @@ public final class Workspace extends AppWorkspaceComponent {
         mainScene = new Scene(workspace);
     }
 
-    public static Pane getCanvas() {
+    public Pane getCanvas() {
         return canvas;
     }
 
@@ -286,12 +290,19 @@ public final class Workspace extends AppWorkspaceComponent {
     }
 
     public void setupHandlers() {
+        // MAKE THE GRID CONTROLLER	
+        gridEditController = new GridEditController(app);
+
+        //MAKE THE DIAGRAM CONTROLLER
+        // MAKE THE EDIT CONTROLLER
+        diagramEditController = new DiagramEditController(app);
+
         //when the user wants to add a class
         addClassButton.setOnAction(e -> {
             drawingActive = true;
             selectionActive = false;
             System.out.println("Add class was clicked");
-            GridEditController.addClassDiagram(canvas);
+            gridEditController.addClassDiagram(canvas);
         });
 
         //when the selection button is clicked
@@ -304,7 +315,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         screenshotButton.setOnAction(screenshotButtonClicked -> {
             if (canvas.getChildren().size() > 0) {
-                GridEditController.processSnapshot();
+                gridEditController.processSnapshot();
             } else {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Empty Canvas");
@@ -318,20 +329,22 @@ public final class Workspace extends AppWorkspaceComponent {
         //testing the event handler for text field
         classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println("textfield changed from " + oldValue + " to " + newValue);
-            DiagramEditController.changeClassName(oldValue, newValue);
+            diagramEditController.changeClassName(oldValue, newValue);
         });
     }
 
     @Override
     public void reloadWorkspace() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        disableButtons(true);
+        canvas.getChildren().clear();
+//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
      *
      * @param disable
      */
-    public static void disableButtons(boolean disable) {
+    public void disableButtons(boolean disable) {
         classNameField.setDisable(disable);
         packageNameField.setDisable(disable);
         parentNamePicker.setDisable(disable);
@@ -378,7 +391,7 @@ public final class Workspace extends AppWorkspaceComponent {
         canvasScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
         canvasScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
 
-        Workspace.disableButtons(true);
+        disableButtons(true);
     }
 
 }

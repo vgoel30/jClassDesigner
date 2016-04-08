@@ -11,11 +11,11 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Shape;
 import javax.imageio.ImageIO;
 import jcd.data.ClassDiagramObject;
+import jcd.data.DataManager;
 import jcd.gui.Workspace;
-import static maf.components.AppStyleArbiter.SELECTED_DIAGRAM_CONTAINER;
+import maf.AppTemplate;
 
 /**
  *
@@ -27,15 +27,28 @@ public class GridEditController {
     static ClassDiagramObject selectedClassDiagram = null;
     //THE CURRENT SELECTED INTERFACE DIAGRAM
 
-    public static void addClassDiagram(Pane canvas) {
+    AppTemplate app;
+
+    DataManager dataManager;
+    DiagramEditController diagramEditController;
+
+    public GridEditController(AppTemplate initApp) {
+        app = initApp;
+        dataManager = (DataManager) app.getDataComponent();
+        diagramEditController = new DiagramEditController(initApp);
+    }
+
+    public void addClassDiagram(Pane canvas) {
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
         if (selectedClassDiagram != null) {
-            DiagramEditController.restoreSelectedProperties(selectedClassDiagram);
+            diagramEditController.restoreSelectedProperties(selectedClassDiagram);
             selectedClassDiagram = null;
-            Workspace.disableButtons(true);
+            
+            workspace.disableButtons(true);
         }
 
         canvas.setOnMouseClicked(e -> {
-            if (Workspace.drawingActive) {
+            if (workspace.drawingActive) {
                 double x = e.getX();
                 double y = e.getY();
 
@@ -48,23 +61,24 @@ public class GridEditController {
                 }
 
                 ClassDiagramObject objectToPut = new ClassDiagramObject(canvas, x, y);
-                DiagramEditController.attachClassDiagramEventHandlers(objectToPut);
-                Workspace.disableButtons(true);
+                diagramEditController.attachClassDiagramEventHandlers(objectToPut);
+                workspace.disableButtons(true);
             }
 
         });
 
     }
 
-    public static void processSnapshot() {
-	Pane canvas = Workspace.getCanvas();
-	WritableImage image = canvas.snapshot(new SnapshotParameters(), null);
-	File file = new File("Pose.png");
-	try {
-	    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-	}
-	catch(IOException ioe) {
-	    ioe.printStackTrace();
-	}
+    public void processSnapshot() {
+
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        Pane canvas = workspace.getCanvas();
+        WritableImage image = canvas.snapshot(new SnapshotParameters(), null);
+        File file = new File("Pose.png");
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 }

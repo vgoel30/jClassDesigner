@@ -33,6 +33,8 @@ public class ClassDiagramObject extends Pane {
     Text variablesNameText;
     //the methods text
     Text methodsNameText;
+    
+    
 
     public ClassDiagramObject(Pane root, double x, double y) {
         rootContainer = new VBox();
