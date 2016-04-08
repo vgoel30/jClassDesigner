@@ -143,7 +143,7 @@ public final class Workspace extends AppWorkspaceComponent {
     TableView methodsTable;
 
     //THE AREA WHERE ALL THE STUFF WILL BE RENDERED
-     Pane canvas;
+    Pane canvas;
     ScrollPane canvasScrollPane;
 
     //keep track of the current selected button
@@ -335,8 +335,14 @@ public final class Workspace extends AppWorkspaceComponent {
 
     @Override
     public void reloadWorkspace() {
+        classNameField.setText("");
+        packageNameField.setText("");
         disableButtons(true);
         canvas.getChildren().clear();
+        if (selected != null) {
+            selected.getStyleClass().remove("pressed");
+            selected = null;
+        }
 //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
