@@ -7,6 +7,7 @@ package jcd.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
@@ -26,6 +27,7 @@ public class GridEditController {
     //THE CURRENT SELECTED CLASS DIAGRAM
     static ClassDiagramObject selectedClassDiagram = null;
     //THE CURRENT SELECTED INTERFACE DIAGRAM
+    static ArrayList<String> classNames = new ArrayList<>();
 
     AppTemplate app;
 

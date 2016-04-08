@@ -325,12 +325,11 @@ public final class Workspace extends AppWorkspaceComponent {
                 alert.showAndWait();
             }
         });
-
-        //testing the event handler for text field
-        classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("textfield changed from " + oldValue + " to " + newValue);
-            diagramEditController.changeClassName(oldValue, newValue);
-        });
+        
+        //when the enter key is clicked, validate the name
+        classNameField.setOnAction((event) -> {
+            diagramEditController.validateClassName(classNameField.getText(),classNameField);
+});
     }
 
     @Override

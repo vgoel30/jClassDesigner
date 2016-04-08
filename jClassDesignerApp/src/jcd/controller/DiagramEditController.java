@@ -5,7 +5,10 @@
  */
 package jcd.controller;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
 import static jcd.controller.GridEditController.selectedClassDiagram;
+import static jcd.controller.GridEditController.classNames;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
 import jcd.gui.Workspace;
@@ -38,11 +41,29 @@ public class DiagramEditController {
     }
 
     public void changeClassName(String oldValue, String newValue) {
-        Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        if (workspace.selectionActive) {
-            if (selectedClassDiagram != null) {
-                selectedClassDiagram.getClassNameText().setText(newValue);
-            }
+        selectedClassDiagram.getClassNameText().setText(newValue);
+
+    }
+
+    /**
+     * Validates the name to see if it already exists
+     * @param newName
+     * @param classNameField 
+     */
+    public void validateClassName(String newName, TextField classNameField) {
+        if (classNames.contains(newName)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Class name error");
+            alert.setHeaderText(null);
+            alert.setContentText("Class already exists!");
+            alert.showAndWait();
+            selectedClassDiagram.getClassNameText().setText("Class Name");
+            classNameField.setText("Class Name");
+        }
+        else{
+            System.out.println(newName);
+            selectedClassDiagram.getClassNameText().setText(newName);
+            classNames.add(newName);
         }
     }
 
@@ -66,7 +87,7 @@ public class DiagramEditController {
 
         //FOR MOVING THE diagram
         diagram.getRootContainer().setOnMouseDragged(rectangleDraggedEvent -> {
-            
+
             if (selectedClassDiagram != null) {
                 if (selectedClassDiagram.equals(diagram) && workspace.selectionActive) {
                     workspace.drawingActive = false;

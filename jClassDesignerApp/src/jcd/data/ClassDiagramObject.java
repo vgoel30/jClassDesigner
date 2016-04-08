@@ -28,7 +28,7 @@ public class ClassDiagramObject extends Pane {
     VBox methodsContainer;
 
     //the class name text
-    public Text classNameText;
+    Text classNameText;
     //the variables name text
     Text variablesNameText;
     //the methods text
