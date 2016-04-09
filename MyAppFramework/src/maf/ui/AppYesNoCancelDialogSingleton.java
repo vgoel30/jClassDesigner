@@ -93,7 +93,7 @@ public class AppYesNoCancelDialogSingleton extends Stage {
         cancelButton.setOnAction(yesNoCancelHandler);
 
         // NOW ORGANIZE OUR BUTTONS
-        HBox buttonBox = new HBox();
+        HBox buttonBox = new HBox(10);
         buttonBox.getChildren().add(yesButton);
         buttonBox.getChildren().add(noButton);
         buttonBox.getChildren().add(cancelButton);

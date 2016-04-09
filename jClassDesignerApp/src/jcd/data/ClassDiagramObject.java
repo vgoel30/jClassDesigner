@@ -47,7 +47,7 @@ public class ClassDiagramObject extends Pane {
         rootContainer.setLayoutX(x);
         rootContainer.setLayoutY(y);
 
-        packageNameText = new Text("Package");
+        packageNameText = new Text("");
         packageContainer = new VBox(packageNameText);
 
         //The first container which has the class name
