@@ -29,6 +29,7 @@ public class GridEditController {
     static ArrayList<String> classNames = new ArrayList<>();
     static ArrayList<String> packageNames = new ArrayList<>();
     static ArrayList<String> classPackageCombos = new ArrayList<>();
+    
 
     AppTemplate app;
 
@@ -66,8 +67,10 @@ public class GridEditController {
                 ClassDiagramObject objectToPut = new ClassDiagramObject(canvas, x, y);
                 diagramEditController.attachClassDiagramEventHandlers(objectToPut);
                 workspace.disableButtons(true);
+                dataManager.classesOnCanvas.add(objectToPut);
             }
-
+            //System.out.println(canvas.getChildren());
+            System.out.println(dataManager.classesOnCanvas);
         });
 
     }
@@ -81,7 +84,6 @@ public class GridEditController {
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
         } catch (IOException ioe) {
-            ioe.printStackTrace();
         }
     }
 }

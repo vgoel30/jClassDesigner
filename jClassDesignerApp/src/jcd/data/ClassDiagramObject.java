@@ -18,6 +18,7 @@ import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
  * @author varungoel
  */
 public class ClassDiagramObject extends Pane {
+    String diagramType = "class";
 
     //this will hold the three panes and serve as the skeleton for the diagram
     VBox rootContainer;
@@ -80,7 +81,7 @@ public class ClassDiagramObject extends Pane {
     private void setStandardDimensions() {
         rootContainer.setMinHeight(250);
         rootContainer.setMinWidth(175);
-        rootContainer.setMaxWidth(400);
+        rootContainer.setMaxWidth(450);
 
         packageContainer.setMinHeight(20);
         packageContainer.setMinWidth(100);
@@ -90,14 +91,17 @@ public class ClassDiagramObject extends Pane {
         //binding will allow easier resizing
         nameContainer.minWidthProperty().bind(rootContainer.minWidthProperty());
         nameContainer.maxWidthProperty().bind(rootContainer.maxWidthProperty());
+        nameContainer.prefWidthProperty().bind(rootContainer.prefWidthProperty());
 
         variablesContainer.setMinHeight(100);
         variablesContainer.minWidthProperty().bind(rootContainer.minWidthProperty());
         variablesContainer.maxWidthProperty().bind(rootContainer.maxWidthProperty());
+        variablesContainer.prefWidthProperty().bind(rootContainer.prefWidthProperty());
 
         methodsContainer.setMinHeight(100);
         methodsContainer.minWidthProperty().bind(rootContainer.minWidthProperty());
         methodsContainer.maxWidthProperty().bind(rootContainer.maxWidthProperty());
+        methodsContainer.prefWidthProperty().bind(rootContainer.prefWidthProperty());
 
         //set the wrapping widths
         packageNameText.setWrappingWidth(95);
@@ -108,6 +112,18 @@ public class ClassDiagramObject extends Pane {
 
     public VBox getRootContainer() {
         return this.rootContainer;
+    }
+    
+    public VBox getPackageContainer() {
+        return this.packageContainer;
+    }
+    
+    public VBox getMethodsContainer() {
+        return this.methodsContainer;
+    }
+    
+    public VBox getVariablesContainer() {
+        return this.variablesContainer;
     }
 
     public Text getClassNameText() {
@@ -132,6 +148,10 @@ public class ClassDiagramObject extends Pane {
 
         rootContainer.getStyleClass().add(DIAGRAM_CONTAINER);
 
+    }
+    
+    public String toString(){
+        return diagramType+ ": " + this.classNameText.getText();
     }
 
 }

@@ -8,8 +8,6 @@ package jcd.controller;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import static jcd.controller.GridEditController.selectedClassDiagram;
-import static jcd.controller.GridEditController.classNames;
-import static jcd.controller.GridEditController.packageNames;
 import static jcd.controller.GridEditController.classPackageCombos;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
@@ -50,7 +48,7 @@ public class DiagramEditController {
     public void doFancyNameShitForClass(String oldValue, String newValue, String classPackageName) {
         classPackageCombos.remove(oldValue + ":" + classPackageName);
         classPackageCombos.add(newValue + ":" + classPackageName);
-        System.out.println(classPackageCombos);
+        //System.out.println(classPackageCombos);
     }
 
     /**
@@ -82,7 +80,7 @@ public class DiagramEditController {
     public void doFancyNameShitForPackage(String oldValue, String newValue, String className) {
         classPackageCombos.remove(className + ":" + oldValue);
         classPackageCombos.add(className + ":" + newValue);
-        System.out.println(classPackageCombos);
+        //System.out.println(classPackageCombos);
     }
     
     public void validatePackageName(String newPackageName, TextField packageNameField, String oldValue, String className){
@@ -95,8 +93,8 @@ public class DiagramEditController {
             alert.setHeaderText(null);
             alert.setContentText("Package with this class already exists");
             alert.showAndWait();
-            selectedClassDiagram.getClassNameText().setText("Class Name");
-            packageNameField.setText("Package Name");
+            selectedClassDiagram.getPackageNameText().setText("");
+            packageNameField.setText("");
         }
         else {
             selectedClassDiagram.getPackageNameText().setText(newPackageName);
@@ -105,14 +103,12 @@ public class DiagramEditController {
 
     }
     
-    
-
     public void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
         diagram.getRootContainer().setOnMouseClicked(mouseClicked -> {
             if (workspace.selectionActive) {
-                System.out.println("Clicked on class diagram object");
+                System.out.println("Layout X:" + diagram.getRootContainer().getLayoutX());
                 diagram.getRootContainer().getStyleClass().add(SELECTED_DIAGRAM_CONTAINER);
 
                 if (selectedClassDiagram != null) {

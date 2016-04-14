@@ -5,6 +5,7 @@
  */
 package jcd.data;
 
+import java.util.ArrayList;
 import jcd.gui.Workspace;
 import maf.AppTemplate;
 import maf.components.AppDataComponent;
@@ -17,6 +18,9 @@ public class DataManager implements AppDataComponent{
     
     // THIS IS A SHARED REFERENCE TO THE APPLICATION
     AppTemplate app;
+    
+    //this will keep track of all the classes currently on the canvas
+    public ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
     
     /**
      * THis constructor creates the data manager and sets up the

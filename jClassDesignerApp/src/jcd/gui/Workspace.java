@@ -221,8 +221,8 @@ public final class Workspace extends AppWorkspaceComponent {
         //setting up the editing toolbar
         editToolbar = new VBox();
         //the first row
-        classNameContainer = new HBox(75);
-        classNameLabel = new Label("Class Name");
+        classNameContainer = new HBox(40);
+        classNameLabel = new Label("Class/Interface ");
         classNameField = new TextField();
         //testing the event handler for text field
 //        classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -234,7 +234,7 @@ public final class Workspace extends AppWorkspaceComponent {
         editToolbar.getChildren().add(classNameContainer);
 
         //the second row
-        packageNameContainer = new HBox(75);
+        packageNameContainer = new HBox(70);
         packageNameLabel = new Label("Package      ");
         packageNameField = new TextField();
         packageNameContainer.getChildren().add(packageNameLabel);
@@ -262,7 +262,10 @@ public final class Workspace extends AppWorkspaceComponent {
         editToolbar.getChildren().add(fourthRow);
         variablesTable = new TableView();
         variablesTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Type"), new TableColumn("Static"), new TableColumn("Access"));
-        fourthRow.getChildren().add(variablesTable);
+        
+        ScrollPane variableScroll = new ScrollPane(variablesTable);
+        fourthRow.getChildren().add(variableScroll);
+        variablesTable.setMinWidth(400);
 
         //the 5th and final row
         fifthRow = new VBox(10);
@@ -273,8 +276,13 @@ public final class Workspace extends AppWorkspaceComponent {
         methodsDecrementButton = gui.putButtonInContainer(methodsContainer, DECREMENT_ICON.toString(), DECREMENT_TOOLTIP.toString(), false);
         fifthRow.getChildren().add(methodsContainer);
         editToolbar.getChildren().add(fifthRow);
-        fifthRow.getChildren().add(new TableView());
+        methodsTable = new TableView();
+        methodsTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Return"), new TableColumn("Static"), new TableColumn("Abstract"), new TableColumn("Access"));
 
+        ScrollPane methodsScroll = new ScrollPane(methodsTable);
+        fifthRow.getChildren().add(methodsScroll);
+        variablesTable.setMinWidth(400);
+        
         // AND NOW SETUP THE WORKSPACE
         workspace = new BorderPane();
 
@@ -365,7 +373,7 @@ public final class Workspace extends AppWorkspaceComponent {
     }
 
     /**
-     *
+     * Disable certain buttons depending on when selection is active or not
      * @param disable
      */
     public void disableButtons(boolean disable) {
