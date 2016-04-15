@@ -9,15 +9,19 @@ import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import jcd.controller.GridEditController;
+import jcd.gui.Workspace;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINER;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINERS;
 import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
+import static maf.components.AppStyleArbiter.SELECTED_DIAGRAM_CONTAINER;
 
 /**
  *
  * @author varungoel
  */
 public class ClassDiagramObject extends Pane {
+
     String diagramType = "class";
 
     //this will hold the three panes and serve as the skeleton for the diagram
@@ -76,8 +80,8 @@ public class ClassDiagramObject extends Pane {
 
         initStyle();
     }
-    
-    public void putOnCanvas(Pane root){
+
+    public void putOnCanvas(Pane root) {
         root.getChildren().add(rootContainer);
     }
 
@@ -117,15 +121,15 @@ public class ClassDiagramObject extends Pane {
     public VBox getRootContainer() {
         return this.rootContainer;
     }
-    
+
     public VBox getPackageContainer() {
         return this.packageContainer;
     }
-    
+
     public VBox getMethodsContainer() {
         return this.methodsContainer;
     }
-    
+
     public VBox getVariablesContainer() {
         return this.variablesContainer;
     }
@@ -134,14 +138,24 @@ public class ClassDiagramObject extends Pane {
         return this.classNameText;
     }
     
+    public void setClassNameText(String packageName) {
+        this.classNameText.setText(packageName);
+    }
+
     public Text getPackageNameText() {
         return this.packageNameText;
     }
-    
-    public void setDiagramType(String type){
+
+    public void setPackageNameText(String packageName) {
+        this.packageNameText.setText(packageName);
+    }
+
+    public void setDiagramType(String type) {
         diagramType = type;
     }
 
+   
+    
     //set the style for the diagram
     private void initStyle() {
         packageContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
@@ -157,9 +171,11 @@ public class ClassDiagramObject extends Pane {
         rootContainer.getStyleClass().add(DIAGRAM_CONTAINER);
 
     }
-    
-    public String toString(){
-        return diagramType+ ": " + this.classNameText.getText();
+
+    public String toString() {
+        return diagramType + ": " + this.classNameText.getText();
     }
+    
+    
 
 }

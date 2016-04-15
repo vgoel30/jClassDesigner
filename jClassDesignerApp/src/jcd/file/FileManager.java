@@ -75,7 +75,7 @@ public class FileManager implements AppFileComponent {
         fillArrayWithDiagrams(dataManager.classesOnCanvas, arrayBuilder);
         JsonArray diagramsArray = arrayBuilder.build();
 
-        System.out.println(diagramsArray);
+        //System.out.println(diagramsArray);
 
         // THEN PUT IT ALL TOGETHER IN A JsonObject
         JsonObject dataManagerJSO = Json.createObjectBuilder()
@@ -191,15 +191,22 @@ public class FileManager implements AppFileComponent {
     public ClassDiagramObject loadClassDiagram(JsonObject jsonDiagram) {
         
         
-        JsonArray dimensionsArray = jsonDiagram.getJsonArray(JSON_DIAGRAMS_LIST);
+        JsonArray dimensionsArray = jsonDiagram.getJsonArray(JSON_DIAGRAM_DIMENSIONS);
         JsonObject dimensionsJsonObject = dimensionsArray.getJsonObject(0);
         
         //get the x and y 
         int x = dimensionsJsonObject.getInt(DIAGRAM_X);
         int y = dimensionsJsonObject.getInt(DIAGRAM_Y);
         
+        System.out.println("X " + x );
+        System.out.println("Y  " + y);
+        
         ClassDiagramObject toAdd = new ClassDiagramObject(x, y);   
         toAdd.setDiagramType(CLASS);
+        
+        //setting the class and package names
+        toAdd.setPackageNameText(jsonDiagram.getString(PACKAGE_NAME));
+        toAdd.setClassNameText(jsonDiagram.getString(DIAGRAM_NAME));
 
         int rootContainerWidth = dimensionsJsonObject.getInt(ROOT_CONTAINER_WIDTH);
         int rootContainerHeight = dimensionsJsonObject.getInt(ROOT_CONTAINER_HEIGHT);
@@ -208,8 +215,15 @@ public class FileManager implements AppFileComponent {
         
         int packageContainerWidth = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_WIDTH);
         int packageContainerHeight = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_HEIGHT);
-
-        toAdd.getPackageContainer().setPrefSize(packageContainerWidth, packageContainerWidth);
+        toAdd.getPackageContainer().setPrefSize(packageContainerWidth, packageContainerHeight);
+        
+        int methodsContainerWidth = dimensionsJsonObject.getInt(METHODS_CONTAINER_WIDTH);
+        int methodsContainerHeight = dimensionsJsonObject.getInt(METHODS_CONTAINER_HEIGHT);
+        toAdd.getPackageContainer().setPrefSize(methodsContainerWidth, methodsContainerHeight);
+        
+        int variablesContainerWidth = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_WIDTH);
+        int variablesContainerHeight = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_HEIGHT);
+        toAdd.getPackageContainer().setPrefSize(variablesContainerWidth, variablesContainerHeight);
         
         return toAdd;
     }

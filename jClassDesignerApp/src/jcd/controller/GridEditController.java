@@ -25,10 +25,10 @@ import maf.AppTemplate;
 public class GridEditController {
 
     //THE CURRENT SELECTED CLASS DIAGRAM
-    static ClassDiagramObject selectedClassDiagram = null;
-    static ArrayList<String> classNames = new ArrayList<>();
-    static ArrayList<String> packageNames = new ArrayList<>();
-    static ArrayList<String> classPackageCombos = new ArrayList<>();
+   public static ClassDiagramObject selectedClassDiagram = null;
+    public static ArrayList<String> classNames = new ArrayList<>();
+    public static ArrayList<String> packageNames = new ArrayList<>();
+   public static ArrayList<String> classPackageCombos = new ArrayList<>();
     
 
     AppTemplate app;
