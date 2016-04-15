@@ -6,6 +6,7 @@
 package jcd.data;
 
 import java.util.ArrayList;
+import javafx.scene.layout.Pane;
 import jcd.gui.Workspace;
 import maf.AppTemplate;
 import maf.components.AppDataComponent;
@@ -32,9 +33,20 @@ public class DataManager implements AppDataComponent{
 	// KEEP THE APP FOR LATER
 	app = initApp;
     }
+    
+    public void addClassDiagram(ClassDiagramObject diagramToAdd){
+        classesOnCanvas.add(diagramToAdd);
+       // ((Workspace)app.getWorkspaceComponent()).getCanvas().getChildren().add(diagramToAdd.getRootContainer());
+        //System.out.println(((Workspace)app.getWorkspaceComponent()).getCanvas().getChildren());
+    }
+    
+    public Pane getRenderingPane(){
+        return ((Workspace)app.getWorkspaceComponent()).getCanvas();
+    }
 
     @Override
     public void reset() {
+        //remove all the children
         ((Workspace)app.getWorkspaceComponent()).getCanvas().getChildren().clear();
     }
 }

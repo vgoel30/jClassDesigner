@@ -122,6 +122,7 @@ public class FileManager implements AppFileComponent {
     private JsonObject makeClassDiagramJsonObject(ClassDiagramObject diagram) {
         JsonObject jso = Json.createObjectBuilder().add(DIAGRAM_TYPE, "class").
                 add(DIAGRAM_NAME,diagram.getClassNameText().getText()).
+                add(PACKAGE_NAME,diagram.getPackageNameText().getText()).
                 add(JSON_DIAGRAM_DIMENSIONS, makeDimensionsJsonArray(diagram))
                 .build();
 
@@ -175,4 +176,3 @@ public class FileManager implements AppFileComponent {
     }
 
 }
-

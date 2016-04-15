@@ -369,7 +369,6 @@ public final class Workspace extends AppWorkspaceComponent {
             selected.getStyleClass().remove("pressed");
             selected = null;
         }
-//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
