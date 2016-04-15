@@ -5,8 +5,10 @@
  */
 package jcd.file;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -18,6 +20,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
@@ -37,11 +40,13 @@ public class FileManager implements AppFileComponent {
 
     //Class or Interface
     static final String DIAGRAM_TYPE = "diagram_type";
+    static final String CLASS = "class";
+    static final String INTERFACE = "interface";
     //The dimensions of the diagram
     static final String JSON_DIAGRAM_DIMENSIONS = "dimensions";
-    
+
     static final String PACKAGE_NAME = "package_name";
-    
+
     static final String DIAGRAM_NAME = "diagram_name";
 
     //the coordinates of the diagram
@@ -65,18 +70,18 @@ public class FileManager implements AppFileComponent {
         StringWriter sw = new StringWriter();
 
         DataManager dataManager = (DataManager) data;
-        
+
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         fillArrayWithDiagrams(dataManager.classesOnCanvas, arrayBuilder);
         JsonArray diagramsArray = arrayBuilder.build();
-        
+
         System.out.println(diagramsArray);
-        
+
         // THEN PUT IT ALL TOGETHER IN A JsonObject
         JsonObject dataManagerJSO = Json.createObjectBuilder()
                 .add(JSON_DIAGRAMS_LIST, diagramsArray)
                 .build();
-        
+
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
         Map<String, Object> properties = new HashMap<>(1);
         properties.put(JsonGenerator.PRETTY_PRINTING, true);
@@ -84,7 +89,7 @@ public class FileManager implements AppFileComponent {
         JsonWriter jsonWriter = writerFactory.createWriter(sw);
         jsonWriter.writeObject(dataManagerJSO);
         jsonWriter.close();
-        
+
         // INIT THE WRITER
         OutputStream os = new FileOutputStream(filePath);
         JsonWriter jsonFileWriter = Json.createWriter(os);
@@ -94,7 +99,6 @@ public class FileManager implements AppFileComponent {
         pw.write(prettyPrinted);
         pw.close();
     }
-    
 
     /**
      * Helper method that will fill the JSON array with the diagrams present on
@@ -116,13 +120,14 @@ public class FileManager implements AppFileComponent {
 
     /**
      * Makes a class diagram object in a JSON representation for saving
+     *
      * @param diagram
-     * @return 
+     * @return
      */
     private JsonObject makeClassDiagramJsonObject(ClassDiagramObject diagram) {
         JsonObject jso = Json.createObjectBuilder().add(DIAGRAM_TYPE, "class").
-                add(DIAGRAM_NAME,diagram.getClassNameText().getText()).
-                add(PACKAGE_NAME,diagram.getPackageNameText().getText()).
+                add(DIAGRAM_NAME, diagram.getClassNameText().getText()).
+                add(PACKAGE_NAME, diagram.getPackageNameText().getText()).
                 add(JSON_DIAGRAM_DIMENSIONS, makeDimensionsJsonArray(diagram))
                 .build();
 
@@ -131,8 +136,9 @@ public class FileManager implements AppFileComponent {
 
     /**
      * Builds and returns the dimension array for a diagram object
+     *
      * @param diagram
-     * @return 
+     * @return
      */
     private JsonArray makeDimensionsJsonArray(ClassDiagramObject diagram) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
@@ -141,7 +147,7 @@ public class FileManager implements AppFileComponent {
         VBox packageContainer = diagram.getPackageContainer();
         VBox methodsContainer = diagram.getMethodsContainer();
         VBox variablesContainer = diagram.getVariablesContainer();
-        
+
         JsonObject jso = Json.createObjectBuilder()
                 .add(DIAGRAM_X, rootContainer.getLayoutX())
                 .add(DIAGRAM_Y, rootContainer.getLayoutY())
@@ -162,7 +168,60 @@ public class FileManager implements AppFileComponent {
 
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        DataManager dataManager = (DataManager) data;
+        dataManager.reset();
+        System.out.println("LOAD DATA CALLED");
+//        ClassDiagramObject toAdd = new ClassDiagramObject(232, 232);
+//        dataManager.addClassDiagram(toAdd);
+//        toAdd.putOnCanvas(dataManager.getRenderingPane());
+
+        // LOAD THE JSON FILE WITH ALL THE DATA
+        JsonObject json = loadJSONFile(filePath);
+
+        // AND NOW LOAD ALL THE SHAPES
+        JsonArray jsonDiagramsArray = json.getJsonArray(JSON_DIAGRAMS_LIST);
+        for (int i = 0; i < jsonDiagramsArray.size(); i++) {
+            JsonObject jsonDiagram = jsonDiagramsArray.getJsonObject(i);
+            ClassDiagramObject classDiagram = loadClassDiagram(jsonDiagram);
+            dataManager.classesOnCanvas.add(classDiagram);
+            classDiagram.putOnCanvas(dataManager.getRenderingPane());
+        }
+    }
+
+    public ClassDiagramObject loadClassDiagram(JsonObject jsonDiagram) {
+        
+        
+        JsonArray dimensionsArray = jsonDiagram.getJsonArray(JSON_DIAGRAMS_LIST);
+        JsonObject dimensionsJsonObject = dimensionsArray.getJsonObject(0);
+        
+        //get the x and y 
+        int x = dimensionsJsonObject.getInt(DIAGRAM_X);
+        int y = dimensionsJsonObject.getInt(DIAGRAM_Y);
+        
+        ClassDiagramObject toAdd = new ClassDiagramObject(x, y);   
+        toAdd.setDiagramType(CLASS);
+
+        int rootContainerWidth = dimensionsJsonObject.getInt(ROOT_CONTAINER_WIDTH);
+        int rootContainerHeight = dimensionsJsonObject.getInt(ROOT_CONTAINER_HEIGHT);
+
+        toAdd.getRootContainer().setPrefSize(rootContainerWidth, rootContainerHeight);
+        
+        int packageContainerWidth = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_WIDTH);
+        int packageContainerHeight = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_HEIGHT);
+
+        toAdd.getPackageContainer().setPrefSize(packageContainerWidth, packageContainerWidth);
+        
+        return toAdd;
+    }
+
+    // HELPER METHOD FOR LOADING DATA FROM A JSON FORMAT
+    private JsonObject loadJSONFile(String jsonFilePath) throws IOException {
+        InputStream is = new FileInputStream(jsonFilePath);
+        JsonReader jsonReader = Json.createReader(is);
+        JsonObject json = jsonReader.readObject();
+        jsonReader.close();
+        is.close();
+        return json;
     }
 
     @Override

@@ -47,6 +47,7 @@ public class DataManager implements AppDataComponent{
     @Override
     public void reset() {
         //remove all the children
+        classesOnCanvas.clear();
         ((Workspace)app.getWorkspaceComponent()).getCanvas().getChildren().clear();
     }
 }

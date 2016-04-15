@@ -63,14 +63,16 @@ public class GridEditController {
                 if (y > canvas.getHeight() - 300) {
                     canvas.setMinHeight(canvas.getHeight() + 500);
                 }
-
-                ClassDiagramObject objectToPut = new ClassDiagramObject(canvas, x, y);
+                
+                //initalize a class diagram object
+                ClassDiagramObject objectToPut = new ClassDiagramObject(x, y);
+                //render it on the canvas
+                objectToPut.putOnCanvas(canvas);
                 diagramEditController.attachClassDiagramEventHandlers(objectToPut);
                 workspace.disableButtons(true);
                 dataManager.classesOnCanvas.add(objectToPut);
             }
-            //System.out.println(canvas.getChildren());
-            System.out.println(dataManager.classesOnCanvas);
+            
         });
 
     }

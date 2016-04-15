@@ -364,7 +364,7 @@ public final class Workspace extends AppWorkspaceComponent {
         classNameField.setText("");
         packageNameField.setText("");
         disableButtons(true);
-        canvas.getChildren().clear();
+       // canvas.getChildren().clear();
         if (selected != null) {
             selected.getStyleClass().remove("pressed");
             selected = null;

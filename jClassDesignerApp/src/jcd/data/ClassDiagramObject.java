@@ -41,7 +41,7 @@ public class ClassDiagramObject extends Pane {
     //the methods text
     Text methodsNameText;
 
-    public ClassDiagramObject(Pane root, double x, double y) {
+    public ClassDiagramObject(double x, double y) {
         rootContainer = new VBox();
 
         //set the desired x and y coordinates
@@ -71,10 +71,14 @@ public class ClassDiagramObject extends Pane {
         rootContainer.getChildren().add(variablesContainer);
         rootContainer.getChildren().add(methodsContainer);
 
-        root.getChildren().add(rootContainer);
+        //root.getChildren().add(rootContainer);
         setStandardDimensions();
 
         initStyle();
+    }
+    
+    public void putOnCanvas(Pane root){
+        root.getChildren().add(rootContainer);
     }
 
     //sets the standard dimensions for the containers inside the boxes
@@ -132,6 +136,10 @@ public class ClassDiagramObject extends Pane {
     
     public Text getPackageNameText() {
         return this.packageNameText;
+    }
+    
+    public void setDiagramType(String type){
+        diagramType = type;
     }
 
     //set the style for the diagram
