@@ -5,15 +5,8 @@
  */
 package jcd.controller;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
-import static jcd.controller.GridEditController.selectedClassDiagram;
-import static jcd.controller.GridEditController.classPackageCombos;
-import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
-import jcd.gui.Workspace;
 import maf.AppTemplate;
-import static maf.components.AppStyleArbiter.SELECTED_DIAGRAM_CONTAINER;
 
 /**
  *

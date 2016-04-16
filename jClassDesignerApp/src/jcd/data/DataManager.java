@@ -59,7 +59,6 @@ public class DataManager implements AppDataComponent{
 
         diagram.getRootContainer().setOnMouseClicked(mouseClicked -> {
             if (workspace.selectionActive) {
-                System.out.println("Layout X:" + diagram.getRootContainer().getLayoutX());
                 diagram.getRootContainer().getStyleClass().add(SELECTED_DIAGRAM_CONTAINER);
 
                 if (selectedClassDiagram != null) {
@@ -81,7 +80,7 @@ public class DataManager implements AppDataComponent{
                 if (selectedClassDiagram.equals(diagram) && workspace.selectionActive) {
                     workspace.drawingActive = false;
                     diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getSceneY() - 50);
-                    diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX() - 400);
+                    diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX() - 450);
 
                 }
             }

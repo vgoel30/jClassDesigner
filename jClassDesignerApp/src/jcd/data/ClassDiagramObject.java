@@ -8,6 +8,8 @@ package jcd.data;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import jcd.controller.GridEditController;
 import jcd.gui.Workspace;
@@ -44,6 +46,11 @@ public class ClassDiagramObject extends Pane {
     Text variablesNameText;
     //the methods text
     Text methodsNameText;
+    
+    Line leftLine;
+    Line rightLine;
+    Line topLine;
+    Line bottomLine;
 
     public ClassDiagramObject(double x, double y) {
         rootContainer = new VBox();
@@ -74,6 +81,11 @@ public class ClassDiagramObject extends Pane {
         rootContainer.getChildren().add(nameContainer);
         rootContainer.getChildren().add(variablesContainer);
         rootContainer.getChildren().add(methodsContainer);
+        
+        leftLine = new Line();
+        rightLine = new Line();
+        topLine = new Line();
+        bottomLine = new Line();
 
         //root.getChildren().add(rootContainer);
         setStandardDimensions();
@@ -83,6 +95,7 @@ public class ClassDiagramObject extends Pane {
 
     public void putOnCanvas(Pane root) {
         root.getChildren().add(rootContainer);
+        root.getChildren().add(topLine);
     }
 
     //sets the standard dimensions for the containers inside the boxes
@@ -90,6 +103,34 @@ public class ClassDiagramObject extends Pane {
         rootContainer.setMinHeight(250);
         rootContainer.setMinWidth(175);
         rootContainer.setMaxWidth(450);
+        
+        topLine.startXProperty().bind(rootContainer.layoutXProperty());
+        topLine.startYProperty().bind(rootContainer.layoutYProperty());
+        
+        topLine.endXProperty().bind(topLine.startXProperty().add(rootContainer.widthProperty()));
+        topLine.endYProperty().bind(topLine.startYProperty());
+        
+//        leftLine.setStartX(rootContainer.getLayoutX());
+//        leftLine.setStartY(rootContainer.getLayoutY());
+//        
+//        leftLine.setEndX(rootContainer.getLayoutX() + 175);
+//        leftLine.setEndY(rootContainer.getLayoutY() );
+        
+        topLine.setStroke(Color.YELLOW);
+        topLine.setStrokeWidth(5);
+        
+        topLine.setOnMouseClicked(e -> {
+            System.out.println("HOLA");
+            double original = e.getSceneY();
+            topLine.setOnMouseDragged(f -> {
+            System.out.println("DRAGGY");
+            rootContainer.setLayoutY(f.getSceneY());
+            rootContainer.setPrefHeight(f.getSceneY()-original+rootContainer.getHeight());
+        });
+        });
+        
+        System.out.println("MMI" + topLine.getStartX());
+        System.out.println(topLine.endXProperty());
 
         packageContainer.setMinHeight(20);
         
