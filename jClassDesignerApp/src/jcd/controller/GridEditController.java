@@ -45,7 +45,7 @@ public class GridEditController {
     public void addClassDiagram(Pane canvas) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         if (selectedClassDiagram != null) {
-            diagramEditController.restoreSelectedProperties(selectedClassDiagram);
+            dataManager.restoreSelectedProperties(selectedClassDiagram);
             selectedClassDiagram = null;
             
             workspace.disableButtons(true);
@@ -68,7 +68,7 @@ public class GridEditController {
                 ClassDiagramObject objectToPut = new ClassDiagramObject(x, y);
                 //render it on the canvas
                 objectToPut.putOnCanvas(canvas);
-                diagramEditController.attachClassDiagramEventHandlers(objectToPut);
+                dataManager.attachClassDiagramEventHandlers(objectToPut);
                 workspace.disableButtons(true);
                 dataManager.classesOnCanvas.add(objectToPut);
             }

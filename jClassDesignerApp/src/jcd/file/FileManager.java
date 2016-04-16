@@ -183,6 +183,7 @@ public class FileManager implements AppFileComponent {
         for (int i = 0; i < jsonDiagramsArray.size(); i++) {
             JsonObject jsonDiagram = jsonDiagramsArray.getJsonObject(i);
             ClassDiagramObject classDiagram = loadClassDiagram(jsonDiagram);
+            dataManager.attachClassDiagramEventHandlers(classDiagram);
             dataManager.classesOnCanvas.add(classDiagram);
             classDiagram.putOnCanvas(dataManager.getRenderingPane());
         }
@@ -224,6 +225,8 @@ public class FileManager implements AppFileComponent {
         int variablesContainerWidth = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_WIDTH);
         int variablesContainerHeight = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_HEIGHT);
         toAdd.getPackageContainer().setPrefSize(variablesContainerWidth, variablesContainerHeight);
+        
+        
         
         return toAdd;
     }

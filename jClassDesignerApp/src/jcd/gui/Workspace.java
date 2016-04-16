@@ -59,6 +59,7 @@ import static jcd.PropertyType.ZOOM_OUT_ICON;
 import static jcd.PropertyType.ZOOM_OUT_TOOLTIP;
 import jcd.controller.DiagramEditController;
 import jcd.controller.GridEditController;
+import jcd.data.DataManager;
 import maf.AppTemplate;
 import static maf.components.AppStyleArbiter.CHECKBOX;
 import static maf.components.AppStyleArbiter.CLASS_FILE_BUTTON;
@@ -158,7 +159,7 @@ public final class Workspace extends AppWorkspaceComponent {
     GridEditController gridEditController;
     DiagramEditController diagramEditController;
 
-    public Workspace(AppTemplate initApp) throws IOException {
+    public Workspace(AppTemplate initApp) throws IOException, Exception {
         // KEEP THIS FOR LATER
         app = initApp;
 
@@ -297,9 +298,11 @@ public final class Workspace extends AppWorkspaceComponent {
 
     }
 
-    public void setupHandlers() {
+    public void setupHandlers() throws Exception {
         // MAKE THE GRID CONTROLLER	
         gridEditController = new GridEditController(app);
+        
+        DataManager dataManager = new DataManager(app);
 
         //MAKE THE DIAGRAM CONTROLLER
         // MAKE THE EDIT CONTROLLER
@@ -339,22 +342,22 @@ public final class Workspace extends AppWorkspaceComponent {
         
         //testing the event handler for text field
         classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            diagramEditController.doFancyNameShitForClass(oldValue, newValue, packageNameField.getText());
+            dataManager.doFancyNameShitForClass(oldValue, newValue, packageNameField.getText());
 
             //when the enter key is clicked, validate the name of the class
             classNameField.setOnAction((event) -> {
-                diagramEditController.validateClassName(classNameField.getText(), classNameField, oldValue, packageNameField.getText());
+                dataManager.validateClassName(classNameField.getText(), classNameField, oldValue, packageNameField.getText());
             });
         });
 
         //when the enter key is clicked, validate the name of the package
         packageNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            diagramEditController.doFancyNameShitForPackage(oldValue, newValue, classNameField.getText());
+            dataManager.doFancyNameShitForPackage(oldValue, newValue, classNameField.getText());
             
             
             packageNameField.setOnAction((event) -> {
 //                diagramEditController.validatePackageName(packageNameField.getText(), packageNameField, oldValue, classNameField.getText());
-                   diagramEditController.validatePackageName(packageNameField.getText(), packageNameField, oldValue, classNameField.getText());
+                   dataManager.validatePackageName(packageNameField.getText(), packageNameField, oldValue, classNameField.getText());
             });
         });
     }
