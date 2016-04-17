@@ -24,11 +24,8 @@ import maf.AppTemplate;
  */
 public class GridEditController {
 
-    //THE CURRENT SELECTED CLASS DIAGRAM
-   public static ClassDiagramObject selectedClassDiagram = null;
-    public static ArrayList<String> classNames = new ArrayList<>();
-    public static ArrayList<String> packageNames = new ArrayList<>();
-   public static ArrayList<String> classPackageCombos = new ArrayList<>();
+    
+   
     
 
     AppTemplate app;
@@ -44,9 +41,9 @@ public class GridEditController {
 
     public void addClassDiagram(Pane canvas) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        if (selectedClassDiagram != null) {
-            dataManager.restoreSelectedProperties(selectedClassDiagram);
-            selectedClassDiagram = null;
+        if (DataManager.selectedClassDiagram != null) {
+            dataManager.restoreSelectedProperties(DataManager.selectedClassDiagram);
+            DataManager.selectedClassDiagram = null;
             
             workspace.disableButtons(true);
         }

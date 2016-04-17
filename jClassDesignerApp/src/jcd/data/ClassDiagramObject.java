@@ -95,7 +95,11 @@ public class ClassDiagramObject extends Pane {
 
     public void putOnCanvas(Pane root) {
         root.getChildren().add(rootContainer);
-        root.getChildren().add(topLine);
+        root.getChildren().add(leftLine);
+    }
+    
+    public  double getEndPoint(){
+        return rootContainer.getLayoutX() + rootContainer.getWidth();
     }
 
     //sets the standard dimensions for the containers inside the boxes
@@ -104,33 +108,43 @@ public class ClassDiagramObject extends Pane {
         rootContainer.setMinWidth(175);
         rootContainer.setMaxWidth(450);
         
-        topLine.startXProperty().bind(rootContainer.layoutXProperty());
-        topLine.startYProperty().bind(rootContainer.layoutYProperty());
+        leftLine.startXProperty().bind(rootContainer.layoutXProperty());
+        leftLine.startYProperty().bind(rootContainer.layoutYProperty());
         
-        topLine.endXProperty().bind(topLine.startXProperty().add(rootContainer.widthProperty()));
-        topLine.endYProperty().bind(topLine.startYProperty());
+        leftLine.endXProperty().bind(leftLine.startXProperty());
+        leftLine.endYProperty().bind(leftLine.startYProperty().add(rootContainer.heightProperty()));
         
-//        leftLine.setStartX(rootContainer.getLayoutX());
-//        leftLine.setStartY(rootContainer.getLayoutY());
+        leftLine.setStroke(Color.YELLOW);
+        leftLine.setStrokeWidth(5);
 //        
-//        leftLine.setEndX(rootContainer.getLayoutX() + 175);
-//        leftLine.setEndY(rootContainer.getLayoutY() );
-        
-        topLine.setStroke(Color.YELLOW);
-        topLine.setStrokeWidth(5);
-        
-        topLine.setOnMouseClicked(e -> {
-            System.out.println("HOLA");
-            double original = e.getSceneY();
-            topLine.setOnMouseDragged(f -> {
-            System.out.println("DRAGGY");
-            rootContainer.setLayoutY(f.getSceneY());
-            rootContainer.setPrefHeight(f.getSceneY()-original+rootContainer.getHeight());
+//        leftLine.setOnMouseClicked(e -> {
+//            double original = e.getSceneX();
+//            System.out.println("HOLA: " + original);
+//            leftLine.setOnMouseDragged(f -> {
+//            System.out.println("DRAGGY:" + f.getSceneX());
+//            rootContainer.setLayoutX(f.getSceneX()-e.getSceneX()+rootContainer.getLayoutX()-75);
+//            //rootContainer.setPrefWidth(225);
+//        });
+//        });
+        double endPoint = rootContainer.getLayoutX() + rootContainer.getWidth();
+
+        leftLine.setOnMousePressed(mouseClickedEvent -> {
+            //ADD IT TO THE PANE
+            System.out.println("HOLA: ");
+            
+            //rootContainer.setLayoutX(mouseClickedEvent.getX());
         });
-        });
         
-        System.out.println("MMI" + topLine.getStartX());
-        System.out.println(topLine.endXProperty());
+       leftLine.setOnMouseDragged(mouseDraggedEvent -> {
+           System.out.println("MASSIVE DEBUGGING STATEMENT");
+           rootContainer.setPrefWidth((this.getEndPoint() - mouseDraggedEvent.getX()));
+           rootContainer.setLayoutX(mouseDraggedEvent.getX());
+           //rootContainer.setPrefWidth((this.getEndPoint() - mouseDraggedEvent.getX()));
+       });
+       
+       leftLine.setOnMouseReleased(mouseReleasedEvent -> {
+           rootContainer.setLayoutX(mouseReleasedEvent.getX());
+       });
 
         packageContainer.setMinHeight(20);
         

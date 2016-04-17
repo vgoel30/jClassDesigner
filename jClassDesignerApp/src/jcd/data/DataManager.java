@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
-import static jcd.controller.GridEditController.classPackageCombos;
-import static jcd.controller.GridEditController.selectedClassDiagram;
 import jcd.gui.Workspace;
 import maf.AppTemplate;
 import maf.components.AppDataComponent;
@@ -94,6 +92,7 @@ public class DataManager implements AppDataComponent{
      * @param selectedClassDiagram
      */
     public void restoreSelectedProperties(ClassDiagramObject selectedClassDiagram) {
+        System.out.println("CSS REMOVAL");
         selectedClassDiagram.getRootContainer().getStyleClass().remove(SELECTED_DIAGRAM_CONTAINER);
     }
     
