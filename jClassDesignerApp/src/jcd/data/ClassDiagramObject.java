@@ -5,18 +5,14 @@
  */
 package jcd.data;
 
-import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
-import jcd.controller.GridEditController;
-import jcd.gui.Workspace;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINER;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINERS;
 import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
-import static maf.components.AppStyleArbiter.SELECTED_DIAGRAM_CONTAINER;
 
 /**
  *
@@ -24,7 +20,8 @@ import static maf.components.AppStyleArbiter.SELECTED_DIAGRAM_CONTAINER;
  */
 public class ClassDiagramObject extends Pane {
 
-    String diagramType = "class";
+    //class or interface
+    String diagramType;
 
     //this will hold the three panes and serve as the skeleton for the diagram
     VBox rootContainer;
@@ -52,8 +49,10 @@ public class ClassDiagramObject extends Pane {
     Line topLine;
     Line bottomLine;
 
-    public ClassDiagramObject(double x, double y) {
+    public ClassDiagramObject(double x, double y, String type) {
         rootContainer = new VBox();
+        
+        diagramType = type;
 
         //set the desired x and y coordinates
         rootContainer.setLayoutX(x);
@@ -220,6 +219,10 @@ public class ClassDiagramObject extends Pane {
 
         rootContainer.getStyleClass().add(DIAGRAM_CONTAINER);
 
+    }
+    
+    public String getDiagramType(){
+        return diagramType;
     }
 
     public String toString() {

@@ -76,7 +76,6 @@ public class FileManager implements AppFileComponent {
         JsonArray diagramsArray = arrayBuilder.build();
 
         //System.out.println(diagramsArray);
-
         // THEN PUT IT ALL TOGETHER IN A JsonObject
         JsonObject dataManagerJSO = Json.createObjectBuilder()
                 .add(JSON_DIAGRAMS_LIST, diagramsArray)
@@ -125,7 +124,15 @@ public class FileManager implements AppFileComponent {
      * @return
      */
     private JsonObject makeClassDiagramJsonObject(ClassDiagramObject diagram) {
-        JsonObject jso = Json.createObjectBuilder().add(DIAGRAM_TYPE, "class").
+        String type;
+
+        if (diagram.getDiagramType().equals(CLASS)) {
+            type = "class";
+        } else {
+            type = "interface";
+        }
+
+        JsonObject jso = Json.createObjectBuilder().add(DIAGRAM_TYPE, type).
                 add(DIAGRAM_NAME, diagram.getClassNameText().getText()).
                 add(PACKAGE_NAME, diagram.getPackageNameText().getText()).
                 add(JSON_DIAGRAM_DIMENSIONS, makeDimensionsJsonArray(diagram))
@@ -190,21 +197,22 @@ public class FileManager implements AppFileComponent {
     }
 
     public ClassDiagramObject loadClassDiagram(JsonObject jsonDiagram) {
-        
-        
+
         JsonArray dimensionsArray = jsonDiagram.getJsonArray(JSON_DIAGRAM_DIMENSIONS);
         JsonObject dimensionsJsonObject = dimensionsArray.getJsonObject(0);
-        
+
         //get the x and y 
         int x = dimensionsJsonObject.getInt(DIAGRAM_X);
         int y = dimensionsJsonObject.getInt(DIAGRAM_Y);
-        
-        System.out.println("X " + x );
+
+        System.out.println("X " + x);
         System.out.println("Y  " + y);
         
-        ClassDiagramObject toAdd = new ClassDiagramObject(x, y);   
-        toAdd.setDiagramType(CLASS);
-        
+        //the type of the diagram (interface/class)
+        String type = jsonDiagram.getString(DIAGRAM_TYPE);
+
+        ClassDiagramObject toAdd = new ClassDiagramObject(x, y, type);
+
         //setting the class and package names
         toAdd.setPackageNameText(jsonDiagram.getString(PACKAGE_NAME));
         toAdd.setClassNameText(jsonDiagram.getString(DIAGRAM_NAME));
@@ -213,21 +221,19 @@ public class FileManager implements AppFileComponent {
         int rootContainerHeight = dimensionsJsonObject.getInt(ROOT_CONTAINER_HEIGHT);
 
         toAdd.getRootContainer().setPrefSize(rootContainerWidth, rootContainerHeight);
-        
+
         int packageContainerWidth = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_WIDTH);
         int packageContainerHeight = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_HEIGHT);
         toAdd.getPackageContainer().setPrefSize(packageContainerWidth, packageContainerHeight);
-        
+
         int methodsContainerWidth = dimensionsJsonObject.getInt(METHODS_CONTAINER_WIDTH);
         int methodsContainerHeight = dimensionsJsonObject.getInt(METHODS_CONTAINER_HEIGHT);
         toAdd.getPackageContainer().setPrefSize(methodsContainerWidth, methodsContainerHeight);
-        
+
         int variablesContainerWidth = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_WIDTH);
         int variablesContainerHeight = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_HEIGHT);
         toAdd.getPackageContainer().setPrefSize(variablesContainerWidth, variablesContainerHeight);
-        
-        
-        
+
         return toAdd;
     }
 

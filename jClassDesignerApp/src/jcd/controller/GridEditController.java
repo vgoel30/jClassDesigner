@@ -62,7 +62,7 @@ public class GridEditController {
                 }
                 
                 //initalize a class diagram object
-                ClassDiagramObject objectToPut = new ClassDiagramObject(x, y);
+                ClassDiagramObject objectToPut = new ClassDiagramObject(x, y, "class");
                 //render it on the canvas
                 objectToPut.putOnCanvas(canvas);
                 dataManager.attachClassDiagramEventHandlers(objectToPut);

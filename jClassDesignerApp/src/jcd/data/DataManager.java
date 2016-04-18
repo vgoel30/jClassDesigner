@@ -55,6 +55,7 @@ public class DataManager implements AppDataComponent{
     public void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
+        //if the diagram has been clicked
         diagram.getRootContainer().setOnMouseClicked(mouseClicked -> {
             if (workspace.selectionActive) {
                 diagram.getRootContainer().getStyleClass().add(SELECTED_DIAGRAM_CONTAINER);

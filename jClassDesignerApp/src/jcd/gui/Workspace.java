@@ -154,6 +154,8 @@ public final class Workspace extends AppWorkspaceComponent {
     public boolean selectionActive;
     //DRAWING SHAPES
     public boolean drawingActive;
+    //SELECTING A SHAPE AND RESIZING IT
+    public boolean resizingActive;
 
     // HERE ARE THE CONTROLLERS
     GridEditController gridEditController;
@@ -175,6 +177,10 @@ public final class Workspace extends AppWorkspaceComponent {
     public Pane getCanvas() {
         return canvas;
     }
+    
+    public Scene getScene(){
+        return mainScene;
+    }
 
     public void layoutGUI() {
         FlowPane toolBarPane = gui.getToolbarPane();
@@ -182,7 +188,7 @@ public final class Workspace extends AppWorkspaceComponent {
         //SETTING UP ALL THE BUTTONS
         selectionButton = gui.initChildButton(toolBarPane, SELECTION_TOOL_ICON.toString(), SELECTION_TOOL_TOOLTIP.toString(), false);
         toolbarButtons.add(selectionButton);
-        resizeButton = gui.initChildButton(toolBarPane, RESIZE_ICON.toString(), RESIZE_TOOLTIP.toString(), true);
+        resizeButton = gui.initChildButton(toolBarPane, RESIZE_ICON.toString(), RESIZE_TOOLTIP.toString(), false);
         toolbarButtons.add(resizeButton);
         addClassButton = gui.initChildButton(toolBarPane, ADD_CLASS_ICON.toString(), ADD_CLASS_TOOLTIP.toString(), false);
         toolbarButtons.add(addClassButton);
@@ -322,6 +328,10 @@ public final class Workspace extends AppWorkspaceComponent {
             selectionActive = true;
             System.out.println("Selection was clicked");
             mainScene.getRoot().setCursor(Cursor.MOVE);
+        });
+        
+        //when the resize button is clicked
+        resizeButton.setOnAction(resizeButtonClicked ->{
         });
 
         screenshotButton.setOnAction(screenshotButtonClicked -> {
