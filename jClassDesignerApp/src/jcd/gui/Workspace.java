@@ -319,7 +319,14 @@ public final class Workspace extends AppWorkspaceComponent {
             drawingActive = true;
             selectionActive = false;
             System.out.println("Add class was clicked");
-            gridEditController.addClassDiagram(canvas);
+            gridEditController.addDiagram(canvas,"class");
+        });
+        
+        addInterfaceButton.setOnAction(e -> {
+            drawingActive = true;
+            selectionActive = false;
+            System.out.println("Add interface was clicked");
+            gridEditController.addDiagram(canvas,"interface");
         });
 
         //when the selection button is clicked

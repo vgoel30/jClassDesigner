@@ -39,7 +39,12 @@ public class GridEditController {
         diagramEditController = new DiagramEditController(initApp);
     }
 
-    public void addClassDiagram(Pane canvas) {
+    /**
+     * Adds a new diagram to the canvas
+     * @param canvas is the canvas on which the diagram is rendered
+     * @param type is the diagram type (class/interface)
+     */
+    public void addDiagram(Pane canvas, String type) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         if (DataManager.selectedClassDiagram != null) {
             dataManager.restoreSelectedProperties(DataManager.selectedClassDiagram);
@@ -62,7 +67,7 @@ public class GridEditController {
                 }
                 
                 //initalize a class diagram object
-                ClassDiagramObject objectToPut = new ClassDiagramObject(x, y, "class");
+                ClassDiagramObject objectToPut = new ClassDiagramObject(x, y, type);
                 //render it on the canvas
                 objectToPut.putOnCanvas(canvas);
                 dataManager.attachClassDiagramEventHandlers(objectToPut);
