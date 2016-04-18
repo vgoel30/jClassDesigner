@@ -69,12 +69,10 @@ public class ClassDiagramObject extends Pane {
         //The second container which has all the variables and stuff
         variablesNameText = new Text("Variables");
         variablesContainer = new VBox(variablesNameText);
-        //variablesContainer.setStyle("-fx-background-color:purple");
 
         //The third container which has all the methods and stuff
         methodsNameText = new Text("Methods");
         methodsContainer = new VBox(methodsNameText);
-        //methodsContainer.setStyle("-fx-background-color:pink");
 
         //putting it all in
         rootContainer.getChildren().add(packageContainer);
@@ -96,6 +94,7 @@ public class ClassDiagramObject extends Pane {
     public void putOnCanvas(Pane root) {
         root.getChildren().add(rootContainer);
         root.getChildren().add(leftLine);
+        root.getChildren().add(rightLine);
     }
 
     public double getEndPoint() {
@@ -108,6 +107,7 @@ public class ClassDiagramObject extends Pane {
         rootContainer.setMinWidth(175);
         rootContainer.setMaxWidth(450);
 
+        //setting up the left line
         leftLine.startXProperty().bind(rootContainer.layoutXProperty());
         leftLine.startYProperty().bind(rootContainer.layoutYProperty());
 
@@ -118,17 +118,30 @@ public class ClassDiagramObject extends Pane {
         leftLine.setStrokeWidth(5);
 
         
-
-    
         leftLine.setOnMouseDragged(mouseDraggedEvent -> {
-            
             if(this.getEndPoint() - mouseDraggedEvent.getX() >= 185 && this.getEndPoint() - mouseDraggedEvent.getX() <=450){
             rootContainer.setPrefWidth((this.getEndPoint() - mouseDraggedEvent.getX()));
             rootContainer.setLayoutX(mouseDraggedEvent.getX());
             }
         });
 
-//      
+        //setting up the right line
+        rightLine.startXProperty().bind(rootContainer.layoutXProperty().add(rootContainer.widthProperty()));
+        rightLine.startYProperty().bind(rootContainer.layoutYProperty());
+
+        rightLine.endXProperty().bind(rightLine.startXProperty());
+        rightLine.endYProperty().bind(rightLine.startYProperty().add(rootContainer.heightProperty()));
+
+        rightLine.setStroke(Color.RED);
+        rightLine.setStrokeWidth(5);
+
+        
+        rightLine.setOnMouseDragged(mouseDraggedEvent -> {
+            if(mouseDraggedEvent.getX() - rootContainer.getLayoutX() >= 185 && mouseDraggedEvent.getX() - rootContainer.getLayoutX() <=450){
+            rootContainer.setPrefWidth(mouseDraggedEvent.getX() - rootContainer.getLayoutX());
+            }
+        });
+     
 
         packageContainer.setMinHeight(20);
         packageContainer.setMinWidth(100);
