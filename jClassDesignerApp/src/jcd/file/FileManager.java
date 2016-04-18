@@ -64,21 +64,28 @@ public class FileManager implements AppFileComponent {
 
     static final String VARIABLES_CONTAINER_HEIGHT = "variables_container_height";
     static final String VARIABLES_CONTAINER_WIDTH = "variables_container_width";
+    
+    static final String CANVAS_WIDTH = "canvas_width";
+    static final String CANVAS_HEIGHT = "canvas_height";
 
     @Override
     public void saveData(AppDataComponent data, String filePath) throws IOException {
         StringWriter sw = new StringWriter();
-
+       
         DataManager dataManager = (DataManager) data;
-
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         fillArrayWithDiagrams(dataManager.classesOnCanvas, arrayBuilder);
         JsonArray diagramsArray = arrayBuilder.build();
+        
+        int canvasWidth = (int) dataManager.getRenderingPane().getWidth();
+        int canvasHeight = (int) dataManager.getRenderingPane().getHeight();
 
         //System.out.println(diagramsArray);
         // THEN PUT IT ALL TOGETHER IN A JsonObject
         JsonObject dataManagerJSO = Json.createObjectBuilder()
                 .add(JSON_DIAGRAMS_LIST, diagramsArray)
+                .add(CANVAS_WIDTH,canvasWidth)
+                .add(CANVAS_HEIGHT,canvasHeight)
                 .build();
 
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
@@ -149,7 +156,7 @@ public class FileManager implements AppFileComponent {
      */
     private JsonArray makeDimensionsJsonArray(ClassDiagramObject diagram) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-
+       
         VBox rootContainer = diagram.getRootContainer();
         VBox packageContainer = diagram.getPackageContainer();
         VBox methodsContainer = diagram.getMethodsContainer();
@@ -178,11 +185,6 @@ public class FileManager implements AppFileComponent {
         DataManager dataManager = (DataManager) data;
         dataManager.reset();
         System.out.println("LOAD DATA CALLED");
-//        ClassDiagramObject toAdd = new ClassDiagramObject(232, 232);
-//        dataManager.addClassDiagram(toAdd);
-//        toAdd.putOnCanvas(dataManager.getRenderingPane());
-
-        // LOAD THE JSON FILE WITH ALL THE DATA
         JsonObject json = loadJSONFile(filePath);
 
         // AND NOW LOAD ALL THE SHAPES
@@ -194,6 +196,10 @@ public class FileManager implements AppFileComponent {
             dataManager.classesOnCanvas.add(classDiagram);
             classDiagram.putOnCanvas(dataManager.getRenderingPane());
         }
+        int canvasWidth = json.getInt(CANVAS_WIDTH);
+        int canvasHeight = json.getInt(CANVAS_HEIGHT);
+        dataManager.getRenderingPane().minWidth(canvasWidth);
+        dataManager.getRenderingPane().minHeight(canvasHeight);
     }
 
     public ClassDiagramObject loadClassDiagram(JsonObject jsonDiagram) {
