@@ -46,7 +46,7 @@ public class ClassDiagramObject extends Pane {
     Text variablesNameText;
     //the methods text
     Text methodsNameText;
-    
+
     Line leftLine;
     Line rightLine;
     Line topLine;
@@ -81,7 +81,7 @@ public class ClassDiagramObject extends Pane {
         rootContainer.getChildren().add(nameContainer);
         rootContainer.getChildren().add(variablesContainer);
         rootContainer.getChildren().add(methodsContainer);
-        
+
         leftLine = new Line();
         rightLine = new Line();
         topLine = new Line();
@@ -97,8 +97,8 @@ public class ClassDiagramObject extends Pane {
         root.getChildren().add(rootContainer);
         root.getChildren().add(leftLine);
     }
-    
-    public  double getEndPoint(){
+
+    public double getEndPoint() {
         return rootContainer.getLayoutX() + rootContainer.getWidth();
     }
 
@@ -107,50 +107,32 @@ public class ClassDiagramObject extends Pane {
         rootContainer.setMinHeight(250);
         rootContainer.setMinWidth(175);
         rootContainer.setMaxWidth(450);
-        
+
         leftLine.startXProperty().bind(rootContainer.layoutXProperty());
         leftLine.startYProperty().bind(rootContainer.layoutYProperty());
-        
+
         leftLine.endXProperty().bind(leftLine.startXProperty());
         leftLine.endYProperty().bind(leftLine.startYProperty().add(rootContainer.heightProperty()));
-        
+
         leftLine.setStroke(Color.YELLOW);
         leftLine.setStrokeWidth(5);
-//        
-//        leftLine.setOnMouseClicked(e -> {
-//            double original = e.getSceneX();
-//            System.out.println("HOLA: " + original);
-//            leftLine.setOnMouseDragged(f -> {
-//            System.out.println("DRAGGY:" + f.getSceneX());
-//            rootContainer.setLayoutX(f.getSceneX()-e.getSceneX()+rootContainer.getLayoutX()-75);
-//            //rootContainer.setPrefWidth(225);
-//        });
-//        });
-        double endPoint = rootContainer.getLayoutX() + rootContainer.getWidth();
 
-        leftLine.setOnMousePressed(mouseClickedEvent -> {
-            //ADD IT TO THE PANE
-            System.out.println("HOLA: ");
-            
-            //rootContainer.setLayoutX(mouseClickedEvent.getX());
-        });
         
-       leftLine.setOnMouseDragged(mouseDraggedEvent -> {
-           System.out.println("MASSIVE DEBUGGING STATEMENT");
-           rootContainer.setPrefWidth((this.getEndPoint() - mouseDraggedEvent.getX()));
-           rootContainer.setLayoutX(mouseDraggedEvent.getX());
-           //rootContainer.setPrefWidth((this.getEndPoint() - mouseDraggedEvent.getX()));
-       });
-       
-       leftLine.setOnMouseReleased(mouseReleasedEvent -> {
-           rootContainer.setLayoutX(mouseReleasedEvent.getX());
-       });
+
+    
+        leftLine.setOnMouseDragged(mouseDraggedEvent -> {
+            
+            if(this.getEndPoint() - mouseDraggedEvent.getX() >= 185 && this.getEndPoint() - mouseDraggedEvent.getX() <=450){
+            rootContainer.setPrefWidth((this.getEndPoint() - mouseDraggedEvent.getX()));
+            rootContainer.setLayoutX(mouseDraggedEvent.getX());
+            }
+        });
+
+//      
 
         packageContainer.setMinHeight(20);
-        
-        packageContainer.minWidthProperty().bind(rootContainer.minWidthProperty());
-        packageContainer.maxWidthProperty().bind(rootContainer.maxWidthProperty());
-        packageContainer.prefWidthProperty().bind(rootContainer.prefWidthProperty());
+        packageContainer.setMinWidth(100);
+        packageContainer.setMaxWidth(100);;
 
         nameContainer.setMinHeight(50);
         //binding will allow easier resizing
@@ -194,7 +176,7 @@ public class ClassDiagramObject extends Pane {
     public Text getClassNameText() {
         return this.classNameText;
     }
-    
+
     public void setClassNameText(String packageName) {
         this.classNameText.setText(packageName);
     }
@@ -211,8 +193,6 @@ public class ClassDiagramObject extends Pane {
         diagramType = type;
     }
 
-   
-    
     //set the style for the diagram
     private void initStyle() {
         packageContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
@@ -232,7 +212,5 @@ public class ClassDiagramObject extends Pane {
     public String toString() {
         return diagramType + ": " + this.classNameText.getText();
     }
-    
-    
 
 }
