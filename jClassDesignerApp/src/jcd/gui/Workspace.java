@@ -57,7 +57,6 @@ import static jcd.PropertyType.ZOOM_IN_ICON;
 import static jcd.PropertyType.ZOOM_IN_TOOLTIP;
 import static jcd.PropertyType.ZOOM_OUT_ICON;
 import static jcd.PropertyType.ZOOM_OUT_TOOLTIP;
-import jcd.controller.DiagramEditController;
 import jcd.controller.GridEditController;
 import jcd.data.DataManager;
 import maf.AppTemplate;
@@ -159,7 +158,6 @@ public final class Workspace extends AppWorkspaceComponent {
 
     // HERE ARE THE CONTROLLERS
     GridEditController gridEditController;
-    DiagramEditController diagramEditController;
 
     public Workspace(AppTemplate initApp) throws IOException, Exception {
         // KEEP THIS FOR LATER
@@ -312,7 +310,6 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //MAKE THE DIAGRAM CONTROLLER
         // MAKE THE EDIT CONTROLLER
-        diagramEditController = new DiagramEditController(app);
 
         //when the user wants to add a class
         addClassButton.setOnAction(e -> {

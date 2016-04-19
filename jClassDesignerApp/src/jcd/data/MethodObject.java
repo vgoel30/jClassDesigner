@@ -15,11 +15,40 @@ public class MethodObject {
     String name;
     boolean isStatic;
     boolean isAbstract;
-    ArrayList<String> arguments;
+    ArrayList<ArgumentObject> arguments = new ArrayList<>();
     String returnType;
-    String protection;
+    String access;
+    
+    public void addArgument(ArgumentObject arg){
+        arguments.add(arg);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isIsStatic() {
+        return isStatic;
+    }
+
+    public boolean isIsAbstract() {
+        return isAbstract;
+    }
+
+    public ArrayList<ArgumentObject> getArguments() {
+        return arguments;
+    }
+
+    public String getReturnType() {
+        return returnType;
+    }
+
+    public String getAccess() {
+        return access;
+    }
+    
     
     public String toString(){
-        return protection + name + "(" + arguments + "):" + returnType;
+        return access + name + "(" + arguments + "):" + returnType;
     }
 }

@@ -144,7 +144,7 @@ public class ClassDiagramObject extends Pane {
 
         packageContainer.setMinHeight(20);
         packageContainer.setMinWidth(100);
-        packageContainer.setMaxWidth(100);;
+        packageContainer.setMaxWidth(100);
 
         nameContainer.setMinHeight(50);
         //binding will allow easier resizing

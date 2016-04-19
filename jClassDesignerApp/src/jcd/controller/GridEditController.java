@@ -31,12 +31,10 @@ public class GridEditController {
     AppTemplate app;
 
     DataManager dataManager;
-    DiagramEditController diagramEditController;
 
     public GridEditController(AppTemplate initApp) {
         app = initApp;
         dataManager = (DataManager) app.getDataComponent();
-        diagramEditController = new DiagramEditController(initApp);
     }
 
     /**
