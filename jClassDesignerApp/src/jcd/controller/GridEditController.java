@@ -70,7 +70,7 @@ public class GridEditController {
                 objectToPut.putOnCanvas(canvas);
                 dataManager.attachClassDiagramEventHandlers(objectToPut);
                 workspace.disableButtons(true);
-                dataManager.classesOnCanvas.add(objectToPut);
+                dataManager.addClassDiagram(objectToPut);
             }
             
         });

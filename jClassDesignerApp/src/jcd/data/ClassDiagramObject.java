@@ -5,6 +5,7 @@
  */
 package jcd.data;
 
+import java.util.ArrayList;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -43,11 +44,27 @@ public class ClassDiagramObject extends Pane {
     Text variablesNameText;
     //the methods text
     Text methodsNameText;
-
+    
+    //for drag to resize
     Line leftLine;
     Line rightLine;
-    Line topLine;
-    Line bottomLine;
+    
+    //helper constructor for testing load and save
+    public ClassDiagramObject(double x, double y, ArrayList<MethodObject> methods, ArrayList<VariableObject> variables){
+        
+        //iterate over all the methods
+        for(MethodObject method: methods){
+            Text toAdd = new Text(method.toString());
+            methodsContainer.getChildren().add(toAdd);
+        }
+        
+        //iterate over all the variables
+        for(VariableObject variable: variables){
+            Text toAdd = new Text(variable.toString());
+            variablesContainer.getChildren().add(toAdd);
+        }
+        
+    }
 
     public ClassDiagramObject(double x, double y, String type) {
         rootContainer = new VBox();
@@ -81,8 +98,6 @@ public class ClassDiagramObject extends Pane {
 
         leftLine = new Line();
         rightLine = new Line();
-        topLine = new Line();
-        bottomLine = new Line();
 
         //root.getChildren().add(rootContainer);
         setStandardDimensions();
@@ -113,17 +128,12 @@ public class ClassDiagramObject extends Pane {
         leftLine.endXProperty().bind(leftLine.startXProperty());
         leftLine.endYProperty().bind(leftLine.startYProperty().add(rootContainer.heightProperty()));
 
-        leftLine.setStroke(Color.YELLOW);
+        leftLine.setStroke(Color.WHITE);
         leftLine.setStrokeWidth(5);
+        leftLine.setVisible(false);
 
         
-        leftLine.setOnMouseDragged(mouseDraggedEvent -> {
-            if(this.getEndPoint() - mouseDraggedEvent.getX() >= 185 && this.getEndPoint() - mouseDraggedEvent.getX() <=450){
-            rootContainer.setPrefWidth((this.getEndPoint() - mouseDraggedEvent.getX()));
-            rootContainer.setLayoutX(mouseDraggedEvent.getX());
-            }
-        });
-
+        
         //setting up the right line
         rightLine.startXProperty().bind(rootContainer.layoutXProperty().add(rootContainer.widthProperty()));
         rightLine.startYProperty().bind(rootContainer.layoutYProperty());
@@ -131,17 +141,10 @@ public class ClassDiagramObject extends Pane {
         rightLine.endXProperty().bind(rightLine.startXProperty());
         rightLine.endYProperty().bind(rightLine.startYProperty().add(rootContainer.heightProperty()));
 
-        rightLine.setStroke(Color.RED);
+        rightLine.setStroke(Color.WHITE);
         rightLine.setStrokeWidth(5);
-
-        
-        rightLine.setOnMouseDragged(mouseDraggedEvent -> {
-            if(mouseDraggedEvent.getX() - rootContainer.getLayoutX() >= 185 && mouseDraggedEvent.getX() - rootContainer.getLayoutX() <=450){
-            rootContainer.setPrefWidth(mouseDraggedEvent.getX() - rootContainer.getLayoutX());
-            }
-        });
+        rightLine.setVisible(false);
      
-
         packageContainer.setMinHeight(20);
         packageContainer.setMinWidth(100);
         packageContainer.setMaxWidth(100);
@@ -184,6 +187,14 @@ public class ClassDiagramObject extends Pane {
     public VBox getVariablesContainer() {
         return this.variablesContainer;
     }
+    
+    public Line getLeftLine(){
+        return this.leftLine;
+    }
+    
+    public Line getRightLine(){
+        return this.rightLine;
+    }
 
     public Text getClassNameText() {
         return this.classNameText;
@@ -205,6 +216,10 @@ public class ClassDiagramObject extends Pane {
         diagramType = type;
     }
 
+    public String getDiagramType(){
+        return diagramType;
+    }
+    
     //set the style for the diagram
     private void initStyle() {
         packageContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
@@ -221,9 +236,7 @@ public class ClassDiagramObject extends Pane {
 
     }
     
-    public String getDiagramType(){
-        return diagramType;
-    }
+    
 
     public String toString() {
         return diagramType + ": " + this.classNameText.getText();

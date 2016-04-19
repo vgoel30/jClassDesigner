@@ -18,19 +18,19 @@ import static maf.components.AppStyleArbiter.SELECTED_DIAGRAM_CONTAINER;
  *
  * @author varungoel
  */
-public class DataManager implements AppDataComponent{
-    
+public class DataManager implements AppDataComponent {
+
     // THIS IS A SHARED REFERENCE TO THE APPLICATION
     AppTemplate app;
-    
+
     //this will keep track of all the classes currently on the canvas
     public ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
     //THE CURRENT SELECTED CLASS DIAGRAM
-   public static ClassDiagramObject selectedClassDiagram = null;
-    public static  ArrayList<String> classNames = new ArrayList<>();
+    public static ClassDiagramObject selectedClassDiagram = null;
+    public static ArrayList<String> classNames = new ArrayList<>();
     public static ArrayList<String> packageNames = new ArrayList<>();
-   public static ArrayList<String> classPackageCombos = new ArrayList<>();
-    
+    public static ArrayList<String> classPackageCombos = new ArrayList<>();
+
     /**
      * THis constructor creates the data manager and sets up the
      *
@@ -38,20 +38,18 @@ public class DataManager implements AppDataComponent{
      * @param initApp The application within which this data manager is serving.
      */
     public DataManager(AppTemplate initApp) throws Exception {
-	// KEEP THE APP FOR LATER
-	app = initApp;
+        // KEEP THE APP FOR LATER
+        app = initApp;
     }
-    
-    public void addClassDiagram(ClassDiagramObject diagramToAdd){
+
+    public void addClassDiagram(ClassDiagramObject diagramToAdd) {
         classesOnCanvas.add(diagramToAdd);
-       // ((Workspace)app.getWorkspaceComponent()).getCanvas().getChildren().add(diagramToAdd.getRootContainer());
-        //System.out.println(((Workspace)app.getWorkspaceComponent()).getCanvas().getChildren());
     }
-    
-    public Pane getRenderingPane(){
-        return ((Workspace)app.getWorkspaceComponent()).getCanvas();
+
+    public Pane getRenderingPane() {
+        return ((Workspace) app.getWorkspaceComponent()).getCanvas();
     }
-    
+
     public void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
@@ -59,10 +57,28 @@ public class DataManager implements AppDataComponent{
         diagram.getRootContainer().setOnMouseClicked(mouseClicked -> {
             if (workspace.selectionActive) {
                 diagram.getRootContainer().getStyleClass().add(SELECTED_DIAGRAM_CONTAINER);
+                diagram.getLeftLine().setVisible(true);
+                diagram.getRightLine().setVisible(true);
 
                 if (selectedClassDiagram != null) {
                     restoreSelectedProperties(selectedClassDiagram);
                 }
+
+                //event handlers for the left line (resizing from the left)
+                diagram.getLeftLine().setOnMouseDragged(mouseDraggedEvent -> {
+                    if (diagram.getEndPoint() - mouseDraggedEvent.getX() >= 185 && diagram.getEndPoint() - mouseDraggedEvent.getX() <= 450) {
+                        diagram.getRootContainer().setPrefWidth((diagram.getEndPoint() - mouseDraggedEvent.getX()));
+                        diagram.getRootContainer().setLayoutX(mouseDraggedEvent.getX());
+                    }
+                });
+
+                //event handlers for the right line (resizing from the right)
+                diagram.getRightLine().setOnMouseDragged(mouseDraggedEvent -> {
+                    if (mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() >= 185 && mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() <= 450) {
+                        diagram.getRootContainer().setPrefWidth(mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX());
+                    }
+                });
+
                 selectedClassDiagram = diagram;
                 //reflect the selected changes
                 workspace.classNameField.setText(diagram.getClassNameText().getText());
@@ -85,7 +101,7 @@ public class DataManager implements AppDataComponent{
             }
         });
     }
-    
+
     /**
      * Restores the appearance of the selected diagram after it has been
      * deselected
@@ -95,8 +111,10 @@ public class DataManager implements AppDataComponent{
     public void restoreSelectedProperties(ClassDiagramObject selectedClassDiagram) {
         System.out.println("CSS REMOVAL");
         selectedClassDiagram.getRootContainer().getStyleClass().remove(SELECTED_DIAGRAM_CONTAINER);
+        selectedClassDiagram.getLeftLine().setVisible(false);
+        selectedClassDiagram.getRightLine().setVisible(false);
     }
-    
+
     public void changeClassName(String oldValue, String newValue) {
         selectedClassDiagram.getClassNameText().setText(newValue);
 
@@ -139,11 +157,11 @@ public class DataManager implements AppDataComponent{
         classPackageCombos.add(className + ":" + newValue);
         //System.out.println(classPackageCombos);
     }
-    
-    public void validatePackageName(String newPackageName, TextField packageNameField, String oldValue, String className){
+
+    public void validatePackageName(String newPackageName, TextField packageNameField, String oldValue, String className) {
         String thePackageName = classPackageCombos.get(classPackageCombos.size() - 1).split(":")[1];
         classPackageCombos.remove(className + ":" + oldValue);
-        
+
         if (classPackageCombos.contains(className + ":" + thePackageName) && (classPackageCombos.indexOf(className + ":" + thePackageName) != classPackageCombos.size() - 1)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Package name error");
@@ -152,8 +170,7 @@ public class DataManager implements AppDataComponent{
             alert.showAndWait();
             selectedClassDiagram.getPackageNameText().setText("");
             packageNameField.setText("");
-        }
-        else {
+        } else {
             selectedClassDiagram.getPackageNameText().setText(newPackageName);
             classPackageCombos.add(className + ":" + newPackageName);
         }
@@ -164,6 +181,6 @@ public class DataManager implements AppDataComponent{
     public void reset() {
         //remove all the children
         classesOnCanvas.clear();
-        ((Workspace)app.getWorkspaceComponent()).getCanvas().getChildren().clear();
+        ((Workspace) app.getWorkspaceComponent()).getCanvas().getChildren().clear();
     }
 }

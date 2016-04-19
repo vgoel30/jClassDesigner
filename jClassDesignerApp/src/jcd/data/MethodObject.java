@@ -18,6 +18,17 @@ public class MethodObject {
     ArrayList<ArgumentObject> arguments = new ArrayList<>();
     String returnType;
     String access;
+
+    public MethodObject(String name, boolean isStatic, boolean isAbstract, ArrayList<ArgumentObject> arguments, String returnType, String access) {
+        this.name = name;
+        this.isStatic = isStatic;
+        this.isAbstract = isAbstract;
+        this.arguments = arguments;
+        this.returnType = returnType;
+        this.access = access;
+    }
+    
+    
     
     public void addArgument(ArgumentObject arg){
         arguments.add(arg);

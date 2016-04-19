@@ -5,7 +5,6 @@
  */
 package jcd.gui;
 
-import java.awt.Canvas;
 import javafx.scene.control.Button;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
