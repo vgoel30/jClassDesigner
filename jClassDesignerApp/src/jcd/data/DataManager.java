@@ -6,6 +6,7 @@
 package jcd.data;
 
 import java.util.ArrayList;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -71,12 +72,28 @@ public class DataManager implements AppDataComponent {
                         diagram.getRootContainer().setLayoutX(mouseDraggedEvent.getX());
                     }
                 });
+                
+                diagram.getLeftLine().setOnMouseEntered(mouseEnteredEvent -> {
+                workspace.getScene().getRoot().setCursor(Cursor.W_RESIZE);
+                });
+                
+                diagram.getLeftLine().setOnMouseExited(mouseEnteredEvent -> {
+                workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
+                });
 
                 //event handlers for the right line (resizing from the right)
                 diagram.getRightLine().setOnMouseDragged(mouseDraggedEvent -> {
                     if (mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() >= 185 && mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() <= 450) {
                         diagram.getRootContainer().setPrefWidth(mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX());
                     }
+                });
+                
+                diagram.getRightLine().setOnMouseEntered(mouseEnteredEvent -> {
+                workspace.getScene().getRoot().setCursor(Cursor.W_RESIZE);
+                });
+                
+                diagram.getRightLine().setOnMouseExited(mouseEnteredEvent -> {
+                workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
                 });
 
                 selectedClassDiagram = diagram;
