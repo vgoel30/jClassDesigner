@@ -63,7 +63,39 @@ public class ClassDiagramObject extends Pane {
     Line rightLine;
     
     //helper constructor for testing load and save
-    public ClassDiagramObject(ArrayList<MethodObject> methods, ArrayList<VariableObject> variables){
+    public ClassDiagramObject(String name,String type, ArrayList<MethodObject> methods, ArrayList<VariableObject> variables){
+        rootContainer = new VBox();
+        
+        diagramType = type;
+
+        packageNameText = new Text("");
+        packageContainer = new VBox(packageNameText);
+
+        //The first container which has the class name
+        classNameText = new Text("Name");
+        nameContainer = new VBox(classNameText);
+
+        //The second container which has all the variables and stuff
+        variablesNameText = new Text("Variables");
+        variablesContainer = new VBox(variablesNameText);
+
+        //The third container which has all the methods and stuff
+        methodsNameText = new Text("Methods");
+        methodsContainer = new VBox(methodsNameText);
+
+        //putting it all in
+        rootContainer.getChildren().add(packageContainer);
+        rootContainer.getChildren().add(nameContainer);
+        rootContainer.getChildren().add(variablesContainer);
+        rootContainer.getChildren().add(methodsContainer);
+
+        leftLine = new Line();
+        rightLine = new Line();
+
+        //root.getChildren().add(rootContainer);
+        setStandardDimensions();
+
+        initStyle();
         
         //iterate over all the methods
         for(MethodObject method: methods){
@@ -77,6 +109,8 @@ public class ClassDiagramObject extends Pane {
             variablesContainer.getChildren().add(toAdd);
         }
         
+        this.methods = methods;
+        this.variables = variables;
     }
 
     public ClassDiagramObject(double x, double y, String type) {
@@ -213,8 +247,8 @@ public class ClassDiagramObject extends Pane {
         return this.classNameText;
     }
 
-    public void setClassNameText(String packageName) {
-        this.classNameText.setText(packageName);
+    public void setClassNameText(String className) {
+        this.classNameText.setText(className);
     }
 
     public Text getPackageNameText() {

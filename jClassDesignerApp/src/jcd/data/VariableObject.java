@@ -17,7 +17,9 @@ public class VariableObject {
     
     public VariableObject(String name, String type, boolean isStatic, String access){
         this.name = name;
-        
+        this.type = type;
+        this.isStatic = isStatic;
+        this.access = access;
     }
 
     public String getName() {
@@ -28,7 +30,7 @@ public class VariableObject {
         return type;
     }
 
-    public boolean isIsStatic() {
+    public boolean getIsStatic() {
         return isStatic;
     }
 

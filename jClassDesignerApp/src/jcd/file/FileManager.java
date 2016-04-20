@@ -27,6 +27,8 @@ import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
+import jcd.data.MethodObject;
+import jcd.data.VariableObject;
 import maf.components.AppDataComponent;
 import maf.components.AppFileComponent;
 
@@ -45,6 +47,16 @@ public class FileManager implements AppFileComponent {
     static final String INTERFACE = "interface";
     //The dimensions of the diagram
     static final String JSON_DIAGRAM_DIMENSIONS = "dimensions";
+
+    //The methods of the diagram
+    static final String JSON_METHODS = "methods";
+
+    //The variables of the diagram
+    static final String JSON_VARIABLES = "variables";
+    static final String VARIABLE_NAME = "variable_name";
+    static final String VARIABLE_TYPE = "variable_type";
+    static final String VARIABLE_IS_STATIC = "variable_is_static";
+    static final String VARIABLE_ACCESS = "variable_access";
 
     static final String PACKAGE_NAME = "package_name";
 
@@ -65,28 +77,28 @@ public class FileManager implements AppFileComponent {
 
     static final String VARIABLES_CONTAINER_HEIGHT = "variables_container_height";
     static final String VARIABLES_CONTAINER_WIDTH = "variables_container_width";
-    
+
     static final String CANVAS_WIDTH = "canvas_width";
     static final String CANVAS_HEIGHT = "canvas_height";
 
-    public void testSaveData(ArrayList<ClassDiagramObject> classDiagramObjects, String filePath) throws FileNotFoundException{
+    public void testSaveData(ArrayList<ClassDiagramObject> classDiagramObjects, String filePath) throws FileNotFoundException {
         StringWriter sw = new StringWriter();
-        
+
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         fillArrayWithDiagrams(classDiagramObjects, arrayBuilder);
-        
+
         JsonArray diagramsArray = arrayBuilder.build();
-        
+
         int canvasWidth = 500;
         int canvasHeight = 500;
-        
+
         // THEN PUT IT ALL TOGETHER IN A JsonObject
         JsonObject dataManagerJSO = Json.createObjectBuilder()
                 .add(JSON_DIAGRAMS_LIST, diagramsArray)
-                .add(CANVAS_WIDTH,canvasWidth)
-                .add(CANVAS_HEIGHT,canvasHeight)
+                .add(CANVAS_WIDTH, canvasWidth)
+                .add(CANVAS_HEIGHT, canvasHeight)
                 .build();
-        
+
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
         Map<String, Object> properties = new HashMap<>(1);
         properties.put(JsonGenerator.PRETTY_PRINTING, true);
@@ -104,16 +116,16 @@ public class FileManager implements AppFileComponent {
         pw.write(prettyPrinted);
         pw.close();
     }
-    
+
     @Override
     public void saveData(AppDataComponent data, String filePath) throws IOException {
         StringWriter sw = new StringWriter();
-       
+
         DataManager dataManager = (DataManager) data;
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         fillArrayWithDiagrams(dataManager.classesOnCanvas, arrayBuilder);
         JsonArray diagramsArray = arrayBuilder.build();
-        
+
         int canvasWidth = (int) dataManager.getRenderingPane().getWidth();
         int canvasHeight = (int) dataManager.getRenderingPane().getHeight();
 
@@ -121,8 +133,8 @@ public class FileManager implements AppFileComponent {
         // THEN PUT IT ALL TOGETHER IN A JsonObject
         JsonObject dataManagerJSO = Json.createObjectBuilder()
                 .add(JSON_DIAGRAMS_LIST, diagramsArray)
-                .add(CANVAS_WIDTH,canvasWidth)
-                .add(CANVAS_HEIGHT,canvasHeight)
+                .add(CANVAS_WIDTH, canvasWidth)
+                .add(CANVAS_HEIGHT, canvasHeight)
                 .build();
 
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
@@ -179,7 +191,8 @@ public class FileManager implements AppFileComponent {
         JsonObject jso = Json.createObjectBuilder().add(DIAGRAM_TYPE, type).
                 add(DIAGRAM_NAME, diagram.getClassNameText().getText()).
                 add(PACKAGE_NAME, diagram.getPackageNameText().getText()).
-                add(JSON_DIAGRAM_DIMENSIONS, makeDimensionsJsonArray(diagram))
+                add(JSON_DIAGRAM_DIMENSIONS, makeDimensionsJsonArray(diagram)).
+                add(JSON_VARIABLES, makeVariablesJsonArray(diagram))
                 .build();
 
         return jso;
@@ -193,7 +206,7 @@ public class FileManager implements AppFileComponent {
      */
     private JsonArray makeDimensionsJsonArray(ClassDiagramObject diagram) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-       
+
         VBox rootContainer = diagram.getRootContainer();
         VBox packageContainer = diagram.getPackageContainer();
         VBox methodsContainer = diagram.getMethodsContainer();
@@ -214,6 +227,30 @@ public class FileManager implements AppFileComponent {
 
         arrayBuilder.add(jso);
         JsonArray jA = arrayBuilder.build();
+        return jA;
+    }
+
+    /**
+     * Builds the JSON array of all the variables of the class diagram
+     * @param diagram
+     * @return 
+     */
+    private JsonArray makeVariablesJsonArray(ClassDiagramObject diagram) {
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+        ArrayList<VariableObject> variables = diagram.getVariables();
+
+        for (VariableObject variable : variables) {
+            JsonObject jso = Json.createObjectBuilder()
+                    .add(VARIABLE_NAME, variable.getName())
+                    .add(VARIABLE_TYPE, variable.getType())
+                    .add(VARIABLE_IS_STATIC,variable.getIsStatic())
+                    .add(VARIABLE_ACCESS,variable.getAccess())
+                    .build();
+            arrayBuilder.add(jso);
+        }
+        JsonArray jA = arrayBuilder.build();
+        System.out.println("VARIABLES ARRAY " + jA);
         return jA;
     }
 
@@ -250,7 +287,7 @@ public class FileManager implements AppFileComponent {
 
         System.out.println("X " + x);
         System.out.println("Y  " + y);
-        
+
         //the type of the diagram (interface/class)
         String type = jsonDiagram.getString(DIAGRAM_TYPE);
 

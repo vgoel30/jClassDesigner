@@ -35,12 +35,13 @@ public class TestSave {
         MethodObject call = new MethodObject("call", false, false, new ArrayList<>(), "void", "protected");
         methods.add(call);
         
-        ClassDiagramObject CounterTask = new ClassDiagramObject(methods, variables);
+        ClassDiagramObject CounterTask = new ClassDiagramObject("CounterTask","class", methods, variables);
+        CounterTask.setClassNameText("CounterTask");
         
         classDiagramObjects.add(CounterTask);
         
         
-        fileManager.testSaveData(classDiagramObjects,"./work/");
+        fileManager.testSaveData(classDiagramObjects,"./work/DesignSaveTest.json");
     }
 
 }
