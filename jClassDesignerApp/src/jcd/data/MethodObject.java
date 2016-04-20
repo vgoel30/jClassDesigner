@@ -60,6 +60,12 @@ public class MethodObject {
     
     
     public String toString(){
-        return access + name + "(" + arguments + "):" + returnType;
+        String privacy;
+        if(this.access.equals("private"))
+            privacy = "-";
+        else
+            privacy = "+";
+        
+        return privacy + name + "(" + arguments + "):" + returnType;
     }
 }

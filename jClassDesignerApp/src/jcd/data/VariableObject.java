@@ -35,4 +35,14 @@ public class VariableObject {
     public String getAccess() {
         return access;
     }
+    
+    public String toString(){
+        String privacy;
+        if(this.access.equals("private"))
+            privacy = "-";
+        else
+            privacy = "+";
+        
+        return privacy + name + " : " + type;
+    }
 }

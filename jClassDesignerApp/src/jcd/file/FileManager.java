@@ -6,6 +6,7 @@
 package jcd.file;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,6 +69,42 @@ public class FileManager implements AppFileComponent {
     static final String CANVAS_WIDTH = "canvas_width";
     static final String CANVAS_HEIGHT = "canvas_height";
 
+    public void testSaveData(ArrayList<ClassDiagramObject> classDiagramObjects, String filePath) throws FileNotFoundException{
+        StringWriter sw = new StringWriter();
+        
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        fillArrayWithDiagrams(classDiagramObjects, arrayBuilder);
+        
+        JsonArray diagramsArray = arrayBuilder.build();
+        
+        int canvasWidth = 500;
+        int canvasHeight = 500;
+        
+        // THEN PUT IT ALL TOGETHER IN A JsonObject
+        JsonObject dataManagerJSO = Json.createObjectBuilder()
+                .add(JSON_DIAGRAMS_LIST, diagramsArray)
+                .add(CANVAS_WIDTH,canvasWidth)
+                .add(CANVAS_HEIGHT,canvasHeight)
+                .build();
+        
+        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+        Map<String, Object> properties = new HashMap<>(1);
+        properties.put(JsonGenerator.PRETTY_PRINTING, true);
+        JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
+        JsonWriter jsonWriter = writerFactory.createWriter(sw);
+        jsonWriter.writeObject(dataManagerJSO);
+        jsonWriter.close();
+
+        // INIT THE WRITER
+        OutputStream os = new FileOutputStream(filePath);
+        JsonWriter jsonFileWriter = Json.createWriter(os);
+        jsonFileWriter.writeObject(dataManagerJSO);
+        String prettyPrinted = sw.toString();
+        PrintWriter pw = new PrintWriter(filePath);
+        pw.write(prettyPrinted);
+        pw.close();
+    }
+    
     @Override
     public void saveData(AppDataComponent data, String filePath) throws IOException {
         StringWriter sw = new StringWriter();

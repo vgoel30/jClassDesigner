@@ -45,12 +45,25 @@ public class ClassDiagramObject extends Pane {
     //the methods text
     Text methodsNameText;
     
+    //all the methods
+    ArrayList<MethodObject> methods = new ArrayList<>();
+    //all the variables
+    ArrayList<VariableObject> variables = new ArrayList<>();
+
+    public ArrayList<MethodObject> getMethods() {
+        return methods;
+    }
+
+    public ArrayList<VariableObject> getVariables() {
+        return variables;
+    }
+    
     //for drag to resize
     Line leftLine;
     Line rightLine;
     
     //helper constructor for testing load and save
-    public ClassDiagramObject(double x, double y, ArrayList<MethodObject> methods, ArrayList<VariableObject> variables){
+    public ClassDiagramObject(ArrayList<MethodObject> methods, ArrayList<VariableObject> variables){
         
         //iterate over all the methods
         for(MethodObject method: methods){

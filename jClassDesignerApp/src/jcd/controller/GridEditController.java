@@ -23,11 +23,6 @@ import maf.AppTemplate;
  * @author varungoel
  */
 public class GridEditController {
-
-    
-   
-    
-
     AppTemplate app;
 
     DataManager dataManager;
