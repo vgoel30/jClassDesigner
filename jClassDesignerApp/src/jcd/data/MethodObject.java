@@ -38,11 +38,11 @@ public class MethodObject {
         return name;
     }
 
-    public boolean isIsStatic() {
+    public boolean getIsStatic() {
         return isStatic;
     }
 
-    public boolean isIsAbstract() {
+    public boolean getIsAbstract() {
         return isAbstract;
     }
 

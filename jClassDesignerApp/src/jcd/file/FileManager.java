@@ -25,6 +25,7 @@ import javax.json.JsonReader;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
+import jcd.data.ArgumentObject;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
 import jcd.data.MethodObject;
@@ -50,6 +51,15 @@ public class FileManager implements AppFileComponent {
 
     //The methods of the diagram
     static final String JSON_METHODS = "methods";
+    static final String METHOD_NAME = "method_name";
+    static final String METHOD_IS_STATIC = "method_is_static";
+    static final String METHOD_IS_ABSTRACT = "method_is_abstract";
+    static final String METHOD_ARGUMENTS = "method_arguments";
+    static final String METHOD_RETURN_TYPE = "method_return_type";
+    static final String METHOD_ACCESS = "method_access";
+    
+    static final String ARGUMENT_NAME = "argument_name";
+    static final String ARGUMENT_TYPE = "argument_type";
 
     //The variables of the diagram
     static final String JSON_VARIABLES = "variables";
@@ -57,7 +67,7 @@ public class FileManager implements AppFileComponent {
     static final String VARIABLE_TYPE = "variable_type";
     static final String VARIABLE_IS_STATIC = "variable_is_static";
     static final String VARIABLE_ACCESS = "variable_access";
-
+    
     static final String PACKAGE_NAME = "package_name";
 
     static final String DIAGRAM_NAME = "diagram_name";
@@ -188,11 +198,12 @@ public class FileManager implements AppFileComponent {
             type = "interface";
         }
 
-        JsonObject jso = Json.createObjectBuilder().add(DIAGRAM_TYPE, type).
-                add(DIAGRAM_NAME, diagram.getClassNameText().getText()).
-                add(PACKAGE_NAME, diagram.getPackageNameText().getText()).
-                add(JSON_DIAGRAM_DIMENSIONS, makeDimensionsJsonArray(diagram)).
-                add(JSON_VARIABLES, makeVariablesJsonArray(diagram))
+        JsonObject jso = Json.createObjectBuilder().add(DIAGRAM_TYPE, type)
+                .add(DIAGRAM_NAME, diagram.getClassNameText().getText())
+                .add(PACKAGE_NAME, diagram.getPackageNameText().getText())
+                .add(JSON_DIAGRAM_DIMENSIONS, makeDimensionsJsonArray(diagram))
+                .add(JSON_VARIABLES, makeVariablesJsonArray(diagram))
+                .add(JSON_METHODS, makeMethodsJsonArray(diagram))
                 .build();
 
         return jso;
@@ -250,7 +261,54 @@ public class FileManager implements AppFileComponent {
             arrayBuilder.add(jso);
         }
         JsonArray jA = arrayBuilder.build();
-        System.out.println("VARIABLES ARRAY " + jA);
+        //System.out.println("VARIABLES ARRAY " + jA);
+        return jA;
+    }
+    
+    /**
+     * Makes a Json array of all the methods in the class
+     * @param diagram
+     * @return 
+     */
+    private JsonArray makeMethodsJsonArray(ClassDiagramObject diagram){
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+        ArrayList<MethodObject> methods = diagram.getMethods();
+        
+        for (MethodObject method : methods) {
+            JsonObject jso = Json.createObjectBuilder()
+                    .add(METHOD_NAME, method.getName())
+                    .add(METHOD_IS_STATIC, method.getIsStatic())
+                    .add(METHOD_IS_ABSTRACT, method.getIsAbstract())
+                    .add(METHOD_ARGUMENTS,makeArgumentsArray(method))
+                    .add(METHOD_RETURN_TYPE, method.getReturnType())
+                    .add(METHOD_ACCESS, method.getAccess())
+                    .build();
+            arrayBuilder.add(jso);
+        }
+        JsonArray jA = arrayBuilder.build();
+        System.out.println("METHODS ARRAY " + jA);
+        return jA;
+    }
+    
+    /**
+     * Makes a Json array of all the arguments in the method
+     * @param method
+     * @return 
+     */
+    private JsonArray makeArgumentsArray(MethodObject method){
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        ArrayList<ArgumentObject> arguments = method.getArguments();
+        
+        for(ArgumentObject argument: arguments){
+            JsonObject jso = Json.createObjectBuilder()
+                    .add(ARGUMENT_NAME,argument.getName())
+                    .add(ARGUMENT_TYPE,argument.getType())
+                    .build();
+             arrayBuilder.add(jso);
+        }
+        JsonArray jA = arrayBuilder.build();
+        //System.out.println("ARGUMENTS ARRAY: " + jA);
         return jA;
     }
 
