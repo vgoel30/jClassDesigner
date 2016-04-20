@@ -67,6 +67,7 @@ public class FileManager implements AppFileComponent {
     static final String VARIABLE_TYPE = "variable_type";
     static final String VARIABLE_IS_STATIC = "variable_is_static";
     static final String VARIABLE_ACCESS = "variable_access";
+    static final String VARIABLE_VALUE = "variable_value";
     
     static final String PACKAGE_NAME = "package_name";
 
@@ -257,6 +258,7 @@ public class FileManager implements AppFileComponent {
                     .add(VARIABLE_TYPE, variable.getType())
                     .add(VARIABLE_IS_STATIC,variable.getIsStatic())
                     .add(VARIABLE_ACCESS,variable.getAccess())
+                    .add(VARIABLE_VALUE,variable.getValue())
                     .build();
             arrayBuilder.add(jso);
         }

@@ -38,7 +38,6 @@ public class TestSave {
         methods1.add(call);
 
         ClassDiagramObject CounterTask = new ClassDiagramObject("CounterTask", "class", methods1, variables1);
-        CounterTask.setClassNameText("CounterTask");
         classDiagramObjects.add(CounterTask);
         //the first class is done. Onto the second one.
 
@@ -55,7 +54,6 @@ public class TestSave {
         methods2.add(call);
 
         ClassDiagramObject DateTask = new ClassDiagramObject("DateTask", "class", methods2, variables2);
-        DateTask.setClassNameText("DateTask");
         classDiagramObjects.add(DateTask);
         //second class is done
 
@@ -72,7 +70,6 @@ public class TestSave {
         methods3.add(handle);
 
         ClassDiagramObject PauseHandler = new ClassDiagramObject("PauseHandler", "class", methods3, variables3);
-        DateTask.setClassNameText("PauseHandler");
         classDiagramObjects.add(PauseHandler);
         //third class is done
 
@@ -89,9 +86,106 @@ public class TestSave {
         methods4.add(handle);
 
         ClassDiagramObject StartHandler = new ClassDiagramObject("StartHandler", "class", methods4, variables4);
-        DateTask.setClassNameText("StartHandler");
         classDiagramObjects.add(StartHandler);
         //fourth class is done
+
+        //hard coding the 5th class 
+        ArrayList<VariableObject> variables5 = new ArrayList<>();
+        ArrayList<MethodObject> methods5 = new ArrayList<>();
+
+        VariableObject start_text = new VariableObject("START_TEXT", "String", true, "public", "Start");
+        variables5.add(start_text);
+
+        VariableObject pause_text = new VariableObject("PAUSE_TEXT", "String", true, "public", "Pause");
+        variables5.add(start_text);
+
+        VariableObject window = new VariableObject("window", "Stage", false, "private");
+        variables5.add(window);
+
+        VariableObject appPane = new VariableObject("appPane", "BorderPane", false, "private");
+        variables5.add(appPane);
+
+        VariableObject topPane = new VariableObject("topPane", "FlowPane", false, "private");
+        variables5.add(topPane);
+
+        VariableObject startButton = new VariableObject("startButton", "Button", false, "private");
+        variables5.add(startButton);
+
+        VariableObject pauseButton = new VariableObject("pauseButton", "Button", false, "private");
+        variables5.add(pauseButton);
+
+        VariableObject scrollPane = new VariableObject("scrollPane", "ScrollPane", false, "private");
+        variables5.add(scrollPane);
+
+        VariableObject textArea = new VariableObject("textArea", "TextArea", false, "private");
+        variables5.add(textArea);
+
+        VariableObject dateThread = new VariableObject("dateThread", "Thread", false, "private");
+        variables5.add(dateThread);
+
+        VariableObject dateTask = new VariableObject("dateTask", "Task", false, "private");
+        variables5.add(dateTask);
+
+        VariableObject counterThread = new VariableObject("counterThread", "Thread", false, "private");
+        variables5.add(counterThread);
+
+        VariableObject counterTask = new VariableObject("counterTask", "Task", false, "private");
+        variables5.add(counterTask);
+
+        VariableObject work = new VariableObject("work", "boolean", false, "private");
+        variables5.add(work);
+
+        ArrayList<ArgumentObject> startArguments = new ArrayList<>();
+        ArgumentObject primaryStage = new ArgumentObject("primaryStage", "Stage");
+        startArguments.add(primaryStage);
+        MethodObject start = new MethodObject("start", false, false, startArguments, "void", "public");
+        methods5.add(start);
+
+        MethodObject startWork = new MethodObject("startWork", false, false, new ArrayList<>(), "void", "public");
+        methods5.add(startWork);
+
+        MethodObject pauseWork = new MethodObject("pauseWork", false, false, new ArrayList<>(), "void", "public");
+        methods5.add(pauseWork);
+
+        MethodObject doWork = new MethodObject("doWork", false, false, new ArrayList<>(), "boolean", "public");
+        methods5.add(doWork);
+
+        ArrayList<ArgumentObject> appendTextArguments = new ArrayList<>();
+        ArgumentObject textToAppend = new ArgumentObject("textToAppend", "String");
+        appendTextArguments.add(primaryStage);
+        MethodObject appendText = new MethodObject("appendText", false, false, appendTextArguments, "void", "public");
+        methods5.add(appendText);
+
+        ArrayList<ArgumentObject> sleepArguments = new ArrayList<>();
+        ArgumentObject timeToSleep = new ArgumentObject("timeToSleep", "int");
+        sleepArguments.add(primaryStage);
+        MethodObject sleep = new MethodObject("sleep", false, false, sleepArguments, "void", "public");
+        methods5.add(sleep);
+
+        MethodObject initLayout = new MethodObject("initLayout", false, false, new ArrayList<>(), "void", "private");
+        methods5.add(initLayout);
+        
+        MethodObject initHandlers = new MethodObject("initHandlers", false, false, new ArrayList<>(), "void", "private");
+        methods5.add(initHandlers);
+        
+        ArrayList<ArgumentObject> initWindowArguments = new ArrayList<>();
+        ArgumentObject initPrimaryStage = new ArgumentObject("initPrimaryStage", "Stage");
+        initWindowArguments.add(initPrimaryStage);
+        MethodObject initWindow = new MethodObject("initWindow", false, false, initWindowArguments, "void", "public");
+        methods5.add(initWindow);
+        
+        MethodObject initThreads = new MethodObject("initThreads", false, false, new ArrayList<>(), "void", "private");
+        methods5.add(initThreads);
+        
+        ArrayList<ArgumentObject> mainMethodArguments = new ArrayList<>();
+        ArgumentObject argsi = new ArgumentObject("args", "String[]");
+        mainMethodArguments.add(argsi);
+        MethodObject mainMethod = new MethodObject("main", true, false, mainMethodArguments, "void", "public");
+        methods5.add(mainMethod);
+
+        ClassDiagramObject ThreadExample = new ClassDiagramObject("ThreadExample", "class", methods5, variables5);
+        classDiagramObjects.add(ThreadExample);
+        //5th class is done
 
         fileManager.testSaveData(classDiagramObjects, "./work/DesignSaveTest.json");
     }

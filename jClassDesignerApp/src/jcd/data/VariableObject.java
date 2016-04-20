@@ -14,6 +14,15 @@ public class VariableObject {
     String type;
     boolean isStatic;
     String access;
+    String value = "";
+    
+    public VariableObject(String name, String type, boolean isStatic, String access, String value){
+        this.name = name;
+        this.type = type;
+        this.isStatic = isStatic;
+        this.access = access;
+        this.value = value;
+    }
     
     public VariableObject(String name, String type, boolean isStatic, String access){
         this.name = name;
@@ -36,6 +45,10 @@ public class VariableObject {
 
     public String getAccess() {
         return access;
+    }
+    
+    public String getValue(){
+        return value;
     }
     
     public String toString(){

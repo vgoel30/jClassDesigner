@@ -72,7 +72,7 @@ public class ClassDiagramObject extends Pane {
         packageContainer = new VBox(packageNameText);
 
         //The first container which has the class name
-        classNameText = new Text("Name");
+        classNameText = new Text(name);
         nameContainer = new VBox(classNameText);
 
         //The second container which has all the variables and stuff
