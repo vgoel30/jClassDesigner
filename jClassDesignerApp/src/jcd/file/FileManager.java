@@ -58,7 +58,7 @@ public class FileManager implements AppFileComponent {
     static final String METHOD_ARGUMENTS = "method_arguments";
     static final String METHOD_RETURN_TYPE = "method_return_type";
     static final String METHOD_ACCESS = "method_access";
-    
+
     static final String ARGUMENT_NAME = "argument_name";
     static final String ARGUMENT_TYPE = "argument_type";
 
@@ -69,7 +69,7 @@ public class FileManager implements AppFileComponent {
     static final String VARIABLE_IS_STATIC = "variable_is_static";
     static final String VARIABLE_ACCESS = "variable_access";
     static final String VARIABLE_VALUE = "variable_value";
-    
+
     static final String PACKAGE_NAME = "package_name";
 
     static final String DIAGRAM_NAME = "diagram_name";
@@ -245,8 +245,9 @@ public class FileManager implements AppFileComponent {
 
     /**
      * Builds the JSON array of all the variables of the class diagram
+     *
      * @param diagram
-     * @return 
+     * @return
      */
     private JsonArray makeVariablesJsonArray(ClassDiagramObject diagram) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
@@ -257,9 +258,9 @@ public class FileManager implements AppFileComponent {
             JsonObject jso = Json.createObjectBuilder()
                     .add(VARIABLE_NAME, variable.getName())
                     .add(VARIABLE_TYPE, variable.getType())
-                    .add(VARIABLE_IS_STATIC,variable.getIsStatic())
-                    .add(VARIABLE_ACCESS,variable.getAccess())
-                    .add(VARIABLE_VALUE,variable.getValue())
+                    .add(VARIABLE_IS_STATIC, variable.getIsStatic())
+                    .add(VARIABLE_ACCESS, variable.getAccess())
+                    .add(VARIABLE_VALUE, variable.getValue())
                     .build();
             arrayBuilder.add(jso);
         }
@@ -267,23 +268,24 @@ public class FileManager implements AppFileComponent {
         //System.out.println("VARIABLES ARRAY " + jA);
         return jA;
     }
-    
+
     /**
      * Makes a Json array of all the methods in the class
+     *
      * @param diagram
-     * @return 
+     * @return
      */
-    private JsonArray makeMethodsJsonArray(ClassDiagramObject diagram){
+    private JsonArray makeMethodsJsonArray(ClassDiagramObject diagram) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
         ArrayList<MethodObject> methods = diagram.getMethods();
-        
+
         for (MethodObject method : methods) {
             JsonObject jso = Json.createObjectBuilder()
                     .add(METHOD_NAME, method.getName())
                     .add(METHOD_IS_STATIC, method.getIsStatic())
                     .add(METHOD_IS_ABSTRACT, method.getIsAbstract())
-                    .add(METHOD_ARGUMENTS,makeArgumentsArray(method))
+                    .add(METHOD_ARGUMENTS, makeArgumentsArray(method))
                     .add(METHOD_RETURN_TYPE, method.getReturnType())
                     .add(METHOD_ACCESS, method.getAccess())
                     .build();
@@ -293,28 +295,29 @@ public class FileManager implements AppFileComponent {
         System.out.println("METHODS ARRAY " + jA);
         return jA;
     }
-    
+
     /**
      * Makes a Json array of all the arguments in the method
+     *
      * @param method
-     * @return 
+     * @return
      */
-    private JsonArray makeArgumentsArray(MethodObject method){
+    private JsonArray makeArgumentsArray(MethodObject method) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         ArrayList<ArgumentObject> arguments = method.getArguments();
-        
-        for(ArgumentObject argument: arguments){
+
+        for (ArgumentObject argument : arguments) {
             JsonObject jso = Json.createObjectBuilder()
-                    .add(ARGUMENT_NAME,argument.getName())
-                    .add(ARGUMENT_TYPE,argument.getType())
+                    .add(ARGUMENT_NAME, argument.getName())
+                    .add(ARGUMENT_TYPE, argument.getType())
                     .build();
-             arrayBuilder.add(jso);
+            arrayBuilder.add(jso);
         }
         JsonArray jA = arrayBuilder.build();
         //System.out.println("ARGUMENTS ARRAY: " + jA);
         return jA;
     }
-    
+
     public void testLoadData(String filePath) throws IOException {
         System.out.println("TEST LOAD DATA CALLED");
         JsonObject json = loadJSONFile(filePath);
@@ -326,7 +329,7 @@ public class FileManager implements AppFileComponent {
             ClassDiagramObject classDiagram = loadClassDiagram(jsonDiagram);
             System.out.println(classDiagram.toStringPlusPlus());
         }
-        
+
     }
 
     @Override
@@ -360,8 +363,6 @@ public class FileManager implements AppFileComponent {
         int x = dimensionsJsonObject.getInt(DIAGRAM_X);
         int y = dimensionsJsonObject.getInt(DIAGRAM_Y);
 
-        
-
         //the type of the diagram (interface/class)
         String type = jsonDiagram.getString(DIAGRAM_TYPE);
 
@@ -387,24 +388,50 @@ public class FileManager implements AppFileComponent {
         int variablesContainerWidth = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_WIDTH);
         int variablesContainerHeight = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_HEIGHT);
         toAdd.getPackageContainer().setPrefSize(variablesContainerWidth, variablesContainerHeight);
-        
-        //ALL THE VARIABLES OF THE METHOD
+
+        //ALL THE VARIABLES OF THE CLASS
         JsonArray variablesArray = jsonDiagram.getJsonArray(JSON_VARIABLES);
-        for(int i = 0; i < variablesArray.size(); i++){
+        for (int i = 0; i < variablesArray.size(); i++) {
             JsonObject current = variablesArray.getJsonObject(i);
             String name = current.getString(VARIABLE_NAME);
             String variableType = current.getString(VARIABLE_TYPE);
             boolean isStatic = current.getBoolean(VARIABLE_IS_STATIC);
             String access = current.getString(VARIABLE_ACCESS);
             String value = current.getString(VARIABLE_VALUE);
-            
+
             VariableObject varToAdd = new VariableObject(name, variableType, isStatic, access, value);
             toAdd.getVariables().add(varToAdd);
         }
-        
+
+        //ALL THE METHODS OF THE CLASS
         JsonArray methodsArray = jsonDiagram.getJsonArray(JSON_METHODS);
-        
-       
+        for (int i = 0; i < methodsArray.size(); i++) {
+            JsonObject current = methodsArray.getJsonObject(i);
+
+            String name = current.getString(METHOD_NAME);
+            boolean isStatic = current.getBoolean(METHOD_IS_STATIC);
+            boolean isAbstract = current.getBoolean(METHOD_IS_ABSTRACT);
+            
+            String returnType = current.getString(METHOD_RETURN_TYPE);
+            String access = current.getString(METHOD_ACCESS);
+
+            JsonArray methodArguments = current.getJsonArray(METHOD_ARGUMENTS);
+            ArrayList<ArgumentObject> arguments = new ArrayList<>();
+
+           // ALL THE ARGUMENTS
+            for (int j = 0; j < methodArguments.size(); j++) {
+                JsonObject argument = methodArguments.getJsonObject(j);
+                
+                String argName = argument.getString(ARGUMENT_NAME);
+                String argType = argument.getString(ARGUMENT_TYPE);
+                
+                ArgumentObject argumentToAdd = new ArgumentObject(argName, argType);
+                arguments.add(argumentToAdd);
+            }
+            MethodObject methodToAdd = new MethodObject(name, isStatic, isAbstract, arguments, returnType, access);
+            toAdd.getMethods().add(methodToAdd);
+        }
+        System.out.println("THE TOTAL METHOD " + toAdd.toStringPlusPlus());
         return toAdd;
     }
 
