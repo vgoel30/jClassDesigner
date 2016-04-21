@@ -97,7 +97,7 @@ public class TestSave {
         variables5.add(start_text);
 
         VariableObject pause_text = new VariableObject("PAUSE_TEXT", "String", true, "public", "Pause");
-        variables5.add(start_text);
+        variables5.add(pause_text);
 
         VariableObject window = new VariableObject("window", "Stage", false, "private");
         variables5.add(window);

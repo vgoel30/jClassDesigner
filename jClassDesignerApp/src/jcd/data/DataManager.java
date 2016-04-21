@@ -161,8 +161,8 @@ public class DataManager implements AppDataComponent {
             alert.setHeaderText(null);
             alert.setContentText("Class already exists in this package!");
             alert.showAndWait();
-            selectedClassDiagram.getClassNameText().setText("Class Name");
-            classNameField.setText("Class Name");
+           // selectedClassDiagram.getClassNameText().setText("Class Name");
+            //classNameField.setText("Class Name");
         } else {
             selectedClassDiagram.getClassNameText().setText(newName);
             classPackageCombos.add(newName + ":" + classPackageName);

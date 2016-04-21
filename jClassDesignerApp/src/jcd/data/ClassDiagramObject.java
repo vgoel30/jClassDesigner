@@ -21,6 +21,8 @@ import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
  */
 public class ClassDiagramObject extends Pane {
 
+    static int counter = 0;
+    
     //class or interface
     String diagramType;
 
@@ -114,6 +116,7 @@ public class ClassDiagramObject extends Pane {
     }
 
     public ClassDiagramObject(double x, double y, String type) {
+        counter++;
         rootContainer = new VBox();
         
         diagramType = type;
@@ -126,7 +129,7 @@ public class ClassDiagramObject extends Pane {
         packageContainer = new VBox(packageNameText);
 
         //The first container which has the class name
-        classNameText = new Text("Name");
+        classNameText = new Text("Class" + counter);
         nameContainer = new VBox(classNameText);
 
         //The second container which has all the variables and stuff
@@ -262,6 +265,8 @@ public class ClassDiagramObject extends Pane {
     public void setDiagramType(String type) {
         diagramType = type;
     }
+    
+   
 
     public String getDiagramType(){
         return diagramType;
@@ -283,7 +288,9 @@ public class ClassDiagramObject extends Pane {
 
     }
     
-    
+    public String toStringPlusPlus(){
+        return diagramType + ": " + this.classNameText.getText() + " Methods : " + this.methods + " Variables : " + this.variables;
+    }
 
     public String toString() {
         return diagramType + ": " + this.classNameText.getText();

@@ -22,6 +22,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.JsonValue;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
@@ -313,6 +314,20 @@ public class FileManager implements AppFileComponent {
         //System.out.println("ARGUMENTS ARRAY: " + jA);
         return jA;
     }
+    
+    public void testLoadData(String filePath) throws IOException {
+        System.out.println("TEST LOAD DATA CALLED");
+        JsonObject json = loadJSONFile(filePath);
+
+        // AND NOW LOAD ALL THE SHAPES
+        JsonArray jsonDiagramsArray = json.getJsonArray(JSON_DIAGRAMS_LIST);
+        for (int i = 0; i < jsonDiagramsArray.size(); i++) {
+            JsonObject jsonDiagram = jsonDiagramsArray.getJsonObject(i);
+            ClassDiagramObject classDiagram = loadClassDiagram(jsonDiagram);
+            System.out.println(classDiagram.toStringPlusPlus());
+        }
+        
+    }
 
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
@@ -345,8 +360,7 @@ public class FileManager implements AppFileComponent {
         int x = dimensionsJsonObject.getInt(DIAGRAM_X);
         int y = dimensionsJsonObject.getInt(DIAGRAM_Y);
 
-        System.out.println("X " + x);
-        System.out.println("Y  " + y);
+        
 
         //the type of the diagram (interface/class)
         String type = jsonDiagram.getString(DIAGRAM_TYPE);
@@ -373,7 +387,24 @@ public class FileManager implements AppFileComponent {
         int variablesContainerWidth = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_WIDTH);
         int variablesContainerHeight = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_HEIGHT);
         toAdd.getPackageContainer().setPrefSize(variablesContainerWidth, variablesContainerHeight);
-
+        
+        //ALL THE VARIABLES OF THE METHOD
+        JsonArray variablesArray = jsonDiagram.getJsonArray(JSON_VARIABLES);
+        for(int i = 0; i < variablesArray.size(); i++){
+            JsonObject current = variablesArray.getJsonObject(i);
+            String name = current.getString(VARIABLE_NAME);
+            String variableType = current.getString(VARIABLE_TYPE);
+            boolean isStatic = current.getBoolean(VARIABLE_IS_STATIC);
+            String access = current.getString(VARIABLE_ACCESS);
+            String value = current.getString(VARIABLE_VALUE);
+            
+            VariableObject varToAdd = new VariableObject(name, variableType, isStatic, access, value);
+            toAdd.getVariables().add(varToAdd);
+        }
+        
+        JsonArray methodsArray = jsonDiagram.getJsonArray(JSON_METHODS);
+        
+       
         return toAdd;
     }
 

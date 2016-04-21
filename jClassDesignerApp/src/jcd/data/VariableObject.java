@@ -58,6 +58,6 @@ public class VariableObject {
         else
             privacy = "+";
         
-        return privacy + name + " : " + type;
+        return privacy + " " + name + " : " + type;
     }
 }
