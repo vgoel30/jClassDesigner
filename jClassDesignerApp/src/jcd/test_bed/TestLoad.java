@@ -14,10 +14,21 @@ import jcd.file.FileManager;
  */
 public class TestLoad {
     
+    //arraylist fo diagrams to be loaded from the filemanager
+    
     public static void main(String[] args) throws IOException{
         FileManager myManager = new FileManager();
         
         myManager.testLoadData("./work/DesignSaveTest.json");
     }
+    
+    //public static TYPE getData1()
+    //returns some particular data value found in the arraylist of diagrams
+    
+    //public TYPE getData2()
+    //returns some particular data value found in the arraylist of diagrams
+    
+    //public TYPE getData3()
+    //returns some particular data value found in the arraylist of diagrams
     
 }
