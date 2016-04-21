@@ -54,6 +54,8 @@ public class TestSave {
         methods2.add(call);
 
         ClassDiagramObject DateTask = new ClassDiagramObject("DateTask", "class", methods2, variables2);
+        DateTask.setX(300);
+        DateTask.setY(54);
         classDiagramObjects.add(DateTask);
         //second class is done
 
@@ -70,6 +72,8 @@ public class TestSave {
         methods3.add(handle);
 
         ClassDiagramObject PauseHandler = new ClassDiagramObject("PauseHandler", "class", methods3, variables3);
+        PauseHandler.setX(264);
+        PauseHandler.setY(264);
         classDiagramObjects.add(PauseHandler);
         //third class is done
 
@@ -86,6 +90,8 @@ public class TestSave {
         methods4.add(handle);
 
         ClassDiagramObject StartHandler = new ClassDiagramObject("StartHandler", "class", methods4, variables4);
+        StartHandler.setX(66);
+        StartHandler.setY(66);
         classDiagramObjects.add(StartHandler);
         //fourth class is done
 
@@ -185,6 +191,8 @@ public class TestSave {
 
         ClassDiagramObject ThreadExample = new ClassDiagramObject("ThreadExample", "class", methods5, variables5);
         classDiagramObjects.add(ThreadExample);
+        ThreadExample.setX(132);
+        ThreadExample.setY(132);
         //5th class is done
 
         fileManager.testSaveData(classDiagramObjects, "./work/DesignSaveTest.json");

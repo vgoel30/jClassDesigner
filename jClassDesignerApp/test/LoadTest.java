@@ -46,6 +46,51 @@ public class LoadTest {
         TestLoad.main(args);
         // TODO review the generated test code and remove the default call to fail.
         //assert 10 different things here
+        
     }
     
+    @Test
+    public void testGetData1(){
+        assertEquals("- app : ThreadExample", TestLoad.getData1());
+    }
+    
+    @Test
+    public void testGetData2(){
+        assertEquals("class", TestLoad.getData2());
+    }
+    
+    @Test
+    public void testGetData3(){
+        assertEquals(0, TestLoad.getData3(), 0);
+    }
+    
+    @Test
+    public void testGetData4(){
+        assertEquals(0, TestLoad.getData4(), 0);
+    }
+    
+    @Test
+    public void testGetData5(){
+        assertEquals(300, TestLoad.getData5(), 0);
+    }
+    
+    @Test
+    public void testGetData6(){
+        assertEquals("- appPane : BorderPane", TestLoad.getData6());
+    }
+    
+    @Test
+    public void testGetData7(){
+        assertEquals(2, TestLoad.getData7());
+    }
+    
+    @Test
+    public void testGetData8(){
+        assertEquals(1, TestLoad.getData8());
+    }
+    
+    @Test
+    public void testGetData9(){
+        assertEquals("- app : ThreadExample", TestLoad.getData9());
+    }
 }

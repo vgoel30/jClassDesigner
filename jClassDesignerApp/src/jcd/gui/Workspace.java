@@ -368,7 +368,6 @@ public final class Workspace extends AppWorkspaceComponent {
             
             
             packageNameField.setOnAction((event) -> {
-//                diagramEditController.validatePackageName(packageNameField.getText(), packageNameField, oldValue, classNameField.getText());
                    dataManager.validatePackageName(packageNameField.getText(), packageNameField, oldValue, classNameField.getText());
             });
         });

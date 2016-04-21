@@ -99,17 +99,19 @@ public class ClassDiagramObject extends Pane {
 
         initStyle();
         
-        //iterate over all the methods
-        for(MethodObject method: methods){
-            Text toAdd = new Text(method.toString());
-            methodsContainer.getChildren().add(toAdd);
-        }
+        methodsContainer.getChildren().add(new Text("HOLA"));
         
-        //iterate over all the variables
-        for(VariableObject variable: variables){
-            Text toAdd = new Text(variable.toString());
-            variablesContainer.getChildren().add(toAdd);
-        }
+//        //iterate over all the methods
+//        for(MethodObject method: methods){
+//            Text toAdd = new Text(method.toString());
+//            methodsContainer.getChildren().add(toAdd);
+//        }
+//        
+//        //iterate over all the variables
+//        for(VariableObject variable: variables){
+//            Text toAdd = new Text(variable.toString());
+//            variablesContainer.getChildren().add(toAdd);
+//        }
         
         this.methods = methods;
         this.variables = variables;
@@ -139,6 +141,7 @@ public class ClassDiagramObject extends Pane {
         //The third container which has all the methods and stuff
         methodsNameText = new Text("Methods");
         methodsContainer = new VBox(methodsNameText);
+        methodsContainer.getChildren().add(new Text("HOLA"));
 
         //putting it all in
         rootContainer.getChildren().add(packageContainer);
@@ -266,7 +269,21 @@ public class ClassDiagramObject extends Pane {
         diagramType = type;
     }
     
-   
+    public void setX(double X){
+        rootContainer.setLayoutX(X);
+    }
+    
+    public void setY(double Y){
+        rootContainer.setLayoutY(Y);
+    }
+    
+    public double getX(){
+        return rootContainer.getLayoutX();
+    }
+    
+    public double getY(){
+        return rootContainer.getLayoutY();
+    }
 
     public String getDiagramType(){
         return diagramType;

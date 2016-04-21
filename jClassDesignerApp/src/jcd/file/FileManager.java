@@ -318,18 +318,27 @@ public class FileManager implements AppFileComponent {
         return jA;
     }
 
-    public void testLoadData(String filePath) throws IOException {
+    /**
+     * Testing load data
+     * @param filePath
+     * @return a list of diagrams
+     * @throws IOException 
+     */
+    public ArrayList<ClassDiagramObject> testLoadData(String filePath) throws IOException {
         System.out.println("TEST LOAD DATA CALLED");
         JsonObject json = loadJSONFile(filePath);
+        
+        ArrayList<ClassDiagramObject> diagrams = new ArrayList<>();
 
         // AND NOW LOAD ALL THE SHAPES
         JsonArray jsonDiagramsArray = json.getJsonArray(JSON_DIAGRAMS_LIST);
         for (int i = 0; i < jsonDiagramsArray.size(); i++) {
             JsonObject jsonDiagram = jsonDiagramsArray.getJsonObject(i);
             ClassDiagramObject classDiagram = loadClassDiagram(jsonDiagram);
-            System.out.println(classDiagram.toStringPlusPlus());
+            diagrams.add(classDiagram);
+            //System.out.println(classDiagram.toStringPlusPlus());
         }
-
+        return diagrams;
     }
 
     @Override
