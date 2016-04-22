@@ -46,6 +46,14 @@ public class DataManager implements AppDataComponent {
     public void addClassDiagram(ClassDiagramObject diagramToAdd) {
         classesOnCanvas.add(diagramToAdd);
     }
+    
+    public void addPackage(String packageName){
+        packageNames.add(packageName);
+    }
+    
+    public void addClassPackageCombo(String name){
+        classPackageCombos.add(name);
+    }
 
     public Pane getRenderingPane() {
         return ((Workspace) app.getWorkspaceComponent()).getCanvas();
@@ -192,6 +200,10 @@ public class DataManager implements AppDataComponent {
             classPackageCombos.add(className + ":" + newPackageName);
         }
 
+    }
+    
+    public void handleExportCode(){
+        
     }
 
     @Override

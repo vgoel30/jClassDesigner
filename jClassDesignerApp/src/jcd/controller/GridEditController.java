@@ -10,6 +10,7 @@ import java.io.IOException;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javax.imageio.ImageIO;
 import jcd.data.ClassDiagramObject;
@@ -45,7 +46,7 @@ public class GridEditController {
             workspace.disableButtons(true);
         }
 
-        canvas.setOnMouseClicked(e -> {
+        canvas.setOnMouseClicked((MouseEvent e) -> {
             if (workspace.drawingActive) {
                 double x = e.getX();
                 double y = e.getY();
@@ -65,6 +66,10 @@ public class GridEditController {
                 dataManager.attachClassDiagramEventHandlers(objectToPut);
                 workspace.disableButtons(true);
                 dataManager.addClassDiagram(objectToPut);
+                dataManager.addPackage(objectToPut.getPackageNameText().getText());
+                
+                String nameToAdd = objectToPut.getClassNameText().getText() + ":" + objectToPut.getPackageNameText().getText();
+                dataManager.addClassPackageCombo(nameToAdd);
             }
             
         });

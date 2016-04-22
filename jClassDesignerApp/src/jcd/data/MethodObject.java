@@ -8,10 +8,12 @@ package jcd.data;
 import java.util.ArrayList;
 
 /**
- *A custom method object that will be put inside our UML diagram
+ * A custom method object that will be put inside our UML diagram
+ *
  * @author varungoel
  */
 public class MethodObject {
+
     String name;
     boolean isStatic;
     boolean isAbstract;
@@ -19,6 +21,15 @@ public class MethodObject {
     String returnType;
     String access;
 
+    public static void main(String[] args){
+        ArrayList<ArgumentObject> arguments = new ArrayList<>();
+        ArgumentObject sample = new ArgumentObject("args", "String[]");
+        arguments.add(sample);
+        MethodObject sampleMethod = new MethodObject("main", true, false, arguments, "boolean", "private");
+        System.out.println(sampleMethod.toStringCode());
+    }
+    
+    
     public MethodObject(String name, boolean isStatic, boolean isAbstract, ArrayList<ArgumentObject> arguments, String returnType, String access) {
         this.name = name;
         this.isStatic = isStatic;
@@ -27,10 +38,8 @@ public class MethodObject {
         this.returnType = returnType;
         this.access = access;
     }
-    
-    
-    
-    public void addArgument(ArgumentObject arg){
+
+    public void addArgument(ArgumentObject arg) {
         arguments.add(arg);
     }
 
@@ -57,15 +66,65 @@ public class MethodObject {
     public String getAccess() {
         return access;
     }
-    
-    
-    public String toString(){
+
+    public String toString() {
         String privacy;
-        if(this.access.equals("private"))
+        if (this.access.equals("private")) {
             privacy = "-";
-        else
+        } else {
             privacy = "+";
-        
+        }
+
         return privacy + name + "(" + arguments + "):" + returnType;
     }
+    
+    
+
+    public String toStringCode() {
+        String toReturn = "";
+
+        toReturn += access + " ";
+
+        if (isStatic && !isAbstract) {
+            toReturn += "static ";
+        } else if (!isStatic && isAbstract) {
+            toReturn += "abstract ";
+        }
+
+        toReturn += returnType + " ";
+        toReturn += name + " (";
+
+        //adding all the arguments
+        for (int i = 0; i < arguments.size(); i++) {
+            if (i < arguments.size() - 1) {
+                toReturn += arguments.get(i).toStringCode() + ", ";
+            } else {
+                toReturn += arguments.get(i).toStringCode() + " )";
+            }
+        }
+
+        //adding the opening curly brace
+        toReturn += "{\n";
+        
+        if(returnType.equals("char") || returnType.equals("byte") || returnType.equals("short") || returnType.equals("long") || returnType.equals("int")){
+            toReturn += "   return 0; \n}";
+        }
+        else if(returnType.equals("double")){
+            toReturn += "   return 0.0; \n}";
+        }
+        else if(returnType.equals("boolean")){
+            toReturn += "   return false; \n}";
+        }
+        else if(returnType.equals("void")){
+            toReturn += "\n}";
+        }
+        else{
+            toReturn += "   return null; \n}";
+        }
+        
+        
+        return toReturn;
+    }
+    
+    
 }

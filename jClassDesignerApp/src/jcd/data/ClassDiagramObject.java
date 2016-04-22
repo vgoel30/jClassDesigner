@@ -99,7 +99,7 @@ public class ClassDiagramObject extends Pane {
 
         initStyle();
         
-        methodsContainer.getChildren().add(new Text("HOLA"));
+        //methodsContainer.getChildren().add(new Text("HOLA"));
         
 //        //iterate over all the methods
 //        for(MethodObject method: methods){
@@ -131,7 +131,7 @@ public class ClassDiagramObject extends Pane {
         packageContainer = new VBox(packageNameText);
 
         //The first container which has the class name
-        classNameText = new Text("Class" + counter);
+        classNameText = new Text("diagram" + counter);
         nameContainer = new VBox(classNameText);
 
         //The second container which has all the variables and stuff
@@ -141,7 +141,6 @@ public class ClassDiagramObject extends Pane {
         //The third container which has all the methods and stuff
         methodsNameText = new Text("Methods");
         methodsContainer = new VBox(methodsNameText);
-        methodsContainer.getChildren().add(new Text("HOLA"));
 
         //putting it all in
         rootContainer.getChildren().add(packageContainer);
@@ -311,6 +310,28 @@ public class ClassDiagramObject extends Pane {
 
     public String toString() {
         return diagramType + ": " + this.classNameText.getText();
+    }
+    
+    public String toStringCode(){
+        String toReturn = "";
+        
+        toReturn += "public class " + this.getClassNameText() + "{\n\n ";
+        
+        for(VariableObject variable: variables){
+            toReturn += "\t" + variable.toStringCode() + "\n";
+        }
+        
+        for(MethodObject method: methods){
+            toReturn += "\t" + method.toStringCode() + "\n";
+        }
+        
+        toReturn += "\n}";
+        
+        return toReturn;
+    }
+    
+    public static void main(String[] args){
+        
     }
 
 }

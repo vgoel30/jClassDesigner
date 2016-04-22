@@ -10,21 +10,36 @@ package jcd.data;
  * @author varungoel
  */
 public class VariableObject {
+
     String name;
     String type;
     boolean isStatic;
+    boolean isFinal;
     String access;
     String value = "";
     
-    public VariableObject(String name, String type, boolean isStatic, String access, String value){
+    public static void main(String[] args){
+        VariableObject sample = new VariableObject("kickassVariable", "int", true, false, "public");
+        System.out.println(sample.toStringCode());
+    }
+
+    public VariableObject(String name, String type, boolean isStatic, boolean isFinal, String access) {
+        this.name = name;
+        this.type = type;
+        this.isStatic = isStatic;
+        this.isFinal = isFinal;
+        this.access = access;
+    }
+
+    public VariableObject(String name, String type, boolean isStatic, String access, String value) {
         this.name = name;
         this.type = type;
         this.isStatic = isStatic;
         this.access = access;
         this.value = value;
     }
-    
-    public VariableObject(String name, String type, boolean isStatic, String access){
+
+    public VariableObject(String name, String type, boolean isStatic, String access) {
         this.name = name;
         this.type = type;
         this.isStatic = isStatic;
@@ -46,18 +61,68 @@ public class VariableObject {
     public String getAccess() {
         return access;
     }
-    
-    public String getValue(){
+
+    public String getValue() {
         return value;
     }
-    
-    public String toString(){
-        String privacy;
-        if(this.access.equals("private"))
-            privacy = "-";
-        else
-            privacy = "+";
+
+    @Override
+    public String toString() {
+        String toReturn = "";
+
+        if (this.access.equals("private")) {
+            toReturn += "-";
+        } else {
+            toReturn += "+";
+        }
+
+        if (isStatic) {
+            toReturn += "static";
+        }
+
+        if (isFinal) {
+            toReturn += name.toUpperCase();
+        } else {
+            toReturn += name;
+        }
+        toReturn += type;
+
+        return toReturn;
+    }
+
+    public String toStringCode() {
+        String toReturn = "";
+
+        if (this.access.equals("private")) {
+            toReturn += "private ";
+        } else {
+            toReturn += "public ";
+        }
+
+        if (isStatic) {
+            toReturn += "static ";
+        }
         
-        return privacy + " " + name + " : " + type;
+        if(isFinal){
+            toReturn += "final ";
+        }
+
+        toReturn += type + " ";
+        if (isFinal) {
+            toReturn += name.toUpperCase() + ";";
+        } else {
+            toReturn += name + ";";
+        }
+
+        return toReturn;
+    }
+
+    public void setIsFinal(boolean isFinal) {
+        this.isFinal = isFinal;
+    }
+
+   
+    public boolean getIsFinal() {
+        return isFinal;
     }
 }

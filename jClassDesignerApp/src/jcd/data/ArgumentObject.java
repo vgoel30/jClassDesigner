@@ -31,4 +31,8 @@ public class ArgumentObject {
     public String toString(){
         return name + ":" + type;
     }
+    
+    public String toStringCode(){
+        return type + " " + name;
+    }
 }

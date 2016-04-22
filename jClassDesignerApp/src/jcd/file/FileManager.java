@@ -67,6 +67,7 @@ public class FileManager implements AppFileComponent {
     static final String VARIABLE_NAME = "variable_name";
     static final String VARIABLE_TYPE = "variable_type";
     static final String VARIABLE_IS_STATIC = "variable_is_static";
+    static final String VARIABLE_IS_FINAL = "variable_is_final";
     static final String VARIABLE_ACCESS = "variable_access";
     static final String VARIABLE_VALUE = "variable_value";
 
@@ -259,8 +260,8 @@ public class FileManager implements AppFileComponent {
                     .add(VARIABLE_NAME, variable.getName())
                     .add(VARIABLE_TYPE, variable.getType())
                     .add(VARIABLE_IS_STATIC, variable.getIsStatic())
+                    .add(VARIABLE_IS_FINAL, variable.getIsFinal())
                     .add(VARIABLE_ACCESS, variable.getAccess())
-                    .add(VARIABLE_VALUE, variable.getValue())
                     .build();
             arrayBuilder.add(jso);
         }
@@ -405,10 +406,10 @@ public class FileManager implements AppFileComponent {
             String name = current.getString(VARIABLE_NAME);
             String variableType = current.getString(VARIABLE_TYPE);
             boolean isStatic = current.getBoolean(VARIABLE_IS_STATIC);
+            boolean isFinal = current.getBoolean(VARIABLE_IS_FINAL);
             String access = current.getString(VARIABLE_ACCESS);
-            String value = current.getString(VARIABLE_VALUE);
 
-            VariableObject varToAdd = new VariableObject(name, variableType, isStatic, access, value);
+            VariableObject varToAdd = new VariableObject(name, variableType, isStatic, isFinal, access);
             toAdd.getVariables().add(varToAdd);
         }
 

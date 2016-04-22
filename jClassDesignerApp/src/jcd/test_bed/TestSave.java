@@ -30,7 +30,7 @@ public class TestSave {
         ArrayList<MethodObject> methods1 = new ArrayList<>();
 
         VariableObject app = new VariableObject("app", "ThreadExample", false, "private");
-        VariableObject counter = new VariableObject("counter", "int", false, "private");
+        VariableObject counter = new VariableObject("counter", "int", false, false, "private");
         variables1.add(app);
         variables1.add(counter);
 
@@ -45,8 +45,8 @@ public class TestSave {
         ArrayList<VariableObject> variables2 = new ArrayList<>();
         ArrayList<MethodObject> methods2 = new ArrayList<>();
 
-        VariableObject dateTaskApp = new VariableObject("app", "ThreadExample", false, "private");
-        VariableObject now = new VariableObject("now", "Date", false, "private");
+        VariableObject dateTaskApp = new VariableObject("app", "ThreadExample", false, false, "private");
+        VariableObject now = new VariableObject("now", "Date", false, false,"private");
         variables2.add(dateTaskApp);
         variables2.add(now);
 
@@ -63,7 +63,7 @@ public class TestSave {
         ArrayList<VariableObject> variables3 = new ArrayList<>();
         ArrayList<MethodObject> methods3 = new ArrayList<>();
 
-        VariableObject pauseHandlerApp = new VariableObject("app", "ThreadExample", false, "private");
+        VariableObject pauseHandlerApp = new VariableObject("app", "ThreadExample", false, false, "private");
         variables3.add(pauseHandlerApp);
 
         ArrayList<ArgumentObject> arguments3 = new ArrayList<>();
@@ -81,7 +81,7 @@ public class TestSave {
         ArrayList<VariableObject> variables4 = new ArrayList<>();
         ArrayList<MethodObject> methods4 = new ArrayList<>();
 
-        VariableObject startHandlerApp = new VariableObject("app", "ThreadExample", false, "private");
+        VariableObject startHandlerApp = new VariableObject("app", "ThreadExample", false, false, "private");
         variables4.add(startHandlerApp);
 
         ArrayList<ArgumentObject> arguments4 = new ArrayList<>();
@@ -99,46 +99,46 @@ public class TestSave {
         ArrayList<VariableObject> variables5 = new ArrayList<>();
         ArrayList<MethodObject> methods5 = new ArrayList<>();
 
-        VariableObject start_text = new VariableObject("START_TEXT", "String", true, "public", "Start");
+        VariableObject start_text = new VariableObject("START_TEXT", "String", true, false,  "public");
         variables5.add(start_text);
 
-        VariableObject pause_text = new VariableObject("PAUSE_TEXT", "String", true, "public", "Pause");
+        VariableObject pause_text = new VariableObject("PAUSE_TEXT", "String", true, false, "public");
         variables5.add(pause_text);
 
-        VariableObject window = new VariableObject("window", "Stage", false, "private");
+        VariableObject window = new VariableObject("window", "Stage", false, false, "private");
         variables5.add(window);
 
-        VariableObject appPane = new VariableObject("appPane", "BorderPane", false, "private");
+        VariableObject appPane = new VariableObject("appPane", "BorderPane", false, false, "private");
         variables5.add(appPane);
 
-        VariableObject topPane = new VariableObject("topPane", "FlowPane", false, "private");
+        VariableObject topPane = new VariableObject("topPane", "FlowPane", false, false, "private");
         variables5.add(topPane);
 
-        VariableObject startButton = new VariableObject("startButton", "Button", false, "private");
+        VariableObject startButton = new VariableObject("startButton", "Button", false, false, "private");
         variables5.add(startButton);
 
-        VariableObject pauseButton = new VariableObject("pauseButton", "Button", false, "private");
+        VariableObject pauseButton = new VariableObject("pauseButton", "Button", false, false, "private");
         variables5.add(pauseButton);
 
-        VariableObject scrollPane = new VariableObject("scrollPane", "ScrollPane", false, "private");
+        VariableObject scrollPane = new VariableObject("scrollPane", "ScrollPane", false,false, "private");
         variables5.add(scrollPane);
 
-        VariableObject textArea = new VariableObject("textArea", "TextArea", false, "private");
+        VariableObject textArea = new VariableObject("textArea", "TextArea", false,false, "private");
         variables5.add(textArea);
 
-        VariableObject dateThread = new VariableObject("dateThread", "Thread", false, "private");
+        VariableObject dateThread = new VariableObject("dateThread", "Thread", false,false, "private");
         variables5.add(dateThread);
 
-        VariableObject dateTask = new VariableObject("dateTask", "Task", false, "private");
+        VariableObject dateTask = new VariableObject("dateTask", "Task", false,false, "private");
         variables5.add(dateTask);
 
-        VariableObject counterThread = new VariableObject("counterThread", "Thread", false, "private");
+        VariableObject counterThread = new VariableObject("counterThread", "Thread", false,false, "private");
         variables5.add(counterThread);
 
-        VariableObject counterTask = new VariableObject("counterTask", "Task", false, "private");
+        VariableObject counterTask = new VariableObject("counterTask", "Task", false,false, "private");
         variables5.add(counterTask);
 
-        VariableObject work = new VariableObject("work", "boolean", false, "private");
+        VariableObject work = new VariableObject("work", "boolean", false,false, "private");
         variables5.add(work);
 
         ArrayList<ArgumentObject> startArguments = new ArrayList<>();
