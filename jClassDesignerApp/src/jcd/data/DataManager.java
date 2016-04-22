@@ -31,7 +31,7 @@ public class DataManager implements AppDataComponent {
 
    
     //THE CURRENT SELECTED CLASS DIAGRAM
-    public  ClassDiagramObject selectedClassDiagram = null;
+    public   ClassDiagramObject selectedClassDiagram = null;
     
     public  ArrayList<String> classNames = new ArrayList<>();
     
@@ -57,7 +57,9 @@ public class DataManager implements AppDataComponent {
         System.out.print("A class was added  ");
         
         classesOnCanvas.add(diagramToAdd);
+        classNames.add(diagramToAdd.getClassNameText().getText());
         packageNames.add(diagramToAdd.getPackageNameText().getText());
+        classPackageCombos.add(diagramToAdd.getClassNameText().getText() + ":" + diagramToAdd.getPackageNameText().getText());
         System.out.println(classesOnCanvas.hashCode());
     }
 
@@ -172,6 +174,7 @@ public class DataManager implements AppDataComponent {
      * @param newName
      * @param classNameField
      * @param oldValue
+     * @param classPackageName
      */
     public void validateClassName(String newName, TextField classNameField, String oldValue, String classPackageName) {
         String theClassName = classPackageCombos.get(classPackageCombos.size() - 1).split(":")[0];
@@ -188,6 +191,9 @@ public class DataManager implements AppDataComponent {
             //classNameField.setText("Class Name");
         } else {
             selectedClassDiagram.getClassNameText().setText(newName);
+            classNames.remove(oldValue);
+            classNames.add(newName);
+            classPackageCombos.remove(oldValue + ":" + classPackageName);
             classPackageCombos.add(newName + ":" + classPackageName);
         }
     }
@@ -212,15 +218,19 @@ public class DataManager implements AppDataComponent {
             packageNameField.setText("");
         } else {
             selectedClassDiagram.getPackageNameText().setText(newPackageName);
+            packageNames.remove(oldValue);
+            System.out.println("OLDVALUE: " + oldValue);
+            packageNames.add(newPackageName);
+            classPackageCombos.remove(className + ":" + oldValue);
             classPackageCombos.add(className + ":" + newPackageName);
         }
 
     }
 
     public void handleExportCode(Window window) {
-        System.out.println("classesOnCanvas.size " + classesOnCanvas.hashCode());
-        for(ClassDiagramObject Class: classesOnCanvas){
-            System.out.println("LIT : " + Class);
+        System.out.println("packageNames.size " + packageNames.size());
+        for(String Package: packageNames){
+            System.out.println("LIT : " + Package);
     }
         
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -229,9 +239,9 @@ public class DataManager implements AppDataComponent {
         directoryChooser.setInitialDirectory(initialDirectory);
         File file = directoryChooser.showDialog(window);
         
-        
-        
-       
+//        for(String packageName: packageNames){
+//            System.out.println(initialDirectory + packageName);
+//        }
     }
 
     @Override
