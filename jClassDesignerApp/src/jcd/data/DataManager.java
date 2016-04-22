@@ -6,7 +6,12 @@
 package jcd.data;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -226,9 +231,25 @@ public class DataManager implements AppDataComponent {
         ArrayList<String> distinctPackages = getDistinctPackages();
         
         for(String packageName: distinctPackages){
+            ArrayList<ClassDiagramObject> insideCorrectPackage = findByPackageName(packageName);
             packageName = packageName.replace(".", "/");
-            File testFile = new File(file.getPath() + "/src/" + packageName);
-            testFile.mkdirs();
+            File directory = new File(file.getPath() + "/src/" + packageName);
+            directory.mkdirs();
+            for(ClassDiagramObject diagramToExtract : insideCorrectPackage){
+                File javaFile = new File(directory,diagramToExtract.getClassNameText().getText() + ".java");
+                    
+                try {
+                    PrintWriter myWriter = new PrintWriter(javaFile.getPath(), "UTF-16");
+                    myWriter.write(diagramToExtract.toStringCode());
+                    myWriter.close();
+                } catch (FileNotFoundException ex) {
+                    System.out.println("FILE NOT FOUND");
+                } catch (UnsupportedEncodingException ex) {
+                    System.out.println("ENCODING NOT FOUND");
+                }
+                    
+                
+            }
         }
     }
     
@@ -239,6 +260,18 @@ public class DataManager implements AppDataComponent {
                 uniquePackages.add(packageName);
         }
         return uniquePackages;
+    }
+    
+    public ArrayList<ClassDiagramObject> findByPackageName(String packageName){
+        ArrayList<ClassDiagramObject> legitList = new ArrayList<>();
+        
+        for(ClassDiagramObject diagrams: classesOnCanvas){
+            if(diagrams.getPackageNameText().getText().equals(packageName)){
+                legitList.add(diagrams);
+            }
+        }
+        
+        return legitList;
     }
 
     @Override
