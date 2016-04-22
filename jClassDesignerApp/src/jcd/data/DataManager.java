@@ -10,16 +10,14 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import jcd.controller.GridEditController;
+import jcd.gui.AppOptionDialog;
 import jcd.gui.Workspace;
 import maf.AppTemplate;
 import maf.components.AppDataComponent;
@@ -83,7 +81,7 @@ public class DataManager implements AppDataComponent {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
         //if the diagram has been clicked
-        diagram.getRootContainer().setOnMouseClicked(mouseClicked -> {
+        diagram.getRootContainer().setOnMouseClicked((MouseEvent mouseClicked) -> {
             if (workspace.selectionActive) {
                 diagram.getRootContainer().getStyleClass().add(SELECTED_DIAGRAM_CONTAINER);
                 diagram.getLeftLine().setVisible(true);
@@ -130,6 +128,14 @@ public class DataManager implements AppDataComponent {
                 workspace.packageNameField.setText(diagram.getPackageNameText().getText());
 
                 workspace.disableButtons(false);
+
+                if (mouseClicked.getClickCount() == 2) {
+                    System.out.println("Twice");
+
+                    AppOptionDialog newDialog = new AppOptionDialog();
+                    newDialog.init(app.getGUI().getWindow(),selectedClassDiagram);
+                    newDialog.show();
+                }
             }
         });
 
@@ -174,7 +180,6 @@ public class DataManager implements AppDataComponent {
 
     public void validateNameOfClass(String oldValue, String newValue) {
         classNames.remove(oldValue);
-        
 
         selectedClassDiagram.getClassNameText().setText(newValue);
         classPackageCombos.remove(oldValue + ":" + selectedClassDiagram.getPackageNameText().getText());
