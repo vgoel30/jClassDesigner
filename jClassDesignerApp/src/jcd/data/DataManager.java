@@ -169,6 +169,8 @@ public class DataManager implements AppDataComponent {
 
     
     public void validateNameOfClass(String oldValue, String newValue){
+        boolean isLegit = false;
+        
         classNames.remove(oldValue);
         classNames.add(newValue);
         
@@ -177,19 +179,22 @@ public class DataManager implements AppDataComponent {
         
         
         for(ClassDiagramObject diagram: classesOnCanvas){
-            System.out.println("SELECTED" + selectedClassDiagram);
-            System.out.println(diagram);
-            if(selectedClassDiagram != diagram && classPackageCombos.contains(newValue + ":" + selectedClassDiagram.getPackageNameText().getText())){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
+            if(diagram != selectedClassDiagram){
+                int x = selectedClassDiagram.compareTo(diagram);
+                if(x == 0){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Class name error");
                 alert.setHeaderText(null);
                 alert.setContentText("Class already exists in this package!");
                 alert.showAndWait();
-            }  
+                }
+            }
         }
         
         classPackageCombos.add(newValue + ":" + selectedClassDiagram.getPackageNameText().getText());
     }
+    
+    
     
     public void validateNameOfPackage(String oldValue, String newValue){
         packageNames.remove(oldValue);
@@ -200,18 +205,35 @@ public class DataManager implements AppDataComponent {
         
         
         for(ClassDiagramObject diagram: classesOnCanvas){
-            if(selectedClassDiagram != diagram && classPackageCombos.contains(selectedClassDiagram.getClassNameText().getText() + ":" + newValue)){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
+            if(diagram != selectedClassDiagram){
+                int x = selectedClassDiagram.compareTo(diagram);
+                if(x == 0){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Package name error");
                 alert.setHeaderText(null);
-                alert.setContentText("Package name error!");
+                alert.setContentText("Package already exists in this package!");
+                alert.showAndWait();
+                }
+            }
+        }
+//        
+      classPackageCombos.add(selectedClassDiagram.getClassNameText().getText() + ":" + newValue);
+    }
+
+    public void setValidatedPackageName(String oldText, String newText){
+        selectedClassDiagram.getPackageNameText().setText(newText);
+        for(ClassDiagramObject diagram: classesOnCanvas){
+            System.out.println("SELECTED" + selectedClassDiagram);
+            System.out.println(diagram);
+            if(selectedClassDiagram != diagram && classPackageCombos.contains(selectedClassDiagram.getClassNameText().getText() + ":" + newText)){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Class name error");
+                alert.setHeaderText(null);
+                alert.setContentText("Class already exists in this package!");
                 alert.showAndWait();
             }  
         }
-        
-       classPackageCombos.add(selectedClassDiagram.getClassNameText().getText() + ":" + newValue);
     }
-
     
     
     
@@ -224,8 +246,6 @@ public class DataManager implements AppDataComponent {
         
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Export to java code");
-        //File initialDirectory = new File("./Source/");
-        //directoryChooser.setInitialDirectory(initialDirectory);
         File file = directoryChooser.showDialog(window);
         
         ArrayList<String> distinctPackages = getDistinctPackages();
@@ -255,9 +275,9 @@ public class DataManager implements AppDataComponent {
     
     public ArrayList<String> getDistinctPackages(){
         ArrayList<String> uniquePackages = new ArrayList<>();
-        for(String packageName: packageNames){
-            if(!uniquePackages.contains(packageName))
-                uniquePackages.add(packageName);
+        for(ClassDiagramObject diagrams: classesOnCanvas){
+            if(!uniquePackages.contains(diagrams.getPackageNameText().getText()))
+                uniquePackages.add(diagrams.getPackageNameText().getText());
         }
         return uniquePackages;
     }

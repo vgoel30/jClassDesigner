@@ -19,7 +19,7 @@ import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
  *
  * @author varungoel
  */
-public class ClassDiagramObject extends Pane {
+public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramObject> {
 
     static int counter = 0;
     
@@ -70,7 +70,7 @@ public class ClassDiagramObject extends Pane {
         
         diagramType = type;
 
-        packageNameText = new Text("Package");
+        packageNameText = new Text("");
         packageContainer = new VBox(packageNameText);
 
         //The first container which has the class name
@@ -127,7 +127,7 @@ public class ClassDiagramObject extends Pane {
         rootContainer.setLayoutX(x);
         rootContainer.setLayoutY(y);
 
-        packageNameText = new Text("");
+        packageNameText = new Text("Package");
         packageContainer = new VBox(packageNameText);
 
         //The first container which has the class name
@@ -330,6 +330,20 @@ public class ClassDiagramObject extends Pane {
         return toReturn;
     }
     
+    //x = this.pkgname.compareto(compare.pkgname)
+    //if x != 0 -> return x
+    //else y = this.classname.compareto(compare.classname)
+    //return y
+  
+    @Override
+    public int compareTo(ClassDiagramObject o) {
+        int x = this.getPackageNameText().getText().compareTo(o.getPackageNameText().getText());
+        if(x != 0)
+            return x;
+        return this.getClassNameText().getText().compareTo(o.getClassNameText().getText());
+    }     
+    
+    
     public static void main(String[] args){
         VariableObject sample = new VariableObject("kickassVariable", "int", true, false, "public");
         
@@ -347,5 +361,7 @@ public class ClassDiagramObject extends Pane {
         ClassDiagramObject lit = new ClassDiagramObject("className", "class", methods, variables);
         System.out.println(lit.toStringCode());
     }
+
+    
 
 }

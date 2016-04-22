@@ -360,6 +360,10 @@ public final class Workspace extends AppWorkspaceComponent {
                 dataManager.validateNameOfClass(oldValue, newValue);
             }
         });
+        
+//        classNameField.setOnAction(e -> {
+//            dataManager.setValidatedClassName(dataManager.selectedClassDiagram.getClassNameText().getText(),classNameField.getText());
+//        });
 
         //when the enter key is clicked, validate the name of the package
         packageNameField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -367,6 +371,10 @@ public final class Workspace extends AppWorkspaceComponent {
                 dataManager.validateNameOfPackage(oldValue, newValue);
             }
         });
+        
+//        packageNameField.setOnAction(e -> {
+//            dataManager.setValidatedPackageName(dataManager.selectedClassDiagram.getPackageNameText().getText(),packageNameField.getText());
+//        });
     }
 
     @Override
