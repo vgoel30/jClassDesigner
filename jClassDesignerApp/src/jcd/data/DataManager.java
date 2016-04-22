@@ -220,24 +220,6 @@ public class DataManager implements AppDataComponent {
       classPackageCombos.add(selectedClassDiagram.getClassNameText().getText() + ":" + newValue);
     }
 
-    public void setValidatedPackageName(String oldText, String newText){
-        selectedClassDiagram.getPackageNameText().setText(newText);
-        for(ClassDiagramObject diagram: classesOnCanvas){
-            System.out.println("SELECTED" + selectedClassDiagram);
-            System.out.println(diagram);
-            if(selectedClassDiagram != diagram && classPackageCombos.contains(selectedClassDiagram.getClassNameText().getText() + ":" + newText)){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Class name error");
-                alert.setHeaderText(null);
-                alert.setContentText("Class already exists in this package!");
-                alert.showAndWait();
-            }  
-        }
-    }
-    
-    
-    
-
     public void handleExportCode(Window window) {
         System.out.println("packageNames.size " + packageNames.size());
         for(String Package: packageNames){
