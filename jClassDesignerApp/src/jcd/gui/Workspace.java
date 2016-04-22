@@ -70,7 +70,6 @@ import maf.ui.AppGUI;
  * @author varungoel
  */
 public final class Workspace extends AppWorkspaceComponent {
-    
 
     static final int BUTTON_TAG_WIDTH = 75;
     static final String CLASS_GRID_CANVAS = "grid_canvas";
@@ -158,8 +157,6 @@ public final class Workspace extends AppWorkspaceComponent {
     // HERE ARE THE CONTROLLERS
     GridEditController gridEditController;
     DataManager dataManager;
-    
-    
 
     public Workspace(AppTemplate initApp) throws IOException, Exception {
         // KEEP THIS FOR LATER
@@ -178,8 +175,8 @@ public final class Workspace extends AppWorkspaceComponent {
     public Pane getCanvas() {
         return canvas;
     }
-    
-    public Scene getScene(){
+
+    public Scene getScene() {
         return mainScene;
     }
 
@@ -270,7 +267,7 @@ public final class Workspace extends AppWorkspaceComponent {
         editToolbar.getChildren().add(fourthRow);
         variablesTable = new TableView();
         variablesTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Type"), new TableColumn("Static"), new TableColumn("Access"));
-        
+
         ScrollPane variableScroll = new ScrollPane(variablesTable);
         fourthRow.getChildren().add(variableScroll);
         variablesTable.setMinWidth(400);
@@ -290,7 +287,7 @@ public final class Workspace extends AppWorkspaceComponent {
         ScrollPane methodsScroll = new ScrollPane(methodsTable);
         fifthRow.getChildren().add(methodsScroll);
         variablesTable.setMinWidth(400);
-        
+
         // AND NOW SETUP THE WORKSPACE
         workspace = new BorderPane();
 
@@ -308,25 +305,22 @@ public final class Workspace extends AppWorkspaceComponent {
     public void setupHandlers() throws Exception {
         // MAKE THE GRID CONTROLLER	
         gridEditController = new GridEditController(app);
-        
-        
 
         //MAKE THE DIAGRAM CONTROLLER
         // MAKE THE EDIT CONTROLLER
-
         //when the user wants to add a class
         addClassButton.setOnAction(e -> {
             drawingActive = true;
             selectionActive = false;
             System.out.println("Add class was clicked");
-            gridEditController.addDiagram(canvas,"class");
+            gridEditController.addDiagram(canvas, "class");
         });
-        
+
         addInterfaceButton.setOnAction(e -> {
             drawingActive = true;
             selectionActive = false;
             System.out.println("Add interface was clicked");
-            gridEditController.addDiagram(canvas,"interface");
+            gridEditController.addDiagram(canvas, "interface");
         });
 
         //when the selection button is clicked
@@ -336,14 +330,14 @@ public final class Workspace extends AppWorkspaceComponent {
             System.out.println("Selection was clicked");
             mainScene.getRoot().setCursor(Cursor.MOVE);
         });
-        
+
         //when the resize button is clicked
-        resizeButton.setOnAction(resizeButtonClicked ->{
+        resizeButton.setOnAction(resizeButtonClicked -> {
         });
-        
-       codeButton.setOnAction(codeButtonClicked -> {
-          dataManager.handleExportCode(gui.getWindow());
-       });
+
+        codeButton.setOnAction(codeButtonClicked -> {
+            dataManager.handleExportCode(gui.getWindow());
+        });
 
         screenshotButton.setOnAction(screenshotButtonClicked -> {
             if (canvas.getChildren().size() > 0) {
@@ -360,25 +354,18 @@ public final class Workspace extends AppWorkspaceComponent {
             }
         });
 
-        
         //testing the event handler for text field
         classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            dataManager.doFancyNameShitForClass(oldValue, newValue, packageNameField.getText());
-
-            //when the enter key is clicked, validate the name of the class
-            classNameField.setOnAction((event) -> {
-                dataManager.validateClassName(classNameField.getText(), classNameField, oldValue, packageNameField.getText());
-            });
+            if (!oldValue.equals(newValue)) {
+                dataManager.validateNameOfClass(oldValue, newValue);
+            }
         });
 
         //when the enter key is clicked, validate the name of the package
         packageNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            dataManager.doFancyNameShitForPackage(oldValue, newValue, classNameField.getText());
-            
-            
-            packageNameField.setOnAction((event) -> {
-                   dataManager.validatePackageName(packageNameField.getText(), packageNameField, oldValue, classNameField.getText());
-            });
+            if (!oldValue.equals(newValue)) {
+                dataManager.validateNameOfPackage(oldValue, newValue);
+            }
         });
     }
 
@@ -387,7 +374,7 @@ public final class Workspace extends AppWorkspaceComponent {
         classNameField.setText("");
         packageNameField.setText("");
         disableButtons(true);
-       // canvas.getChildren().clear();
+        // canvas.getChildren().clear();
         if (selected != null) {
             selected.getStyleClass().remove("pressed");
             selected = null;
@@ -396,6 +383,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
     /**
      * Disable certain buttons depending on when selection is active or not
+     *
      * @param disable
      */
     public void disableButtons(boolean disable) {

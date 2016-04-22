@@ -162,70 +162,54 @@ public class DataManager implements AppDataComponent {
 
     }
 
-    public void doFancyNameShitForClass(String oldValue, String newValue, String classPackageName) {
-        classPackageCombos.remove(oldValue + ":" + classPackageName);
-        classPackageCombos.add(newValue + ":" + classPackageName);
-        //System.out.println(classPackageCombos);
-    }
-
-    /**
-     * Validates the name to see if it already exists
-     *
-     * @param newName
-     * @param classNameField
-     * @param oldValue
-     * @param classPackageName
-     */
-    public void validateClassName(String newName, TextField classNameField, String oldValue, String classPackageName) {
-        String theClassName = classPackageCombos.get(classPackageCombos.size() - 1).split(":")[0];
-        //classPackageCombos.remove(classPackageCombos.size() - 1)   
-        classPackageCombos.remove(oldValue + ":" + classPackageName);
-
-        if (classPackageCombos.contains(theClassName + ":" + classPackageName) && (classPackageCombos.indexOf(theClassName + ":" + classPackageName) != classPackageCombos.size() - 1)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Class name error");
-            alert.setHeaderText(null);
-            alert.setContentText("Class already exists in this package!");
-            alert.showAndWait();
-            // selectedClassDiagram.getClassNameText().setText("Class Name");
-            //classNameField.setText("Class Name");
-        } else {
-            selectedClassDiagram.getClassNameText().setText(newName);
-            classNames.remove(oldValue);
-            classNames.add(newName);
-            classPackageCombos.remove(oldValue + ":" + classPackageName);
-            classPackageCombos.add(newName + ":" + classPackageName);
+    
+    public void validateNameOfClass(String oldValue, String newValue){
+        classNames.remove(oldValue);
+        classNames.add(newValue);
+        
+        selectedClassDiagram.getClassNameText().setText(newValue);
+        classPackageCombos.remove(oldValue + ":" + selectedClassDiagram.getPackageNameText().getText());
+        
+        
+        for(ClassDiagramObject diagram: classesOnCanvas){
+            System.out.println("SELECTED" + selectedClassDiagram);
+            System.out.println(diagram);
+            if(selectedClassDiagram != diagram && classPackageCombos.contains(newValue + ":" + selectedClassDiagram.getPackageNameText().getText())){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Class name error");
+                alert.setHeaderText(null);
+                alert.setContentText("Class already exists in this package!");
+                alert.showAndWait();
+            }  
         }
+        
+        classPackageCombos.add(newValue + ":" + selectedClassDiagram.getPackageNameText().getText());
     }
-
-    public void doFancyNameShitForPackage(String oldValue, String newValue, String className) {
-        classPackageCombos.remove(className + ":" + oldValue);
-        classPackageCombos.add(className + ":" + newValue);
-        //System.out.println(classPackageCombos);
-    }
-
-    public void validatePackageName(String newPackageName, TextField packageNameField, String oldValue, String className) {
-        String thePackageName = classPackageCombos.get(classPackageCombos.size() - 1).split(":")[1];
-        classPackageCombos.remove(className + ":" + oldValue);
-
-        if (classPackageCombos.contains(className + ":" + thePackageName) && (classPackageCombos.indexOf(className + ":" + thePackageName) != classPackageCombos.size() - 1)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Package name error");
-            alert.setHeaderText(null);
-            alert.setContentText("Package with this class already exists");
-            alert.showAndWait();
-            selectedClassDiagram.getPackageNameText().setText("");
-            packageNameField.setText("");
-        } else {
-            selectedClassDiagram.getPackageNameText().setText(newPackageName);
-            packageNames.remove(oldValue);
-            System.out.println("OLDVALUE: " + oldValue);
-            packageNames.add(newPackageName);
-            classPackageCombos.remove(className + ":" + oldValue);
-            classPackageCombos.add(className + ":" + newPackageName);
+    
+    public void validateNameOfPackage(String oldValue, String newValue){
+        packageNames.remove(oldValue);
+        packageNames.add(newValue);
+        
+        selectedClassDiagram.getPackageNameText().setText(newValue);
+        classPackageCombos.remove(selectedClassDiagram.getClassNameText().getText() + ":" + oldValue);
+        
+        
+        for(ClassDiagramObject diagram: classesOnCanvas){
+            if(selectedClassDiagram != diagram && classPackageCombos.contains(selectedClassDiagram.getClassNameText().getText() + ":" + newValue)){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Package name error");
+                alert.setHeaderText(null);
+                alert.setContentText("Package name error!");
+                alert.showAndWait();
+            }  
         }
-
+        
+       classPackageCombos.add(selectedClassDiagram.getClassNameText().getText() + ":" + newValue);
     }
+
+    
+    
+    
 
     public void handleExportCode(Window window) {
         System.out.println("packageNames.size " + packageNames.size());
@@ -235,13 +219,26 @@ public class DataManager implements AppDataComponent {
         
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Export to java code");
-        File initialDirectory = new File("./Source/");
-        directoryChooser.setInitialDirectory(initialDirectory);
+        //File initialDirectory = new File("./Source/");
+        //directoryChooser.setInitialDirectory(initialDirectory);
         File file = directoryChooser.showDialog(window);
         
-//        for(String packageName: packageNames){
-//            System.out.println(initialDirectory + packageName);
-//        }
+        ArrayList<String> distinctPackages = getDistinctPackages();
+        
+        for(String packageName: distinctPackages){
+            packageName = packageName.replace(".", "/");
+            File testFile = new File(file.getPath() + "/src/" + packageName);
+            testFile.mkdirs();
+        }
+    }
+    
+    public ArrayList<String> getDistinctPackages(){
+        ArrayList<String> uniquePackages = new ArrayList<>();
+        for(String packageName: packageNames){
+            if(!uniquePackages.contains(packageName))
+                uniquePackages.add(packageName);
+        }
+        return uniquePackages;
     }
 
     @Override
