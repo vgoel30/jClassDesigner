@@ -24,7 +24,7 @@ public class TestLoad {
 
     public static void main(String[] args) throws IOException {
 
-         getData9();
+         getData1();
         // + diagrams.get(0).getVariables());
     }
 
@@ -38,6 +38,7 @@ public class TestLoad {
 
     public static String getData1() {
         populateArray();
+        System.out.println("DONE WITH IT : " + diagrams.get(0).getVariables().get(0).toString());
         return diagrams.get(0).getVariables().get(0).toString();
     }
 
@@ -79,6 +80,11 @@ public class TestLoad {
     public static String getData9(){
         populateArray();
         return (diagrams.get(3).getVariables().get(0).toString());
+    }
+    
+    public static String getData10(){
+        populateArray();
+        return diagrams.get(1).getDiagramType();
     }
 
 }

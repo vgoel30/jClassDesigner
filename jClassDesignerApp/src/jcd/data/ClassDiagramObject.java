@@ -315,6 +315,8 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     public String toStringCode(){
         String toReturn = "";
         
+        toReturn += "import java.util.*;\n";
+        
         toReturn += "public " + getDiagramType() + " " + this.getClassNameText().getText() + "{\n\n ";
         
         for(VariableObject variable: variables){
@@ -360,6 +362,8 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         
         ClassDiagramObject lit = new ClassDiagramObject("className", "class", methods, variables);
         System.out.println(lit.toStringCode());
+        
+        //System.out.println("MASSIVE DOPE TEST: " + lit.getClass().getName());
     }
 
     

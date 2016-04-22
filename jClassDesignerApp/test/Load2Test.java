@@ -17,9 +17,9 @@ import jcd.test_bed.TestSave;
  *
  * @author varungoel
  */
-public class LoadTest {
+public class Load2Test {
     FileManager testFileManager;
-    public LoadTest() {
+    public Load2Test() {
     }
     
     @BeforeClass

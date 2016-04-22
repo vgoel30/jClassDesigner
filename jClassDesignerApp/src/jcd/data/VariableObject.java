@@ -19,7 +19,7 @@ public class VariableObject {
     String value = "";
     
     public static void main(String[] args){
-        VariableObject sample = new VariableObject("kickassVariable", "int", true, false, "public");
+        VariableObject sample = new VariableObject("integerVariable", "int", true, false, "public");
         System.out.println(sample.toStringCode());
     }
 
@@ -68,12 +68,13 @@ public class VariableObject {
 
     @Override
     public String toString() {
+        
         String toReturn = "";
 
         if (this.access.equals("private")) {
-            toReturn += "-";
+            toReturn += "- ";
         } else {
-            toReturn += "+";
+            toReturn += "+ ";
         }
 
         if (isStatic) {
@@ -83,7 +84,7 @@ public class VariableObject {
         if (isFinal) {
             toReturn += name.toUpperCase();
         } else {
-            toReturn += name;
+            toReturn += name + " : ";
         }
         toReturn += type;
 
@@ -91,6 +92,7 @@ public class VariableObject {
     }
 
     public String toStringCode() {
+        
         String toReturn = "";
 
         if (this.access.equals("private")) {
@@ -114,6 +116,12 @@ public class VariableObject {
             toReturn += name + ";";
         }
 
+        String[] split = toReturn.split("\\s");
+        
+        System.out.println("IMPORT1: " + split[split.length-2] + " " + split[split.length-1]);
+        
+        
+        
         return toReturn;
     }
 
