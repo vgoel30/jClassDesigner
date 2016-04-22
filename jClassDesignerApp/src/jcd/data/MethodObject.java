@@ -107,19 +107,19 @@ public class MethodObject {
         toReturn += "{\n";
         
         if(returnType.equals("char") || returnType.equals("byte") || returnType.equals("short") || returnType.equals("long") || returnType.equals("int")){
-            toReturn += "   return 0; \n}";
+            toReturn += "\t\treturn 0; \n}";
         }
         else if(returnType.equals("double")){
-            toReturn += "   return 0.0; \n}";
+            toReturn += "\t\treturn 0.0; \n}";
         }
         else if(returnType.equals("boolean")){
-            toReturn += "   return false; \n}";
+            toReturn += "\t\treturn false; \n}";
         }
         else if(returnType.equals("void")){
             toReturn += "\n}";
         }
         else{
-            toReturn += "   return null; \n}";
+            toReturn += "\t\treturn null; \n\t\t}";
         }
         
         
