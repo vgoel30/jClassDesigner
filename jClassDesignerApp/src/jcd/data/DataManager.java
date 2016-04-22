@@ -144,9 +144,9 @@ public class DataManager implements AppDataComponent {
 
                     double x = diagram.getRootContainer().getLayoutX();
                     double y = diagram.getRootContainer().getLayoutY();
-                    
+
                     Pane canvas = getRenderingPane();
-                    
+
                     //dynamic scrolling 
                     if (x > canvas.getWidth() - 150) {
                         canvas.setMinWidth(canvas.getWidth() + 500);
@@ -172,16 +172,9 @@ public class DataManager implements AppDataComponent {
         selectedClassDiagram.getRightLine().setVisible(false);
     }
 
-    public void changeClassName(String oldValue, String newValue) {
-        selectedClassDiagram.getClassNameText().setText(newValue);
-
-    }
-
     public void validateNameOfClass(String oldValue, String newValue) {
-        boolean isLegit = false;
-
         classNames.remove(oldValue);
-        classNames.add(newValue);
+        
 
         selectedClassDiagram.getClassNameText().setText(newValue);
         classPackageCombos.remove(oldValue + ":" + selectedClassDiagram.getPackageNameText().getText());
@@ -199,12 +192,12 @@ public class DataManager implements AppDataComponent {
             }
         }
 
+        classNames.add(newValue);
         classPackageCombos.add(newValue + ":" + selectedClassDiagram.getPackageNameText().getText());
     }
 
     public void validateNameOfPackage(String oldValue, String newValue) {
         packageNames.remove(oldValue);
-        packageNames.add(newValue);
 
         selectedClassDiagram.getPackageNameText().setText(newValue);
         classPackageCombos.remove(selectedClassDiagram.getClassNameText().getText() + ":" + oldValue);
@@ -221,7 +214,7 @@ public class DataManager implements AppDataComponent {
                 }
             }
         }
-//        
+        packageNames.add(newValue);
         classPackageCombos.add(selectedClassDiagram.getClassNameText().getText() + ":" + newValue);
     }
 

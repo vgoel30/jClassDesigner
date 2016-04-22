@@ -99,12 +99,12 @@ public class MethodObject {
             if (i < arguments.size() - 1) {
                 toReturn += arguments.get(i).toStringCode() + ", ";
             } else {
-                toReturn += arguments.get(i).toStringCode() + " )";
+                toReturn += arguments.get(i).toStringCode() + " ";
             }
         }
 
         //adding the opening curly brace
-        toReturn += "{\n";
+        toReturn += " ){\n";
         
         if(returnType.equals("char") || returnType.equals("byte") || returnType.equals("short") || returnType.equals("long") || returnType.equals("int")){
             toReturn += "\t\treturn 0; \n}";
