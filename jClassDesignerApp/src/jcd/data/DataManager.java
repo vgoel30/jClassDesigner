@@ -34,18 +34,17 @@ public class DataManager implements AppDataComponent {
     // THIS IS A SHARED REFERENCE TO THE APPLICATION
     AppTemplate app;
 
-   
     //THE CURRENT SELECTED CLASS DIAGRAM
-    public   ClassDiagramObject selectedClassDiagram = null;
-    
-    public  ArrayList<String> classNames = new ArrayList<>();
-    
-     //this will keep track of all the classes currently on the canvas
-    public  ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
-    
-    public  ArrayList<String> packageNames = new ArrayList<>();
-    
-    public  ArrayList<String> classPackageCombos = new ArrayList<>();
+    public ClassDiagramObject selectedClassDiagram = null;
+
+    public ArrayList<String> classNames = new ArrayList<>();
+
+    //this will keep track of all the classes currently on the canvas
+    public ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
+
+    public ArrayList<String> packageNames = new ArrayList<>();
+
+    public ArrayList<String> classPackageCombos = new ArrayList<>();
 
     /**
      * THis constructor creates the data manager and sets up the
@@ -60,12 +59,11 @@ public class DataManager implements AppDataComponent {
 
     public void addClassDiagram(ClassDiagramObject diagramToAdd) {
         System.out.print("A class was added  ");
-        
+
         classesOnCanvas.add(diagramToAdd);
         classNames.add(diagramToAdd.getClassNameText().getText());
         packageNames.add(diagramToAdd.getPackageNameText().getText());
         classPackageCombos.add(diagramToAdd.getClassNameText().getText() + ":" + diagramToAdd.getPackageNameText().getText());
-        System.out.println(classesOnCanvas.hashCode());
     }
 
     public void addPackage(String packageName) {
@@ -144,6 +142,18 @@ public class DataManager implements AppDataComponent {
                     diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getSceneY() - 50);
                     diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX() - 450);
 
+                    double x = diagram.getRootContainer().getLayoutX();
+                    double y = diagram.getRootContainer().getLayoutY();
+                    
+                    Pane canvas = getRenderingPane();
+                    
+                    //dynamic scrolling 
+                    if (x > canvas.getWidth() - 150) {
+                        canvas.setMinWidth(canvas.getWidth() + 500);
+                    }
+                    if (y > canvas.getHeight() - 300) {
+                        canvas.setMinHeight(canvas.getHeight() + 500);
+                    }
                 }
             }
         });
@@ -167,79 +177,73 @@ public class DataManager implements AppDataComponent {
 
     }
 
-    
-    public void validateNameOfClass(String oldValue, String newValue){
+    public void validateNameOfClass(String oldValue, String newValue) {
         boolean isLegit = false;
-        
+
         classNames.remove(oldValue);
         classNames.add(newValue);
-        
+
         selectedClassDiagram.getClassNameText().setText(newValue);
         classPackageCombos.remove(oldValue + ":" + selectedClassDiagram.getPackageNameText().getText());
-        
-        
-        for(ClassDiagramObject diagram: classesOnCanvas){
-            if(diagram != selectedClassDiagram){
+
+        for (ClassDiagramObject diagram : classesOnCanvas) {
+            if (diagram != selectedClassDiagram) {
                 int x = selectedClassDiagram.compareTo(diagram);
-                if(x == 0){
+                if (x == 0) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Class name error");
-                alert.setHeaderText(null);
-                alert.setContentText("Class already exists in this package!");
-                alert.showAndWait();
+                    alert.setTitle("Class name error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Class already exists in this package!");
+                    alert.showAndWait();
                 }
             }
         }
-        
+
         classPackageCombos.add(newValue + ":" + selectedClassDiagram.getPackageNameText().getText());
     }
-    
-    
-    
-    public void validateNameOfPackage(String oldValue, String newValue){
+
+    public void validateNameOfPackage(String oldValue, String newValue) {
         packageNames.remove(oldValue);
         packageNames.add(newValue);
-        
+
         selectedClassDiagram.getPackageNameText().setText(newValue);
         classPackageCombos.remove(selectedClassDiagram.getClassNameText().getText() + ":" + oldValue);
-        
-        
-        for(ClassDiagramObject diagram: classesOnCanvas){
-            if(diagram != selectedClassDiagram){
+
+        for (ClassDiagramObject diagram : classesOnCanvas) {
+            if (diagram != selectedClassDiagram) {
                 int x = selectedClassDiagram.compareTo(diagram);
-                if(x == 0){
+                if (x == 0) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Package name error");
-                alert.setHeaderText(null);
-                alert.setContentText("Package already exists in this package!");
-                alert.showAndWait();
+                    alert.setTitle("Package name error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Package already exists in this package!");
+                    alert.showAndWait();
                 }
             }
         }
 //        
-      classPackageCombos.add(selectedClassDiagram.getClassNameText().getText() + ":" + newValue);
+        classPackageCombos.add(selectedClassDiagram.getClassNameText().getText() + ":" + newValue);
     }
 
     public void handleExportCode(Window window) {
         System.out.println("packageNames.size " + packageNames.size());
-        for(String Package: packageNames){
-            System.out.println("LIT : " + Package);
-    }
-        
+
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Export to java code");
         File file = directoryChooser.showDialog(window);
-        
+
+        //get the distinct package names to avoid package with same names
         ArrayList<String> distinctPackages = getDistinctPackages();
-        
-        for(String packageName: distinctPackages){
+
+        for (String packageName : distinctPackages) {
             ArrayList<ClassDiagramObject> insideCorrectPackage = findByPackageName(packageName);
+            //replace all the . with / to prevent issues in file management
             packageName = packageName.replace(".", "/");
             File directory = new File(file.getPath() + "/src/" + packageName);
             directory.mkdirs();
-            for(ClassDiagramObject diagramToExtract : insideCorrectPackage){
-                File javaFile = new File(directory,diagramToExtract.getClassNameText().getText() + ".java");
-                    
+            for (ClassDiagramObject diagramToExtract : insideCorrectPackage) {
+                File javaFile = new File(directory, diagramToExtract.getClassNameText().getText() + ".java");
+
                 try {
                     PrintWriter myWriter = new PrintWriter(javaFile.getPath(), "UTF-16");
                     myWriter.write(diagramToExtract.toStringCode());
@@ -249,30 +253,30 @@ public class DataManager implements AppDataComponent {
                 } catch (UnsupportedEncodingException ex) {
                     System.out.println("ENCODING NOT FOUND");
                 }
-                    
-                
+
             }
         }
     }
-    
-    public ArrayList<String> getDistinctPackages(){
+
+    public ArrayList<String> getDistinctPackages() {
         ArrayList<String> uniquePackages = new ArrayList<>();
-        for(ClassDiagramObject diagrams: classesOnCanvas){
-            if(!uniquePackages.contains(diagrams.getPackageNameText().getText()))
+        for (ClassDiagramObject diagrams : classesOnCanvas) {
+            if (!uniquePackages.contains(diagrams.getPackageNameText().getText())) {
                 uniquePackages.add(diagrams.getPackageNameText().getText());
+            }
         }
         return uniquePackages;
     }
-    
-    public ArrayList<ClassDiagramObject> findByPackageName(String packageName){
+
+    public ArrayList<ClassDiagramObject> findByPackageName(String packageName) {
         ArrayList<ClassDiagramObject> legitList = new ArrayList<>();
-        
-        for(ClassDiagramObject diagrams: classesOnCanvas){
-            if(diagrams.getPackageNameText().getText().equals(packageName)){
+
+        for (ClassDiagramObject diagrams : classesOnCanvas) {
+            if (diagrams.getPackageNameText().getText().equals(packageName)) {
                 legitList.add(diagrams);
             }
         }
-        
+
         return legitList;
     }
 
