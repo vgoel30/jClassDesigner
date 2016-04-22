@@ -7,6 +7,7 @@ package jcd.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
@@ -26,6 +27,8 @@ public class GridEditController {
     AppTemplate app;
 
     DataManager dataManager;
+    
+     ArrayList<String> classes = new ArrayList<>();
 
     public GridEditController(AppTemplate initApp) {
         app = initApp;
@@ -39,12 +42,14 @@ public class GridEditController {
      */
     public void addDiagram(Pane canvas, String type) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        if (DataManager.selectedClassDiagram != null) {
-            dataManager.restoreSelectedProperties(DataManager.selectedClassDiagram);
-            DataManager.selectedClassDiagram = null;
-            
-            workspace.disableButtons(true);
-        }
+//        if (DataManager.selectedClassDiagram != null) {
+//            
+//            DataManager.selectedClassDiagram = null;
+//            
+//            workspace.disableButtons(true);
+//        }
+        
+        //dataManager.restoreSelectedProperties(DataManager.selectedClassDiagram);
 
         canvas.setOnMouseClicked((MouseEvent e) -> {
             if (workspace.drawingActive) {
@@ -65,11 +70,13 @@ public class GridEditController {
                 objectToPut.putOnCanvas(canvas);
                 dataManager.attachClassDiagramEventHandlers(objectToPut);
                 workspace.disableButtons(true);
+                
                 dataManager.addClassDiagram(objectToPut);
-                dataManager.addPackage(objectToPut.getPackageNameText().getText());
                 
                 String nameToAdd = objectToPut.getClassNameText().getText() + ":" + objectToPut.getPackageNameText().getText();
                 dataManager.addClassPackageCombo(nameToAdd);
+                classes.add(objectToPut.getClassNameText().getText());
+                System.out.println("GEC: "  + classes);
             }
             
         });

@@ -315,7 +315,7 @@ public class ClassDiagramObject extends Pane {
     public String toStringCode(){
         String toReturn = "";
         
-        toReturn += "public class " + this.getClassNameText().getText() + "{\n\n ";
+        toReturn += "public " + getDiagramType() + " " + this.getClassNameText().getText() + "{\n\n ";
         
         for(VariableObject variable: variables){
             toReturn += "\t" + variable.toStringCode() + "\n";
@@ -344,7 +344,7 @@ public class ClassDiagramObject extends Pane {
         ArrayList<VariableObject> variables = new ArrayList<>();
         variables.add(sample);
         
-        ClassDiagramObject lit = new ClassDiagramObject("className", "Class", methods, variables);
+        ClassDiagramObject lit = new ClassDiagramObject("className", "class", methods, variables);
         System.out.println(lit.toStringCode());
     }
 

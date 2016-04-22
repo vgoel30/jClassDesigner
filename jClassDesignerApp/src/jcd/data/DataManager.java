@@ -5,11 +5,16 @@
  */
 package jcd.data;
 
+import java.io.File;
 import java.util.ArrayList;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
+import jcd.controller.GridEditController;
 import jcd.gui.Workspace;
 import maf.AppTemplate;
 import maf.components.AppDataComponent;
@@ -24,13 +29,18 @@ public class DataManager implements AppDataComponent {
     // THIS IS A SHARED REFERENCE TO THE APPLICATION
     AppTemplate app;
 
-    //this will keep track of all the classes currently on the canvas
-    public ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
+   
     //THE CURRENT SELECTED CLASS DIAGRAM
-    public static ClassDiagramObject selectedClassDiagram = null;
-    public static ArrayList<String> classNames = new ArrayList<>();
-    public static ArrayList<String> packageNames = new ArrayList<>();
-    public static ArrayList<String> classPackageCombos = new ArrayList<>();
+    public  ClassDiagramObject selectedClassDiagram = null;
+    
+    public  ArrayList<String> classNames = new ArrayList<>();
+    
+     //this will keep track of all the classes currently on the canvas
+    public  ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
+    
+    public  ArrayList<String> packageNames = new ArrayList<>();
+    
+    public  ArrayList<String> classPackageCombos = new ArrayList<>();
 
     /**
      * THis constructor creates the data manager and sets up the
@@ -44,14 +54,18 @@ public class DataManager implements AppDataComponent {
     }
 
     public void addClassDiagram(ClassDiagramObject diagramToAdd) {
+        System.out.print("A class was added  ");
+        
         classesOnCanvas.add(diagramToAdd);
+        packageNames.add(diagramToAdd.getPackageNameText().getText());
+        System.out.println(classesOnCanvas.hashCode());
     }
-    
-    public void addPackage(String packageName){
+
+    public void addPackage(String packageName) {
         packageNames.add(packageName);
     }
-    
-    public void addClassPackageCombo(String name){
+
+    public void addClassPackageCombo(String name) {
         classPackageCombos.add(name);
     }
 
@@ -60,6 +74,7 @@ public class DataManager implements AppDataComponent {
     }
 
     public void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
+        GridEditController gridEditController = new GridEditController(app);
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
         //if the diagram has been clicked
@@ -80,13 +95,13 @@ public class DataManager implements AppDataComponent {
                         diagram.getRootContainer().setLayoutX(mouseDraggedEvent.getX());
                     }
                 });
-                
+
                 diagram.getLeftLine().setOnMouseEntered(mouseEnteredEvent -> {
-                workspace.getScene().getRoot().setCursor(Cursor.W_RESIZE);
+                    workspace.getScene().getRoot().setCursor(Cursor.W_RESIZE);
                 });
-                
+
                 diagram.getLeftLine().setOnMouseExited(mouseEnteredEvent -> {
-                workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
+                    workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
                 });
 
                 //event handlers for the right line (resizing from the right)
@@ -95,13 +110,13 @@ public class DataManager implements AppDataComponent {
                         diagram.getRootContainer().setPrefWidth(mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX());
                     }
                 });
-                
+
                 diagram.getRightLine().setOnMouseEntered(mouseEnteredEvent -> {
-                workspace.getScene().getRoot().setCursor(Cursor.W_RESIZE);
+                    workspace.getScene().getRoot().setCursor(Cursor.W_RESIZE);
                 });
-                
+
                 diagram.getRightLine().setOnMouseExited(mouseEnteredEvent -> {
-                workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
+                    workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
                 });
 
                 selectedClassDiagram = diagram;
@@ -169,7 +184,7 @@ public class DataManager implements AppDataComponent {
             alert.setHeaderText(null);
             alert.setContentText("Class already exists in this package!");
             alert.showAndWait();
-           // selectedClassDiagram.getClassNameText().setText("Class Name");
+            // selectedClassDiagram.getClassNameText().setText("Class Name");
             //classNameField.setText("Class Name");
         } else {
             selectedClassDiagram.getClassNameText().setText(newName);
@@ -201,9 +216,22 @@ public class DataManager implements AppDataComponent {
         }
 
     }
-    
-    public void handleExportCode(){
+
+    public void handleExportCode(Window window) {
+        System.out.println("classesOnCanvas.size " + classesOnCanvas.hashCode());
+        for(ClassDiagramObject Class: classesOnCanvas){
+            System.out.println("LIT : " + Class);
+    }
         
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Export to java code");
+        File initialDirectory = new File("./Source/");
+        directoryChooser.setInitialDirectory(initialDirectory);
+        File file = directoryChooser.showDialog(window);
+        
+        
+        
+       
     }
 
     @Override

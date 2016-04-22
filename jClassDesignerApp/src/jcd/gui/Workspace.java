@@ -70,6 +70,7 @@ import maf.ui.AppGUI;
  * @author varungoel
  */
 public final class Workspace extends AppWorkspaceComponent {
+    
 
     static final int BUTTON_TAG_WIDTH = 75;
     static final String CLASS_GRID_CANVAS = "grid_canvas";
@@ -156,6 +157,9 @@ public final class Workspace extends AppWorkspaceComponent {
 
     // HERE ARE THE CONTROLLERS
     GridEditController gridEditController;
+    DataManager dataManager;
+    
+    
 
     public Workspace(AppTemplate initApp) throws IOException, Exception {
         // KEEP THIS FOR LATER
@@ -163,6 +167,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         // KEEP THE GUI FOR LATER        
         gui = app.getGUI();
+        dataManager = (DataManager) app.getDataComponent();
 
         layoutGUI();
         setupHandlers();
@@ -202,7 +207,7 @@ public final class Workspace extends AppWorkspaceComponent {
         toolbarButtons.add(zoomOutButton);
         screenshotButton = gui.initChildButton(toolBarPane, PHOTO_ICON.toString(), PHOTO_TOOLTIP.toString(), false);
         toolbarButtons.add(screenshotButton);
-        codeButton = gui.initChildButton(toolBarPane, CODE_ICON.toString(), CODE_TOOLTIP.toString(), true);
+        codeButton = gui.initChildButton(toolBarPane, CODE_ICON.toString(), CODE_TOOLTIP.toString(), false);
         toolbarButtons.add(codeButton);
 
         gridButtonContainer = new HBox();
@@ -304,7 +309,7 @@ public final class Workspace extends AppWorkspaceComponent {
         // MAKE THE GRID CONTROLLER	
         gridEditController = new GridEditController(app);
         
-        DataManager dataManager = new DataManager(app);
+        
 
         //MAKE THE DIAGRAM CONTROLLER
         // MAKE THE EDIT CONTROLLER
@@ -337,7 +342,7 @@ public final class Workspace extends AppWorkspaceComponent {
         });
         
        codeButton.setOnAction(codeButtonClicked -> {
-          dataManager.handleExportCode();
+          dataManager.handleExportCode(gui.getWindow());
        });
 
         screenshotButton.setOnAction(screenshotButtonClicked -> {
