@@ -337,7 +337,7 @@ public class FileManager implements AppFileComponent {
             JsonObject jsonDiagram = jsonDiagramsArray.getJsonObject(i);
             ClassDiagramObject classDiagram = loadClassDiagram(jsonDiagram);
             diagrams.add(classDiagram);
-            //System.out.println(classDiagram.toStringPlusPlus());
+            System.out.println(classDiagram.toStringPlusPlus());
         }
         return diagrams;
     }

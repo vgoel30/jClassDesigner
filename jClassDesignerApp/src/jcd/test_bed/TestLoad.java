@@ -7,8 +7,6 @@ package jcd.test_bed;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jcd.data.ClassDiagramObject;
 import jcd.file.FileManager;
 
@@ -23,9 +21,7 @@ public class TestLoad {
     static FileManager myManager = new FileManager();
 
     public static void main(String[] args) throws IOException {
-
-         getData1();
-        // + diagrams.get(0).getVariables());
+        populateArray();
     }
 
     public static void populateArray() {
@@ -61,28 +57,28 @@ public class TestLoad {
         populateArray();
         return diagrams.get(1).getX();
     }
-    
-    public static String getData6(){
+
+    public static String getData6() {
         populateArray();
         return (diagrams.get(4).getVariables().get(3).toString());
     }
-    
-    public static int getData7(){
+
+    public static int getData7() {
         populateArray();
         return (diagrams.get(1).getVariables().size());
     }
-    
-    public static int getData8(){
+
+    public static int getData8() {
         populateArray();
         return diagrams.get(1).getMethods().size();
     }
-    
-    public static String getData9(){
+
+    public static String getData9() {
         populateArray();
         return (diagrams.get(3).getVariables().get(0).toString());
     }
-    
-    public static String getData10(){
+
+    public static String getData10() {
         populateArray();
         return diagrams.get(1).getDiagramType();
     }

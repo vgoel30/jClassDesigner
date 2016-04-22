@@ -20,7 +20,8 @@ public class VariableObject {
     
     public static void main(String[] args){
         VariableObject sample = new VariableObject("integerVariable", "int", true, false, "public");
-        System.out.println(sample.toStringCode());
+        //System.out.println(sample.toStringCode());
+       
     }
 
     public VariableObject(String name, String type, boolean isStatic, boolean isFinal, String access) {
