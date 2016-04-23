@@ -224,7 +224,6 @@ public class DataManager implements AppDataComponent {
     }
 
     public void handleExportCode(Window window) {
-        System.out.println("packageNames.size " + packageNames.size());
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Export to java code");
@@ -235,7 +234,7 @@ public class DataManager implements AppDataComponent {
 
         for (String packageName : distinctPackages) {
             ArrayList<ClassDiagramObject> insideCorrectPackage = findByPackageName(packageName);
-            //replace all the . with / to prevent issues in file management
+            //replace all the . with / to prevent issues in file management and make the children directory
             packageName = packageName.replace(".", "/");
             File directory = new File(file.getPath() + "/src/" + packageName);
             directory.mkdirs();
@@ -243,7 +242,7 @@ public class DataManager implements AppDataComponent {
                 File javaFile = new File(directory, diagramToExtract.getClassNameText().getText() + ".java");
 
                 try {
-                    PrintWriter myWriter = new PrintWriter(javaFile.getPath(), "UTF-16");
+                    PrintWriter myWriter = new PrintWriter(javaFile.getPath(), "UTF-8");
                     myWriter.write(diagramToExtract.toStringCode());
                     myWriter.close();
                 } catch (FileNotFoundException ex) {

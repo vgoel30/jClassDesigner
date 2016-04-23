@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import jcd.data.ClassDiagramObject;
 
@@ -51,7 +50,6 @@ public class AppOptionDialog extends Stage {
      * Note that the constructor is private since it follows the singleton
      * design pattern.
      *
-     * @param primaryStage The owner of this modal dialog.
      */
     public AppOptionDialog() {
     }
@@ -89,13 +87,6 @@ public class AppOptionDialog extends Stage {
         addPackage = new Button(ADD_PACKAGE);
         //noButton = new Button(NO);
         doneButton = new Button(CANCEL);
-
-        // MAKE THE EVENT HANDLER FOR THESE BUTTONS
-//        EventHandler yesNoCancelHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
-//            Button sourceButton = (Button) ae.getSource();
-//            AppOptionDialog.this.selection = sourceButton.getText();
-//            AppOptionDialog.this.hide();
-//        };
 
          // NOW ORGANIZE OUR BUTTONS
         VBox buttonBox = new VBox(10);
@@ -141,16 +132,7 @@ public class AppOptionDialog extends Stage {
         this.setScene(messageScene);
     }
 
-    /**
-     * Accessor method for getting the selection the user made.
-     *
-     * @return Either YES, NO, or CANCEL, depending on which button the user
-     * selected when this dialog was presented.
-     */
-    public String getSelection() {
-        return selection;
-    }
-
+    
     /**
      * This method loads a custom message into the label then pops open the
      * dialog.
