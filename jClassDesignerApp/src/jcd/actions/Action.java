@@ -12,7 +12,7 @@ package jcd.actions;
  */
 public class Action {
     
-    String actionType;
+     String actionType;
 
     public String getActionType() {
         return actionType;

@@ -340,6 +340,8 @@ public final class Workspace extends AppWorkspaceComponent {
         });
         
         undoButton.setOnAction(undoButtonClicked -> {
+            drawingActive = false;
+            selectionActive = false;
             dataManager.handleUndo();
         });
 

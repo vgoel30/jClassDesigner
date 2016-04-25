@@ -19,7 +19,7 @@ import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
  *
  * @author varungoel
  */
-public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramObject> {
+public class ClassDiagramObject  implements Comparable<ClassDiagramObject> {
 
     static int counter = 0;
 
@@ -154,7 +154,7 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         root.getChildren().add(rootContainer);
         root.getChildren().add(leftLine);
         root.getChildren().add(rightLine);
-        root.getChildren().add(bottomLine);
+        //root.getChildren().add(bottomLine);
     }
 
     public double getEndPoint() {
