@@ -182,6 +182,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
     public void layoutGUI() {
         FlowPane toolBarPane = gui.getToolbarPane();
+        
 
         //SETTING UP ALL THE BUTTONS
         selectionButton = gui.initChildButton(toolBarPane, SELECTION_TOOL_ICON.toString(), SELECTION_TOOL_TOOLTIP.toString(), false);
@@ -194,7 +195,7 @@ public final class Workspace extends AppWorkspaceComponent {
         toolbarButtons.add(addInterfaceButton);
         removeButton = gui.initChildButton(toolBarPane, REMOVE_ICON.toString(), REMOVE_TOOLTIP.toString(), true);
         toolbarButtons.add(removeButton);
-        undoButton = gui.initChildButton(toolBarPane, UNDO_ICON.toString(), UNDO_TOOLTIP.toString(), true);
+        undoButton = gui.initChildButton(toolBarPane, UNDO_ICON.toString(), UNDO_TOOLTIP.toString(), false);
         toolbarButtons.add(undoButton);
         redoButton = gui.initChildButton(toolBarPane, REDO_ICON.toString(), REDO_TOOLTIP.toString(), true);
         toolbarButtons.add(redoButton);
@@ -298,8 +299,7 @@ public final class Workspace extends AppWorkspaceComponent {
         ((BorderPane) workspace).setCenter(canvasScrollPane);
         canvasScrollPane.setContent(canvas);
 
-        System.out.println(canvasScrollPane.getContent());
-
+       
     }
 
     public void setupHandlers() throws Exception {
@@ -338,6 +338,10 @@ public final class Workspace extends AppWorkspaceComponent {
         codeButton.setOnAction(codeButtonClicked -> {
             dataManager.handleExportCode(gui.getWindow());
         });
+        
+        undoButton.setOnAction(undoButtonClicked -> {
+            dataManager.handleUndo();
+        });
 
         screenshotButton.setOnAction(screenshotButtonClicked -> {
             if (canvas.getChildren().size() > 0) {
@@ -361,9 +365,7 @@ public final class Workspace extends AppWorkspaceComponent {
             }
         });
         
-//        classNameField.setOnAction(e -> {
-//            dataManager.setValidatedClassName(dataManager.selectedClassDiagram.getClassNameText().getText(),classNameField.getText());
-//        });
+
 
         //when the enter key is clicked, validate the name of the package
         packageNameField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -371,10 +373,6 @@ public final class Workspace extends AppWorkspaceComponent {
                 dataManager.validateNameOfPackage(oldValue, newValue);
             }
         });
-        
-//        packageNameField.setOnAction(e -> {
-//            dataManager.setValidatedPackageName(dataManager.selectedClassDiagram.getPackageNameText().getText(),packageNameField.getText());
-//        });
     }
 
     @Override
@@ -408,7 +406,6 @@ public final class Workspace extends AppWorkspaceComponent {
     @Override
     public void initStyle() {
         System.out.println(toolbarButtons.size());
-
         //stylize the buttons in the toolbar
         for (Button button : toolbarButtons) {
             button.getStyleClass().add(CLASS_FILE_BUTTON);

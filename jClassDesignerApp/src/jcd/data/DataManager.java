@@ -10,12 +10,16 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Stack;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
+import jcd.actions.Action;
+import jcd.actions.ResizeRight;
+import jcd.controller.ActionController;
 import jcd.controller.GridEditController;
 import jcd.gui.AppOptionDialog;
 import jcd.gui.Workspace;
@@ -28,7 +32,9 @@ import static maf.components.AppStyleArbiter.SELECTED_DIAGRAM_CONTAINER;
  * @author varungoel
  */
 public class DataManager implements AppDataComponent {
-
+    
+    public static final String RESIZE_RIGHT = "resize_right";
+    
     // THIS IS A SHARED REFERENCE TO THE APPLICATION
     AppTemplate app;
 
@@ -43,7 +49,10 @@ public class DataManager implements AppDataComponent {
     public ArrayList<String> packageNames = new ArrayList<>();
 
     public ArrayList<String> classPackageCombos = new ArrayList<>();
+    
+    public Stack<Action> undoStack = new Stack<>();
 
+    ActionController actionController;
     /**
      * THis constructor creates the data manager and sets up the
      *
@@ -53,6 +62,7 @@ public class DataManager implements AppDataComponent {
     public DataManager(AppTemplate initApp) throws Exception {
         // KEEP THE APP FOR LATER
         app = initApp;
+        actionController = new ActionController(initApp);
     }
 
     public void addClassDiagram(ClassDiagramObject diagramToAdd) {
@@ -106,12 +116,28 @@ public class DataManager implements AppDataComponent {
                 diagram.getLeftLine().setOnMouseExited(mouseEnteredEvent -> {
                     workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
                 });
+                
+                //if the user is resizing to the right, create a new resize right action
+                ResizeRight resizeRightMove = new ResizeRight(diagram);
+                
+                //when the right line is pressed for the resizing, that's the initial width for resizing
+                diagram.getRightLine().setOnMousePressed(mouseClickedEvent -> {
+                    resizeRightMove.setInitialWidth(diagram.getRootContainer().getWidth());
+                    
+                });
 
                 //event handlers for the right line (resizing from the right)
                 diagram.getRightLine().setOnMouseDragged(mouseDraggedEvent -> {
                     if (mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() >= 185 && mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() <= 450) {
                         diagram.getRootContainer().setPrefWidth(mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX());
                     }
+                });
+                
+                //when the mouse has been released, we set the final width and push the acion on the undo stack
+                diagram.getRightLine().setOnMouseReleased(mouseDragReleased -> {
+                    resizeRightMove.setFinalWidth(diagram.getRootContainer().getWidth());
+                    System.out.println(resizeRightMove);
+                    undoStack.push(resizeRightMove);
                 });
 
                 diagram.getRightLine().setOnMouseEntered(mouseEnteredEvent -> {
@@ -129,6 +155,7 @@ public class DataManager implements AppDataComponent {
 
                 workspace.disableButtons(false);
 
+                //if the user clicked twice on the diagram, ask them to add API classes
                 if (mouseClicked.getClickCount() == 2) {
                     System.out.println("Twice");
 
@@ -162,7 +189,13 @@ public class DataManager implements AppDataComponent {
                     }
                 }
             }
+            
+            diagram.getRootContainer().setOnMouseReleased(e -> {
+            System.out.println("Drag released at X: " + diagram.getRootContainer().getLayoutX());
         });
+        });
+        
+        
     }
 
     /**
@@ -276,11 +309,29 @@ public class DataManager implements AppDataComponent {
 
         return legitList;
     }
+    
+    public void handleUndo(){
+        if (selectedClassDiagram != null) {
+            restoreSelectedProperties(selectedClassDiagram);
+            selectedClassDiagram = null;
+            
+           ((Workspace) app.getWorkspaceComponent()).disableButtons(true);
+        }
+        
+        //if the user wants to undo a right resize
+        if(undoStack.peek().getActionType().equals(RESIZE_RIGHT)){
+            ResizeRight resizeRightMove = (ResizeRight) undoStack.peek();
+            ClassDiagramObject diagram = resizeRightMove.getDiagram();
+            actionController.handleResizeRightUndo(resizeRightMove.getInitialWidth(),diagram);
+        }
+    }
 
     @Override
     public void reset() {
         //remove all the children
         classesOnCanvas.clear();
+        //remove all the actions from the undo stack
+        undoStack.clear();
         ((Workspace) app.getWorkspaceComponent()).getCanvas().getChildren().clear();
     }
 }

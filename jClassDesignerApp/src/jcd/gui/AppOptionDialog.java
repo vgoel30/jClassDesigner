@@ -70,6 +70,7 @@ public class AppOptionDialog extends Stage {
      * This method initializes the singleton for use.
      *
      * @param primaryStage The window above which this dialog will be centered.
+     * @param diagram
      */
     public void init(Stage primaryStage, ClassDiagramObject diagram) {
         // MAKE THIS DIALOG MODAL, MEANING OTHERS WILL WAIT

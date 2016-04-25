@@ -299,7 +299,7 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     }
     
     public String toString() {
-        return diagramType + ": " + this.classNameText.getText();
+        return diagramType + ": " + this.classNameText.getText() + " Package :" + this.packageNameText.getText();
     }
     
     public String toStringCode() {
