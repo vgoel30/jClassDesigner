@@ -69,6 +69,7 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     //for drag to resize
     Line leftLine;
     Line rightLine;
+    Line bottomLine;
 
     //helper constructor for testing load and save
     public ClassDiagramObject(String name, String type, ArrayList<MethodObject> methods, ArrayList<VariableObject> variables) {
@@ -142,8 +143,8 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
 
         leftLine = new Line();
         rightLine = new Line();
+        bottomLine = new Line();
 
-        //root.getChildren().add(rootContainer);
         setStandardDimensions();
 
         initStyle();
@@ -153,12 +154,18 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         root.getChildren().add(rootContainer);
         root.getChildren().add(leftLine);
         root.getChildren().add(rightLine);
+        root.getChildren().add(bottomLine);
     }
 
     public double getEndPoint() {
         return rootContainer.getLayoutX() + rootContainer.getWidth();
     }
 
+    /**
+     * Add an import package
+     *
+     * @param API
+     */
     public void addAPI(String API) {
         if (!javaAPI_Packages.contains(API)) {
             javaAPI_Packages.add(API);
@@ -168,7 +175,7 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
 
     //sets the standard dimensions for the containers inside the boxes
     private void setStandardDimensions() {
-        rootContainer.setMinHeight(250);
+        rootContainer.setMinHeight(80);
         rootContainer.setMinWidth(175);
         rootContainer.setMaxWidth(450);
 
@@ -194,22 +201,32 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         rightLine.setStrokeWidth(5);
         rightLine.setVisible(false);
 
-        packageContainer.setMinHeight(20);
+        //setting up the bottom line
+        bottomLine.startXProperty().bind(rootContainer.layoutXProperty());
+        bottomLine.startYProperty().bind(rootContainer.layoutYProperty().add(rootContainer.heightProperty()));
+        
+        bottomLine.endXProperty().bind(bottomLine.startXProperty().add(rootContainer.widthProperty()));
+        bottomLine.endYProperty().bind(bottomLine.startYProperty());
+        
+        bottomLine.setStroke(Color.RED);
+        bottomLine.setStrokeWidth(5);
+        
+        packageContainer.setMinHeight(10);
         packageContainer.setMinWidth(100);
         packageContainer.setMaxWidth(100);
 
-        nameContainer.setMinHeight(50);
+        nameContainer.setMinHeight(20);
         //binding will allow easier resizing
         nameContainer.minWidthProperty().bind(rootContainer.minWidthProperty());
         nameContainer.maxWidthProperty().bind(rootContainer.maxWidthProperty());
         nameContainer.prefWidthProperty().bind(rootContainer.prefWidthProperty());
 
-        variablesContainer.setMinHeight(100);
+        variablesContainer.setMinHeight(20);
         variablesContainer.minWidthProperty().bind(rootContainer.minWidthProperty());
         variablesContainer.maxWidthProperty().bind(rootContainer.maxWidthProperty());
         variablesContainer.prefWidthProperty().bind(rootContainer.prefWidthProperty());
 
-        methodsContainer.setMinHeight(100);
+        methodsContainer.setMinHeight(20);
         methodsContainer.minWidthProperty().bind(rootContainer.minWidthProperty());
         methodsContainer.maxWidthProperty().bind(rootContainer.maxWidthProperty());
         methodsContainer.prefWidthProperty().bind(rootContainer.prefWidthProperty());
