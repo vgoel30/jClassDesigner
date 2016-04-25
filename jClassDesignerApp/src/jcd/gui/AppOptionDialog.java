@@ -36,9 +36,9 @@ public class AppOptionDialog extends Stage {
     Button noButton;
     Button doneButton;
     String selection;
-    
+
     TextField textField;
-    
+
     ArrayList<TextField> textFields = new ArrayList<>();
 
     // CONSTANT CHOICES
@@ -81,6 +81,8 @@ public class AppOptionDialog extends Stage {
         // LABEL TO DISPLAY THE CUSTOM MESSAGE
         messageLabel = new Label();
         
+        
+
         textField = new TextField();
         textFields.add(textField);
 
@@ -89,34 +91,43 @@ public class AppOptionDialog extends Stage {
         //noButton = new Button(NO);
         doneButton = new Button(CANCEL);
 
-         // NOW ORGANIZE OUR BUTTONS
+        // NOW ORGANIZE OUR BUTTONS
         VBox buttonBox = new VBox(10);
         buttonBox.getChildren().add(addPackage);
         buttonBox.getChildren().add(doneButton);
         buttonBox.getChildren().add(textField);
-        
-        
+
         EventHandler addPackageHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
             TextField newTextField = new TextField();
             textFields.add(newTextField);
             buttonBox.getChildren().add(newTextField);
         };
         
+        System.out.println("JAVA APIS included: " + diagram.getJavaAPI_Packages().size());
+        for(String API : diagram.getJavaAPI_Packages()){
+            textField = new TextField(API);
+            textFields.add(textField);
+            buttonBox.getChildren().add(textField);
+        }
+        
+        //clear the APIs to add new ones
+        diagram.getJavaAPI_Packages().clear();
+
         EventHandler doneHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
-           AppOptionDialog.this.hide();
-           
-           for(TextField textField: textFields){
-               String packageName = textField.getText();
-               //add the API 
-               diagram.addAPI(packageName);
-           }
+            AppOptionDialog.this.hide();
+
+            for (TextField textField : textFields) {
+                String packageName = textField.getText();
+                //add the API 
+                if (packageName != "") {
+                    diagram.addAPI(packageName);
+                }
+            }
         };
 
         // AND THEN REGISTER THEM TO RESPOND TO INTERACTIONS
-       addPackage.setOnAction(addPackageHandler);
-       doneButton.setOnAction(doneHandler);
-
-       
+        addPackage.setOnAction(addPackageHandler);
+        doneButton.setOnAction(doneHandler);
 
         // WE'LL PUT EVERYTHING HERE
         messagePane = new VBox();
@@ -133,7 +144,6 @@ public class AppOptionDialog extends Stage {
         this.setScene(messageScene);
     }
 
-    
     /**
      * This method loads a custom message into the label then pops open the
      * dialog.
