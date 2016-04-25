@@ -208,8 +208,11 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         bottomLine.endXProperty().bind(bottomLine.startXProperty().add(rootContainer.widthProperty()));
         bottomLine.endYProperty().bind(bottomLine.startYProperty());
         
-        bottomLine.setStroke(Color.RED);
+        bottomLine.setStroke(Color.WHITE);
         bottomLine.setStrokeWidth(5);
+        bottomLine.setVisible(false);
+        
+        //bottom line set up done
         
         packageContainer.setMinHeight(10);
         packageContainer.setMinWidth(100);
@@ -260,6 +263,10 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
 
     public Line getRightLine() {
         return this.rightLine;
+    }
+    
+    public Line getBottomLine() {
+        return this.bottomLine;
     }
 
     public Text getClassNameText() {
@@ -383,5 +390,7 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
 
         //System.out.println("MASSIVE DOPE TEST: " + lit.getClass().getName());
     }
+
+    
 
 }

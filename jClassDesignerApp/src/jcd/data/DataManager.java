@@ -96,6 +96,7 @@ public class DataManager implements AppDataComponent {
                 diagram.getRootContainer().getStyleClass().add(SELECTED_DIAGRAM_CONTAINER);
                 diagram.getLeftLine().setVisible(true);
                 diagram.getRightLine().setVisible(true);
+                diagram.getBottomLine().setVisible(true);
 
                 if (selectedClassDiagram != null) {
                     restoreSelectedProperties(selectedClassDiagram);
@@ -144,10 +145,27 @@ public class DataManager implements AppDataComponent {
                     workspace.getScene().getRoot().setCursor(Cursor.W_RESIZE);
                 });
 
+                
                 diagram.getRightLine().setOnMouseExited(mouseEnteredEvent -> {
                     workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
                 });
 
+                //event handlers for the bottom line
+                diagram.getBottomLine().setOnMouseDragged(mouseDraggedEvent -> {
+                   // if (mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() >= 185 && mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() <= 450) {
+                        diagram.getRootContainer().setPrefHeight(mouseDraggedEvent.getY() - diagram.getRootContainer().getLayoutY());
+                    //}
+                });
+                
+                diagram.getBottomLine().setOnMouseEntered(mouseEnteredEvent -> {
+                    workspace.getScene().getRoot().setCursor(Cursor.N_RESIZE);
+                });
+
+                
+                diagram.getBottomLine().setOnMouseExited(mouseEnteredEvent -> {
+                    workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
+                });
+                
                 selectedClassDiagram = diagram;
                 //reflect the selected changes
                 workspace.classNameField.setText(diagram.getClassNameText().getText());
