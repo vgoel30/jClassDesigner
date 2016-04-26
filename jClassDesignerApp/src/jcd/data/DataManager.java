@@ -339,6 +339,8 @@ public class DataManager implements AppDataComponent {
             VariableOptionDialog newDialog = new VariableOptionDialog();
             newDialog.init(app.getGUI().getWindow(), selectedClassDiagram);
             newDialog.show();
+            
+            //diagramController.addVariable();
         }
     }
 

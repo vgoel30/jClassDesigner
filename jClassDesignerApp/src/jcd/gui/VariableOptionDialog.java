@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -152,6 +153,29 @@ public class VariableOptionDialog extends Stage {
             
             VariableObject toAdd = new VariableObject(name, type, isStatic, isFinal, access);
             System.out.println(toAdd.toStringCode());
+            
+            boolean alreadyExists = false;
+            
+            //see if the method already exists
+            for(VariableObject variable : diagram.getVariables()){
+                if(toAdd.equals(toAdd)){
+                    alreadyExists = true;
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Variable name error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Variable already exists in this class!");
+                    alert.showAndWait();
+                    break;
+                }
+            }
+            
+            //if the variable doesn't already exist, add it to the list of variables
+            if(!alreadyExists){
+                diagram.getVariables().add(toAdd);
+                System.out.println(diagram.toStringCode());
+            }
+            
+           
             
             VariableOptionDialog.this.hide();
         };

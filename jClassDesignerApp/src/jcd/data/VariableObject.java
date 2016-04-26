@@ -152,9 +152,7 @@ public class VariableObject implements Comparable<VariableObject> {
      * @param o
      * @return 
      */
-    public boolean variablesAreEqual(VariableObject o){
-        if(this.compareTo(o) == 0)
-            return true;
-        return false;
+    public boolean equals(VariableObject o){
+        return this.compareTo(o) == 0;
     }
 }
