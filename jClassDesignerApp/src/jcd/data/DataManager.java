@@ -21,6 +21,7 @@ import jcd.actions.Action;
 import jcd.actions.MoveDiagram;
 import jcd.actions.ResizeRight;
 import jcd.controller.ActionController;
+import jcd.controller.DiagramController;
 import jcd.gui.AppOptionDialog;
 import jcd.gui.Workspace;
 import maf.AppTemplate;
@@ -54,6 +55,7 @@ public class DataManager implements AppDataComponent {
     public Stack<Action> undoStack = new Stack<>();
 
     ActionController actionController;
+    DiagramController diagramController;
 
     /**
      * THis constructor creates the data manager and sets up the
@@ -65,6 +67,8 @@ public class DataManager implements AppDataComponent {
         // KEEP THE APP FOR LATER
         app = initApp;
         actionController = new ActionController(initApp);
+        diagramController = new DiagramController();
+
     }
 
     public void addClassDiagram(ClassDiagramObject diagramToAdd) {
@@ -91,23 +95,21 @@ public class DataManager implements AppDataComponent {
     public void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
-        
         MoveDiagram moveDiagramEvent = new MoveDiagram(diagram);
-        
+
         //if the diagram has been clicked
         diagram.getRootContainer().setOnMouseClicked((MouseEvent mouseClicked) -> {
             if (workspace.selectionActive) {
                 diagram.getRootContainer().getStyleClass().add(SELECTED_DIAGRAM_CONTAINER);
                 diagram.getLeftLine().setVisible(true);
                 diagram.getRightLine().setVisible(true);
-                diagram.getBottomLine().setVisible(true);
 
                 if (selectedClassDiagram != null) {
                     restoreSelectedProperties(selectedClassDiagram);
                 }
-                
+
                 //set the inital position of the mouse event
-                moveDiagramEvent.setInitialPosition(diagram.getRootContainer().getLayoutX(),diagram.getRootContainer().getLayoutY());
+                moveDiagramEvent.setInitialPosition(diagram.getRootContainer().getLayoutX(), diagram.getRootContainer().getLayoutY());
                 System.out.println("MOUSE CLICKED AT : X  " + diagram.getRootContainer().getLayoutX() + " AND FOR Y : " + diagram.getRootContainer().getLayoutY());
 
                 //event handlers for the left line (resizing from the left)
@@ -198,8 +200,6 @@ public class DataManager implements AppDataComponent {
                     }
                 }
             }
-            
-            
 
             diagram.getRootContainer().setOnMouseReleased(e -> {
                 System.out.println("Drag released at X: " + diagram.getRootContainer().getLayoutX());
@@ -310,6 +310,11 @@ public class DataManager implements AppDataComponent {
         return uniquePackages;
     }
 
+    /**
+     * Looks for classes with a particular package
+     * @param packageName
+     * @return A list of classes in that package
+     */
     public ArrayList<ClassDiagramObject> findByPackageName(String packageName) {
         ArrayList<ClassDiagramObject> legitList = new ArrayList<>();
 
@@ -320,6 +325,20 @@ public class DataManager implements AppDataComponent {
         }
 
         return legitList;
+    }
+
+    /**
+     * If the user wants to add a variable
+     */
+    public void handleVariableIncrement() {
+        if (selectedClassDiagram != null) {
+
+            System.out.println("Variable Increment called");
+
+            AppOptionDialog newDialog = new AppOptionDialog();
+            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram);
+            newDialog.show();
+        }
     }
 
     public void handleUndo() {
@@ -336,13 +355,12 @@ public class DataManager implements AppDataComponent {
                 ResizeRight resizeRightMove = (ResizeRight) undoStack.pop();
                 ClassDiagramObject diagram = resizeRightMove.getDiagram();
                 actionController.handleResizeRightUndo(resizeRightMove.getInitialWidth(), diagram);
-            }
-            //if the user wants to remove the diagram
-            else if(undoStack.peek().getActionType().equals(MOVE_DIAGRAM)){
+            } //if the user wants to remove the diagram
+            else if (undoStack.peek().getActionType().equals(MOVE_DIAGRAM)) {
                 System.out.println("MOVE DIAGRAM UNDO");
                 MoveDiagram moveDiagramAction = (MoveDiagram) undoStack.pop();
                 ClassDiagramObject diagram = moveDiagramAction.getDiagram();
-                System.out.println("DEBUG STATEMENT :" + moveDiagramAction.getInitialPositionX() );
+                System.out.println("DEBUG STATEMENT :" + moveDiagramAction.getInitialPositionX());
                 actionController.handleMoveDiagramUndo(moveDiagramAction.getInitialPositionX(), moveDiagramAction.getInitialPositionY(), diagram);
             }
         }

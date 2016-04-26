@@ -19,7 +19,7 @@ import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
  *
  * @author varungoel
  */
-public class ClassDiagramObject  implements Comparable<ClassDiagramObject> {
+public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramObject> {
 
     static int counter = 0;
 
@@ -69,7 +69,7 @@ public class ClassDiagramObject  implements Comparable<ClassDiagramObject> {
     //for drag to resize
     Line leftLine;
     Line rightLine;
-    Line bottomLine;
+    //Line bottomLine;
 
     //helper constructor for testing load and save
     public ClassDiagramObject(String name, String type, ArrayList<MethodObject> methods, ArrayList<VariableObject> variables) {
@@ -143,7 +143,6 @@ public class ClassDiagramObject  implements Comparable<ClassDiagramObject> {
 
         leftLine = new Line();
         rightLine = new Line();
-        bottomLine = new Line();
 
         setStandardDimensions();
 
@@ -154,7 +153,6 @@ public class ClassDiagramObject  implements Comparable<ClassDiagramObject> {
         root.getChildren().add(rootContainer);
         root.getChildren().add(leftLine);
         root.getChildren().add(rightLine);
-        //root.getChildren().add(bottomLine);
     }
 
     public double getEndPoint() {
@@ -202,15 +200,7 @@ public class ClassDiagramObject  implements Comparable<ClassDiagramObject> {
         rightLine.setVisible(false);
 
         //setting up the bottom line
-        bottomLine.startXProperty().bind(rootContainer.layoutXProperty());
-        bottomLine.startYProperty().bind(rootContainer.layoutYProperty().add(rootContainer.heightProperty()));
         
-        bottomLine.endXProperty().bind(bottomLine.startXProperty().add(rootContainer.widthProperty()));
-        bottomLine.endYProperty().bind(bottomLine.startYProperty());
-        
-        bottomLine.setStroke(Color.WHITE);
-        bottomLine.setStrokeWidth(5);
-        bottomLine.setVisible(false);
         
         //bottom line set up done
         
@@ -265,9 +255,7 @@ public class ClassDiagramObject  implements Comparable<ClassDiagramObject> {
         return this.rightLine;
     }
     
-    public Line getBottomLine() {
-        return this.bottomLine;
-    }
+    
 
     public Text getClassNameText() {
         return this.classNameText;

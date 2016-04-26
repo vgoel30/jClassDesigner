@@ -10,6 +10,11 @@ package jcd.data;
  * @author varungoel
  */
 public class VariableObject {
+    
+    static final String PRIVATE = "private";
+    static final String PUBLIC = "public";
+    static final String DEFAULT = "default";
+    static final String PROTECTED = "protected";
 
     String name;
     String type;
@@ -96,11 +101,12 @@ public class VariableObject {
         
         String toReturn = "";
 
-        if (this.access.equals("private")) {
-            toReturn += "private ";
-        } else {
-            toReturn += "public ";
+        if (this.access.equals(PRIVATE) || this.access.equals(PUBLIC) || this.access.equals(PROTECTED)) {
+            toReturn += this.access + " ";
         }
+//        } else {
+//            toReturn += "public ";
+//        }
 
         if (isStatic) {
             toReturn += "static ";

@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
@@ -122,7 +123,7 @@ public final class Workspace extends AppWorkspaceComponent {
     //3rd row
     HBox parentSelectionContainer;
     Label parentNameLabel;
-    public ChoiceBox parentNamePicker;
+    public ComboBox parentNamePicker;
 
     //4th row which has the variables increase/decrease control and the table
     VBox fourthRow;
@@ -230,10 +231,7 @@ public final class Workspace extends AppWorkspaceComponent {
         classNameContainer = new HBox(40);
         classNameLabel = new Label("Class/Interface ");
         classNameField = new TextField();
-        //testing the event handler for text field
-//        classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-//            System.out.println("textfield changed from " + oldValue + " to " + newValue);
-//        });
+        
         classNameContainer.getChildren().add(classNameLabel);
         classNameContainer.getChildren().add(classNameField);
         containers.add(classNameContainer);
@@ -251,7 +249,9 @@ public final class Workspace extends AppWorkspaceComponent {
         //the third row
         parentSelectionContainer = new HBox(75);
         parentNameLabel = new Label("Parent         ");
-        parentNamePicker = new ChoiceBox();
+        parentNamePicker = new ComboBox();
+        parentNamePicker.setEditable(true);
+        parentNamePicker.setMaxWidth(210);
         parentSelectionContainer.getChildren().add(parentNameLabel);
         parentSelectionContainer.getChildren().add(parentNamePicker);
         containers.add(parentSelectionContainer);
@@ -284,7 +284,8 @@ public final class Workspace extends AppWorkspaceComponent {
         editToolbar.getChildren().add(fifthRow);
         methodsTable = new TableView();
         methodsTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Return"), new TableColumn("Static"), new TableColumn("Abstract"), new TableColumn("Access"));
-
+       // methodsTable.g
+        
         ScrollPane methodsScroll = new ScrollPane(methodsTable);
         fifthRow.getChildren().add(methodsScroll);
         variablesTable.setMinWidth(400);
@@ -329,6 +330,12 @@ public final class Workspace extends AppWorkspaceComponent {
             selectionActive = true;
             System.out.println("Selection was clicked");
             mainScene.getRoot().setCursor(Cursor.MOVE);
+        });
+        
+        variablesIncrementButton.setOnAction(variableIncrementClicked -> {
+            drawingActive = false;
+            selectionActive = true;
+            dataManager.handleVariableIncrement();
         });
 
         //when the resize button is clicked
