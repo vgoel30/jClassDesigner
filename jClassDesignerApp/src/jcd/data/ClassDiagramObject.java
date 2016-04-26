@@ -359,25 +359,6 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         return this.getClassNameText().getText().compareTo(o.getClassNameText().getText());
     }
 
-    public static void main(String[] args) {
-        VariableObject sample = new VariableObject("kickassVariable", "int", true, false, "public");
-
-        ArrayList<ArgumentObject> arguments = new ArrayList<>();
-        ArgumentObject sampleArgument = new ArgumentObject("args", "String[]");
-        arguments.add(sampleArgument);
-        MethodObject sampleMethod = new MethodObject("main", true, false, arguments, "boolean", "private");
-
-        ArrayList<MethodObject> methods = new ArrayList<>();
-        methods.add(sampleMethod);
-
-        ArrayList<VariableObject> variables = new ArrayList<>();
-        variables.add(sample);
-
-        ClassDiagramObject lit = new ClassDiagramObject("className", "class", methods, variables);
-        System.out.println(lit.toStringCode());
-
-        //System.out.println("MASSIVE DOPE TEST: " + lit.getClass().getName());
-    }
 
     
 

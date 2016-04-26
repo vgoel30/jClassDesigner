@@ -23,6 +23,7 @@ import jcd.actions.ResizeRight;
 import jcd.controller.ActionController;
 import jcd.controller.DiagramController;
 import jcd.gui.AppOptionDialog;
+import jcd.gui.VariableOptionDialog;
 import jcd.gui.Workspace;
 import maf.AppTemplate;
 import maf.components.AppDataComponent;
@@ -335,7 +336,7 @@ public class DataManager implements AppDataComponent {
 
             System.out.println("Variable Increment called");
 
-            AppOptionDialog newDialog = new AppOptionDialog();
+            VariableOptionDialog newDialog = new VariableOptionDialog();
             newDialog.init(app.getGUI().getWindow(), selectedClassDiagram);
             newDialog.show();
         }

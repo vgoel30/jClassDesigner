@@ -9,8 +9,8 @@ package jcd.data;
  *
  * @author varungoel
  */
-public class VariableObject {
-    
+public class VariableObject implements Comparable<VariableObject> {
+
     static final String PRIVATE = "private";
     static final String PUBLIC = "public";
     static final String DEFAULT = "default";
@@ -22,11 +22,11 @@ public class VariableObject {
     boolean isFinal;
     String access;
     String value = "";
-    
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         VariableObject sample = new VariableObject("integerVariable", "int", true, false, "public");
         //System.out.println(sample.toStringCode());
-       
+
     }
 
     public VariableObject(String name, String type, boolean isStatic, boolean isFinal, String access) {
@@ -74,21 +74,23 @@ public class VariableObject {
 
     @Override
     public String toString() {
-        
+
         String toReturn = "";
 
-        if (this.access.equals("private")) {
+        if (this.access.equals(PRIVATE)) {
             toReturn += "- ";
-        } else {
+        } else if (this.access.equals(PUBLIC)) {
             toReturn += "+ ";
+        } else if (this.access.equals(PROTECTED)) {
+            toReturn += "# ";
         }
 
         if (isStatic) {
-            toReturn += "static";
+            toReturn += "$";
         }
 
         if (isFinal) {
-            toReturn += name.toUpperCase();
+            toReturn += name.toUpperCase() + " : ";
         } else {
             toReturn += name + " : ";
         }
@@ -98,21 +100,17 @@ public class VariableObject {
     }
 
     public String toStringCode() {
-        
         String toReturn = "";
 
         if (this.access.equals(PRIVATE) || this.access.equals(PUBLIC) || this.access.equals(PROTECTED)) {
             toReturn += this.access + " ";
         }
-//        } else {
-//            toReturn += "public ";
-//        }
 
         if (isStatic) {
             toReturn += "static ";
         }
-        
-        if(isFinal){
+
+        if (isFinal) {
             toReturn += "final ";
         }
 
@@ -122,13 +120,6 @@ public class VariableObject {
         } else {
             toReturn += name + ";";
         }
-
-        String[] split = toReturn.split("\\s");
-        
-        System.out.println("IMPORT1: " + split[split.length-2] + " " + split[split.length-1]);
-        
-        
-        
         return toReturn;
     }
 
@@ -136,8 +127,34 @@ public class VariableObject {
         this.isFinal = isFinal;
     }
 
-   
     public boolean getIsFinal() {
         return isFinal;
+    }
+
+    /**
+     * Custom compareTo function to see if two variables are the same
+     * @param o
+     * @return 
+     */
+    @Override
+    public int compareTo(VariableObject o) {
+        int x = this.getName().compareTo(o.getName());
+        //if the names are not the same, we can be sure that the methods aren't the same
+        if (x != 0) {
+            return x;
+        }
+        //two methods might have the same name but different types
+        return this.getType().compareTo(o.getType());
+    }
+    
+    /**
+     * Uses the compareTo function to see if the two variables are the same
+     * @param o
+     * @return 
+     */
+    public boolean variablesAreEqual(VariableObject o){
+        if(this.compareTo(o) == 0)
+            return true;
+        return false;
     }
 }

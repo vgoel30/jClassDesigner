@@ -131,7 +131,7 @@ public final class Workspace extends AppWorkspaceComponent {
     Label variablesLabel;
     Button variablesIncrementButton;
     Button variablesDecrementButton;
-    TableView variablesTable;
+    public TableView variablesTable;
 
     //5th row which has the methods increase/decrease control and the table
     VBox fifthRow;
