@@ -5,6 +5,10 @@
  */
 package jcd.controller;
 
+import javafx.scene.control.TableView;
+import jcd.data.ClassDiagramObject;
+import jcd.data.VariableObject;
+
 /**
  *
  * @author varungoel
@@ -13,6 +17,10 @@ public class DiagramController {
     
     public DiagramController(){
         
+    }
+
+    public void updateVariablesTable(ClassDiagramObject selectedClassDiagram, TableView<VariableObject> variablesTable) {
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

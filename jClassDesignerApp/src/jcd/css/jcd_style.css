@@ -57,7 +57,6 @@ and open the template in the editor.
 
 .label{
     -fx-text-fill: white;
-    /*-fx-margin-top:50;*/
 }
 
 .checkbox{
@@ -66,10 +65,13 @@ and open the template in the editor.
 
 .rendering_canvas{
     -fx-background-color: white;
+    
 }
 
 .table{
-    -fx-background-color: black;
+    -fx-background-color: #1F4788;
+    -fx-border-color: #1F4788 ;
+     -fx-border-width: 0 0 0 0;
 }
 
 .diagram_container{

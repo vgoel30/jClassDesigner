@@ -313,6 +313,7 @@ public class DataManager implements AppDataComponent {
 
     /**
      * Looks for classes with a particular package
+     *
      * @param packageName
      * @return A list of classes in that package
      */
@@ -334,13 +335,14 @@ public class DataManager implements AppDataComponent {
     public void handleVariableIncrement() {
         if (selectedClassDiagram != null) {
 
+            Workspace workspace = (Workspace) app.getWorkspaceComponent();
             System.out.println("Variable Increment called");
 
             VariableOptionDialog newDialog = new VariableOptionDialog();
             newDialog.init(app.getGUI().getWindow(), selectedClassDiagram);
             newDialog.show();
-            
-            //diagramController.addVariable();
+
+            diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
         }
     }
 

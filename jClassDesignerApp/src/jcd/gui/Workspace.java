@@ -58,6 +58,7 @@ import static jcd.PropertyType.ZOOM_OUT_ICON;
 import static jcd.PropertyType.ZOOM_OUT_TOOLTIP;
 import jcd.controller.GridEditController;
 import jcd.data.DataManager;
+import jcd.data.VariableObject;
 import maf.AppTemplate;
 import static maf.components.AppStyleArbiter.CHECKBOX;
 import static maf.components.AppStyleArbiter.CLASS_FILE_BUTTON;
@@ -131,7 +132,7 @@ public final class Workspace extends AppWorkspaceComponent {
     Label variablesLabel;
     Button variablesIncrementButton;
     Button variablesDecrementButton;
-    public TableView variablesTable;
+    public TableView<VariableObject> variablesTable;
 
     //5th row which has the methods increase/decrease control and the table
     VBox fifthRow;
@@ -266,7 +267,7 @@ public final class Workspace extends AppWorkspaceComponent {
         variablesDecrementButton = gui.putButtonInContainer(variablesContainer, DECREMENT_ICON.toString(), DECREMENT_TOOLTIP.toString(), false);
         fourthRow.getChildren().add(variablesContainer);
         editToolbar.getChildren().add(fourthRow);
-        variablesTable = new TableView();
+        variablesTable = new TableView<>();
         variablesTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Type"), new TableColumn("Static"), new TableColumn("Access"));
 
         ScrollPane variableScroll = new ScrollPane(variablesTable);
@@ -284,7 +285,8 @@ public final class Workspace extends AppWorkspaceComponent {
         editToolbar.getChildren().add(fifthRow);
         methodsTable = new TableView();
         methodsTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Return"), new TableColumn("Static"), new TableColumn("Abstract"), new TableColumn("Access"));
-       // methodsTable.g
+        
+// methodsTable.g
         
         ScrollPane methodsScroll = new ScrollPane(methodsTable);
         fifthRow.getChildren().add(methodsScroll);
@@ -441,6 +443,9 @@ public final class Workspace extends AppWorkspaceComponent {
         fifthRow.getStyleClass().add(EDIT_TOOLBAR_ROW);
         canvas.getStyleClass().add(RENDERING_CANVAS);
         canvasScrollPane.getStyleClass().add(RENDERING_CANVAS);
+        
+        methodsTable.getStyleClass().add(TABLES);
+        variablesTable.getStyleClass().add(TABLES);
 
         canvasScrollPane.setFitToHeight(true);
         canvasScrollPane.setFitToWidth(true);
