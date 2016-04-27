@@ -214,9 +214,9 @@ public final class Workspace extends AppWorkspaceComponent {
         gridButtonContainer = new HBox();
         toolBarPane.getChildren().add(gridButtonContainer);
         gridCheckBox = new CheckBox();
-        gridCheckBox.setDisable(true);
+        gridCheckBox.setDisable(false);
         gridButtonContainer.getChildren().add(gridCheckBox);
-        gridButton = gui.initChildButton(gridButtonContainer, GRID_ICON.toString(), GRID_TOOLTIP.toString(), true);
+        gridButton = gui.initChildButton(gridButtonContainer, GRID_ICON.toString(), GRID_TOOLTIP.toString(), false);
         toolbarButtons.add(gridButton);
 
         snapButtonContainer = new HBox();
@@ -268,38 +268,37 @@ public final class Workspace extends AppWorkspaceComponent {
         variablesDecrementButton = gui.putButtonInContainer(variablesContainer, DECREMENT_ICON.toString(), DECREMENT_TOOLTIP.toString(), false);
         fourthRow.getChildren().add(variablesContainer);
         editToolbar.getChildren().add(fourthRow);
-        
+
         variablesTable = new TableView<>();
         //variablesTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Type"), new TableColumn("Static"), new TableColumn("Access"));
-        
+
         TableColumn<VariableObject, String> nameCol = new TableColumn<>("Name");
         nameCol.setCellValueFactory(new PropertyValueFactory("name"));
-        
-        TableColumn<VariableObject,String> typeCol = new TableColumn<>("Type");
+
+        TableColumn<VariableObject, String> typeCol = new TableColumn<>("Type");
         typeCol.setCellValueFactory(new PropertyValueFactory("type"));
-        
-        TableColumn<VariableObject,Boolean> staticCol = new TableColumn<>("Static");
+
+        TableColumn<VariableObject, Boolean> staticCol = new TableColumn<>("Static");
         staticCol.setCellValueFactory(new PropertyValueFactory("isStatic"));
-        
-        TableColumn<VariableObject,String> accessCol = new TableColumn<>("Access");
+
+        TableColumn<VariableObject, String> accessCol = new TableColumn<>("Access");
         accessCol.setCellValueFactory(new PropertyValueFactory("access"));
-        
-        TableColumn<VariableObject,Boolean> finalCol = new TableColumn<>("Final");
+
+        TableColumn<VariableObject, Boolean> finalCol = new TableColumn<>("Final");
         finalCol.setCellValueFactory(new PropertyValueFactory("isFinal"));
-       
+
         //adding all the columns
-        variablesTable.getColumns().setAll(nameCol,typeCol,staticCol,accessCol,finalCol);
+        variablesTable.getColumns().setAll(nameCol, typeCol, staticCol, accessCol, finalCol);
 
         ScrollPane variableScroll = new ScrollPane(variablesTable);
         fourthRow.getChildren().add(variableScroll);
         variablesTable.setMinWidth(400);
-        
+
         //Obser
 //        ObservableList<VariableObject> value = FXCollections.observableArrayList();
 //        value.add(new VariableObject("myMethod", "int", false, false, "private"));
 //        
 //        variablesTable.setItems(value);
-
         //the 5th and final row
         fifthRow = new VBox(10);
         methodsContainer = new HBox(78);
@@ -310,9 +309,8 @@ public final class Workspace extends AppWorkspaceComponent {
         fifthRow.getChildren().add(methodsContainer);
         editToolbar.getChildren().add(fifthRow);
         methodsTable = new TableView();
-       methodsTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Return"), new TableColumn("Static"), new TableColumn("Abstract"), new TableColumn("Access"));
-       
-       
+        methodsTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Return"), new TableColumn("Static"), new TableColumn("Abstract"), new TableColumn("Access"));
+
 // methodsTable.g
         ScrollPane methodsScroll = new ScrollPane(methodsTable);
         fifthRow.getChildren().add(methodsScroll);
@@ -364,7 +362,7 @@ public final class Workspace extends AppWorkspaceComponent {
             drawingActive = false;
             dataManager.handleVariableIncrement();
         });
-        
+
         //delete a variable
         variablesDecrementButton.setOnAction(variableDecrementClicked -> {
             drawingActive = false;
@@ -373,6 +371,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //when the resize button is clicked
         resizeButton.setOnAction(resizeButtonClicked -> {
+
         });
 
         codeButton.setOnAction(codeButtonClicked -> {
@@ -400,6 +399,13 @@ public final class Workspace extends AppWorkspaceComponent {
             }
         });
 
+        gridCheckBox.setOnAction(e -> {
+            if(gridCheckBox.isSelected())
+                gridEditController.renderGridLines(canvas);
+            else
+                gridEditController.removeGridLines(canvas);
+        });
+
         //testing the event handler for text field
         classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!oldValue.equals(newValue)) {
@@ -421,9 +427,8 @@ public final class Workspace extends AppWorkspaceComponent {
         packageNameField.setText("");
         disableButtons(true);
         variablesTable.getItems().clear();
-        // canvas.getChildren().clear();
         if (selected != null) {
-            selected.getStyleClass().remove("pressed");
+            selected.getStyleClass().remove(BUTTON_PRESSED);
             selected = null;
         }
     }
@@ -454,14 +459,18 @@ public final class Workspace extends AppWorkspaceComponent {
             button.setOnMouseClicked(e -> {
                 if (selected == null) {
                     selected = button;
-                    selected.getStyleClass().add(BUTTON_PRESSED);
+                    if (selected != gridButton || selected != snapButton) {
+                        selected.getStyleClass().add(BUTTON_PRESSED);
+                    }
+
                 } else {
-                    selected.getStyleClass().remove("pressed");
+                    selected.getStyleClass().remove(BUTTON_PRESSED);
                     selected = button;
-                    selected.getStyleClass().add("pressed");
+                    if (selected != gridButton || selected != snapButton) {
+                        selected.getStyleClass().add(BUTTON_PRESSED);
+                    }
                 }
             });
-
         }
 
         gridCheckBox.getStyleClass().add(CHECKBOX);

@@ -52,6 +52,9 @@ public class VariableObject implements Comparable<VariableObject> {
         this.access = access;
     }
 
+    public VariableObject() {
+    }
+
     public String getName() {
         return name;
     }

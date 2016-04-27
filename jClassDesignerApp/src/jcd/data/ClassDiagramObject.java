@@ -231,6 +231,8 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         classNameText.setWrappingWidth(rootContainer.getMinWidth());
         methodsNameText.setWrappingWidth(rootContainer.getMinWidth());
         variablesNameText.setWrappingWidth(rootContainer.getMinWidth());
+        
+        
     }
 
     public VBox getRootContainer() {
@@ -312,7 +314,6 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         variablesNameText.getStyleClass().add(DIAGRAM_TEXT_FIELD);
 
         rootContainer.getStyleClass().add(DIAGRAM_CONTAINER);
-
     }
 
     public String toStringPlusPlus() {

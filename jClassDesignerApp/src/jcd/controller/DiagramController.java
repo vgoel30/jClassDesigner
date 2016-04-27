@@ -61,24 +61,31 @@ public class DiagramController {
     }
 
     public void removeVariable(ClassDiagramObject diagram, VariableObject toRemove) {
+        VariableObject toRemoveTemp = new VariableObject();
+        
         for(VariableObject variable: diagram.getVariables()){
             if(variable.equals(toRemove)){
-                diagram.getVariables().remove(variable);
+                toRemoveTemp = variable;
                 break;
             }
         }
         
+        diagram.getVariables().remove(toRemoveTemp);
+        
         double heightToSubtract = 0;
+        
+        Label labelToRemove = new Label();
         
         for(Node child: diagram.getVariablesContainer().getChildren()){
             if(child instanceof Label){
                 if(((Label) child).getText().equals(toRemove.toString())){
-                    diagram.getVariablesContainer().getChildren().remove(child);
+                    labelToRemove = (Label)child;
                     heightToSubtract = ((Label) child).getHeight();
                     break;
                 }
             }
         }
+        diagram.getVariablesContainer().getChildren().remove(labelToRemove);
         //decreases the height of the container to compensate for the removal of the variable 
         diagram.getVariablesContainer().setPrefHeight(diagram.getVariablesContainer().getHeight()-heightToSubtract);
     }

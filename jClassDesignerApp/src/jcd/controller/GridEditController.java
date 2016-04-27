@@ -7,7 +7,9 @@ package jcd.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
@@ -15,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javax.imageio.ImageIO;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
+import jcd.gui.GridLine;
 import jcd.gui.Workspace;
 import maf.AppTemplate;
 
@@ -84,5 +87,45 @@ public class GridEditController {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
         } catch (IOException ioe) {
         }
+    }
+
+    /**
+     * Renders the grid lines on the canvas
+     * @param canvas 
+     */
+    public void renderGridLines(Pane canvas) {
+        for(int i = 0; i < canvas.getWidth(); i = i + 15){
+                GridLine gridLine = new GridLine();
+                 gridLine.setStartY(0);
+                 gridLine.setStartX(i);
+                 
+                 gridLine.setEndX(i);
+                 gridLine.setEndY(canvas.getHeight());
+                 //this sets them to the back (enforces it)
+                 canvas.getChildren().add(0, gridLine);
+            }
+            
+            for(int i = 0; i < canvas.getHeight(); i = i + 15){
+                GridLine gridLine = new GridLine();
+                 gridLine.setStartY(i);
+                 gridLine.setStartX(0);
+                 
+                 gridLine.setEndX(canvas.getWidth());
+                 gridLine.setEndY(i);
+                 //this sets them to the back (enforces it)
+                 canvas.getChildren().add(0, gridLine);
+            }
+    }
+
+    public void removeGridLines(Pane canvas) {
+        ArrayList<GridLine> linesToRemove = new ArrayList();
+        
+        for(Node objectOnGrid: canvas.getChildren()){
+            if(objectOnGrid instanceof GridLine){
+                linesToRemove.add((GridLine) objectOnGrid);
+            }
+        }
+        
+        canvas.getChildren().removeAll(linesToRemove);
     }
 }

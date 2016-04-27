@@ -88,6 +88,7 @@ and open the template in the editor.
 .diagram_containers{
     -fx-border-color: black ;
      -fx-border-width: 1.5 3 1.5 2.5;
+     -fx-background-color: white;
 }
 
 
