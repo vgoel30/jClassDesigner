@@ -191,6 +191,10 @@ public final class Workspace extends AppWorkspaceComponent {
     public boolean gridIsActive(){
         return gridCheckBox.isSelected();
     }
+    
+    public boolean snapIsActive(){
+        return snapCheckBox.isSelected();
+    }
 
     public void layoutGUI() {
         FlowPane toolBarPane = gui.getToolbarPane();
@@ -222,7 +226,6 @@ public final class Workspace extends AppWorkspaceComponent {
         gridButtonContainer = new HBox();
         toolBarPane.getChildren().add(gridButtonContainer);
         gridCheckBox = new CheckBox();
-        gridCheckBox.setDisable(false);
         gridButtonContainer.getChildren().add(gridCheckBox);
         gridButton = gui.initChildButton(gridButtonContainer, GRID_ICON.toString(), GRID_TOOLTIP.toString(), false);
         toolbarButtons.add(gridButton);
@@ -230,9 +233,8 @@ public final class Workspace extends AppWorkspaceComponent {
         snapButtonContainer = new HBox();
         toolBarPane.getChildren().add(snapButtonContainer);
         snapCheckBox = new CheckBox();
-        snapCheckBox.setDisable(true);
         snapButtonContainer.getChildren().add(snapCheckBox);
-        snapButton = gui.initChildButton(snapButtonContainer, SNAP_ICON.toString(), SNAP_TOOLTIP.toString(), true);
+        snapButton = gui.initChildButton(snapButtonContainer, SNAP_ICON.toString(), SNAP_TOOLTIP.toString(), false);
         toolbarButtons.add(snapButton);
 
         //setting up the editing toolbar
@@ -412,6 +414,12 @@ public final class Workspace extends AppWorkspaceComponent {
                 gridEditController.renderGridLines(canvas);
             else
                 gridEditController.removeGridLines(canvas);
+        });
+        
+        snapCheckBox.setOnAction(e -> {
+            //pass all the classes on canvas as the paramater
+            if(snapCheckBox.isSelected())
+                gridEditController.snapToGrid(dataManager.classesOnCanvas);
         });
 
         //testing the event handler for text field

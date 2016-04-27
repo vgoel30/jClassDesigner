@@ -173,6 +173,9 @@ public class DataManager implements AppDataComponent {
                 workspace.classNameField.setText(diagram.getClassNameText().getText());
                 workspace.packageNameField.setText(diagram.getPackageNameText().getText());
                 diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
+                
+                
+                
 
                 workspace.disableButtons(false);
 

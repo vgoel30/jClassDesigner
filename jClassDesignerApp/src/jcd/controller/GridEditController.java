@@ -149,4 +149,15 @@ public class GridEditController {
 
         canvas.getChildren().removeAll(linesToRemove);
     }
+
+    /**
+     * Method that snaps all the diagrams to the grid
+     * @param classesOnCanvas 
+     */
+    public void snapToGrid(ArrayList<ClassDiagramObject> classesOnCanvas) {
+        for(ClassDiagramObject diagramToFix: classesOnCanvas){
+                diagramToFix.getRootContainer().setLayoutX(diagramToFix.getX() - (diagramToFix.getX()%15));
+                diagramToFix.getRootContainer().setLayoutY(diagramToFix.getY() - (diagramToFix.getY()%15));
+                }
+    }
 }
