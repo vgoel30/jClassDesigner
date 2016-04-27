@@ -25,6 +25,7 @@ import javax.json.JsonReader;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
+import jcd.controller.DiagramController;
 import jcd.data.ArgumentObject;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
@@ -364,6 +365,7 @@ public class FileManager implements AppFileComponent {
     }
 
     public ClassDiagramObject loadClassDiagram(JsonObject jsonDiagram) {
+        DiagramController diagramController = new DiagramController();
 
         JsonArray dimensionsArray = jsonDiagram.getJsonArray(JSON_DIAGRAM_DIMENSIONS);
         JsonObject dimensionsJsonObject = dimensionsArray.getJsonObject(0);
@@ -409,7 +411,8 @@ public class FileManager implements AppFileComponent {
             String access = current.getString(VARIABLE_ACCESS);
 
             VariableObject varToAdd = new VariableObject(name, variableType, isStatic, isFinal, access);
-            toAdd.getVariables().add(varToAdd);
+            //add the variable and render the thing
+            diagramController.addVariable(toAdd, varToAdd);
         }
 
         //ALL THE METHODS OF THE CLASS
