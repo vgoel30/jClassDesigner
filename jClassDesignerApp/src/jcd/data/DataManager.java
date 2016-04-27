@@ -205,16 +205,16 @@ public class DataManager implements AppDataComponent {
                     //dynamic scrolling 
                     if (x > canvas.getWidth() - 150) {
                         canvas.setMinWidth(canvas.getWidth() + 500);
+                        canvas.setPrefWidth(canvas.getWidth() + 500);
                         if (workspace.gridIsActive()) {
-                            System.out.println("GIRD WAS ACTIVE 1");
-                            gridEditController.renderGridLines(scrollPane,canvas);
+                            gridEditController.renderGridLines(canvas);
                         }
                     }
                     if (y > canvas.getHeight() - 300) {
                         canvas.setMinHeight(canvas.getHeight() + 500);
+                        canvas.setPrefHeight(canvas.getHeight() + 500);
                         if (workspace.gridIsActive()) {
-                            System.out.println("GIRD WAS ACTIVE 2");
-                            gridEditController.renderGridLines(scrollPane,canvas);
+                            gridEditController.renderGridLines(canvas);
                         }
                     }
                 }

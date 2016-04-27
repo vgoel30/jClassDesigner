@@ -27,6 +27,7 @@ import maf.AppTemplate;
  * @author varungoel
  */
 public class GridEditController {
+
     AppTemplate app;
 
     DataManager dataManager;
@@ -38,6 +39,7 @@ public class GridEditController {
 
     /**
      * Adds a new diagram to the canvas
+     *
      * @param canvas is the canvas on which the diagram is rendered
      * @param type is the diagram type (class/interface)
      */
@@ -46,7 +48,7 @@ public class GridEditController {
         if (dataManager.selectedClassDiagram != null) {
             dataManager.restoreSelectedProperties(dataManager.selectedClassDiagram);
             dataManager.selectedClassDiagram = null;
-            
+
             workspace.disableButtons(true);
         }
 
@@ -57,25 +59,26 @@ public class GridEditController {
 
                 //dynamic scrolling 
                 if (x > canvas.getWidth() - 150) {
-                    canvas.setMinWidth(canvas.getWidth() + 500);
-                    canvas.setMinHeight(canvas.getHeight() + 500);
-                    
-                    
+                    canvas.setMinWidth(canvas.getWidth() + 300);
+                    canvas.setPrefWidth(canvas.getWidth() + 300);
                 }
                 if (y > canvas.getHeight() - 300) {
                     canvas.setMinHeight(canvas.getHeight() + 500);
+                    canvas.setPrefHeight(canvas.getHeight() + 500);
                 }
-                
+
                 //initalize a class diagram object
                 ClassDiagramObject objectToPut = new ClassDiagramObject(x, y, type);
                 //render it on the canvas
                 objectToPut.putOnCanvas(canvas);
                 dataManager.attachClassDiagramEventHandlers(objectToPut);
                 workspace.disableButtons(true);
-                
+
                 dataManager.addClassDiagram(objectToPut);
             }
-            
+            if (workspace.gridIsActive()) {
+                renderGridLines(canvas);
+            }
         });
 
     }
@@ -94,46 +97,56 @@ public class GridEditController {
 
     /**
      * Renders the grid lines on the canvas
-     * @param canvas 
+     *
+     * @param canvas
      */
-    public void renderGridLines(ScrollPane canvasScrollPane, Pane canvas) {
+    public void renderGridLines(Pane canvas) {
         //this will clear out all the old canvas lines
         removeGridLines(canvas);
-        
-        System.out.println("canvasScrollPane.getVvalue()    " + canvas.getWidth());
-        
-        for(int i = 0; i < canvas.getWidth(); i = i + 15){
-                GridLine gridLine = new GridLine();
-                 gridLine.setStartY(0);
-                 gridLine.setStartX(i);
-                 
-                 gridLine.setEndX(i);
-                 gridLine.setEndY(canvas.getHeight());
-                 //this sets them to the back (enforces it)
-                 canvas.getChildren().add(0, gridLine);
-            }
-            
-            for(int i = 0; i < canvas.getHeight(); i = i + 15){
-                GridLine gridLine = new GridLine();
-                 gridLine.setStartY(i);
-                 gridLine.setStartX(0);
-                 
-                 gridLine.setEndX(canvas.getWidth());
-                 gridLine.setEndY(i);
-                 //this sets them to the back (enforces it)
-                 canvas.getChildren().add(0, gridLine);
-            }
+
+        int firstBound = (int) canvas.getWidth();
+        int secondBound = (int) canvas.getHeight();
+
+        if (canvas.getPrefWidth() > 0) {
+            firstBound = (int) canvas.getPrefWidth();
+        }
+
+        if (canvas.getPrefHeight() > 0) {
+            secondBound = (int) canvas.getPrefHeight();
+        }
+
+        for (int i = 0; i < firstBound; i = i + 15) {
+            GridLine gridLine = new GridLine();
+            gridLine.setStartY(0);
+            gridLine.setStartX(i);
+
+            gridLine.setEndX(i);
+            gridLine.setEndY(secondBound);
+            //this sets them to the back (enforces it)
+            canvas.getChildren().add(0, gridLine);
+        }
+
+        for (int i = 0; i < secondBound; i = i + 15) {
+            GridLine gridLine = new GridLine();
+            gridLine.setStartY(i);
+            gridLine.setStartX(0);
+
+            gridLine.setEndX(firstBound);
+            gridLine.setEndY(i);
+            //this sets them to the back (enforces it)
+            canvas.getChildren().add(0, gridLine);
+        }
     }
 
     public void removeGridLines(Pane canvas) {
         ArrayList<GridLine> linesToRemove = new ArrayList();
-        
-        for(Node objectOnGrid: canvas.getChildren()){
-            if(objectOnGrid instanceof GridLine){
+
+        for (Node objectOnGrid : canvas.getChildren()) {
+            if (objectOnGrid instanceof GridLine) {
                 linesToRemove.add((GridLine) objectOnGrid);
             }
         }
-        
+
         canvas.getChildren().removeAll(linesToRemove);
     }
 }

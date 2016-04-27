@@ -409,7 +409,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         gridCheckBox.setOnAction(e -> {
             if(gridCheckBox.isSelected())
-                gridEditController.renderGridLines(canvasScrollPane, canvas);
+                gridEditController.renderGridLines(canvas);
             else
                 gridEditController.removeGridLines(canvas);
         });
@@ -499,6 +499,8 @@ public final class Workspace extends AppWorkspaceComponent {
         canvasScrollPane.setFitToWidth(true);
         canvasScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
         canvasScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+        
+       
 
         disableButtons(true);
     }
