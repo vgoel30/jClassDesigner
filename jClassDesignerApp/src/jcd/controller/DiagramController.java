@@ -7,6 +7,8 @@ package jcd.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import jcd.data.ClassDiagramObject;
@@ -23,7 +25,9 @@ public class DiagramController {
     }
 
     public  void updateVariablesTable(ClassDiagramObject selectedClassDiagram, TableView<VariableObject> variablesTable) {
-       //clear the previous values to make space for the new
+      System.out.println("Update variables table called");
+        
+        //clear the previous values to make space for the new
        variablesTable.getItems().clear();
        
        ObservableList<VariableObject> value = FXCollections.observableArrayList();
@@ -38,7 +42,6 @@ public class DiagramController {
            value.add(new VariableObject(name, type, isStatic, isFinal, access));
        }
        variablesTable.setItems(value);
-       //System.out.println(variablesTable.getColumns().get(0).getCellData(0));
     }
 
     /**
@@ -50,10 +53,34 @@ public class DiagramController {
         //add to the list of variables for the class
         diagram.getVariables().add(toAdd);
         
-        Text variableText = new Text(toAdd.toString());
+        Label variableText = new Label(toAdd.toString());
+        variableText.getStyleClass().add("diagram_text_field");
         diagram.getVariablesContainer().getChildren().add(variableText);
         
-        variableText.getStyleClass().add("diagram_text_field");
+        //ariableText.getStyleClass().add("diagram_text_field");
+    }
+
+    public void removeVariable(ClassDiagramObject diagram, VariableObject toRemove) {
+        for(VariableObject variable: diagram.getVariables()){
+            if(variable.equals(toRemove)){
+                diagram.getVariables().remove(variable);
+                break;
+            }
+        }
+        
+        double heightToSubtract = 0;
+        
+        for(Node child: diagram.getVariablesContainer().getChildren()){
+            if(child instanceof Label){
+                if(((Label) child).getText().equals(toRemove.toString())){
+                    diagram.getVariablesContainer().getChildren().remove(child);
+                    heightToSubtract = ((Label) child).getHeight();
+                    break;
+                }
+            }
+        }
+        //decreases the height of the container to compensate for the removal of the variable 
+        diagram.getVariablesContainer().setPrefHeight(diagram.getVariablesContainer().getHeight()-heightToSubtract);
     }
     
 }

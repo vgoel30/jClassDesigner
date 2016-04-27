@@ -24,6 +24,7 @@ import jcd.controller.ActionController;
 import jcd.controller.DiagramController;
 import jcd.gui.AppOptionDialog;
 import jcd.gui.VariableOptionDialog;
+import jcd.gui.VariableRemoveDialog;
 import jcd.gui.Workspace;
 import maf.AppTemplate;
 import maf.components.AppDataComponent;
@@ -340,6 +341,23 @@ public class DataManager implements AppDataComponent {
             System.out.println("Variable Increment called");
 
             VariableOptionDialog newDialog = new VariableOptionDialog();
+            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.variablesTable);
+            newDialog.show();
+
+            //diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
+        }
+    }
+    
+    /**
+     * If the user wants to delete a variable
+     */
+    public void handleVariableDecrement() {
+        if (selectedClassDiagram != null) {
+
+            Workspace workspace = (Workspace) app.getWorkspaceComponent();
+            System.out.println("Variable Decrement called");
+
+            VariableRemoveDialog newDialog = new VariableRemoveDialog();
             newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.variablesTable);
             newDialog.show();
 

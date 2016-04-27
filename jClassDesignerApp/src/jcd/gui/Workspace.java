@@ -359,10 +359,16 @@ public final class Workspace extends AppWorkspaceComponent {
             mainScene.getRoot().setCursor(Cursor.MOVE);
         });
 
+        //add the variable
         variablesIncrementButton.setOnAction(variableIncrementClicked -> {
             drawingActive = false;
-            selectionActive = true;
             dataManager.handleVariableIncrement();
+        });
+        
+        //delete a variable
+        variablesDecrementButton.setOnAction(variableDecrementClicked -> {
+            drawingActive = false;
+            dataManager.handleVariableDecrement();
         });
 
         //when the resize button is clicked

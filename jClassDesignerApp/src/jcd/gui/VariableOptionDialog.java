@@ -183,7 +183,6 @@ public class VariableOptionDialog extends Stage {
                 
                 //update the list of variables
                 diagramController.updateVariablesTable(diagram, variablesTable);
-               // diagram.getVariablesContainer().getChildren().add(new Text(toAdd.toString()));
                 
             }
 
