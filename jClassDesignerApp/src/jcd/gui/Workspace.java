@@ -179,9 +179,17 @@ public final class Workspace extends AppWorkspaceComponent {
     public Pane getCanvas() {
         return canvas;
     }
+    
+    public ScrollPane getCanvasScrollPane() {
+        return canvasScrollPane;
+    }
 
     public Scene getScene() {
         return mainScene;
+    }
+    
+    public boolean gridIsActive(){
+        return gridCheckBox.isSelected();
     }
 
     public void layoutGUI() {
@@ -401,7 +409,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         gridCheckBox.setOnAction(e -> {
             if(gridCheckBox.isSelected())
-                gridEditController.renderGridLines(canvas);
+                gridEditController.renderGridLines(canvasScrollPane, canvas);
             else
                 gridEditController.removeGridLines(canvas);
         });
@@ -459,14 +467,14 @@ public final class Workspace extends AppWorkspaceComponent {
             button.setOnMouseClicked(e -> {
                 if (selected == null) {
                     selected = button;
-                    if (selected != gridButton || selected != snapButton) {
+                    if (selected != gridButton && selected != snapButton) {
                         selected.getStyleClass().add(BUTTON_PRESSED);
                     }
 
                 } else {
                     selected.getStyleClass().remove(BUTTON_PRESSED);
                     selected = button;
-                    if (selected != gridButton || selected != snapButton) {
+                    if (selected != gridButton && selected != snapButton) {
                         selected.getStyleClass().add(BUTTON_PRESSED);
                     }
                 }

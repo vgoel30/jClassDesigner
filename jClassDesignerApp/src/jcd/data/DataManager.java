@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
@@ -22,6 +23,7 @@ import jcd.actions.MoveDiagram;
 import jcd.actions.ResizeRight;
 import jcd.controller.ActionController;
 import jcd.controller.DiagramController;
+import jcd.controller.GridEditController;
 import jcd.gui.AppOptionDialog;
 import jcd.gui.VariableOptionDialog;
 import jcd.gui.VariableRemoveDialog;
@@ -58,6 +60,7 @@ public class DataManager implements AppDataComponent {
 
     ActionController actionController;
     DiagramController diagramController;
+    GridEditController gridEditController;
 
     /**
      * THis constructor creates the data manager and sets up the
@@ -70,7 +73,7 @@ public class DataManager implements AppDataComponent {
         app = initApp;
         actionController = new ActionController(initApp);
         diagramController = new DiagramController();
-
+        gridEditController = new GridEditController(initApp);
     }
 
     public void addClassDiagram(ClassDiagramObject diagramToAdd) {
@@ -93,6 +96,10 @@ public class DataManager implements AppDataComponent {
     public Pane getRenderingPane() {
         return ((Workspace) app.getWorkspaceComponent()).getCanvas();
     }
+    
+    public ScrollPane getRenderingScrollPane(){
+        return ((Workspace) app.getWorkspaceComponent()).getCanvasScrollPane();
+    }
 
     public void attachClassDiagramEventHandlers(ClassDiagramObject diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
@@ -112,7 +119,7 @@ public class DataManager implements AppDataComponent {
 
                 //set the inital position of the mouse event
                 moveDiagramEvent.setInitialPosition(diagram.getRootContainer().getLayoutX(), diagram.getRootContainer().getLayoutY());
-                System.out.println("MOUSE CLICKED AT : X  " + diagram.getRootContainer().getLayoutX() + " AND FOR Y : " + diagram.getRootContainer().getLayoutY());
+                
 
                 //event handlers for the left line (resizing from the left)
                 diagram.getLeftLine().setOnMouseDragged(mouseDraggedEvent -> {
@@ -193,19 +200,28 @@ public class DataManager implements AppDataComponent {
                     double y = diagram.getRootContainer().getLayoutY();
 
                     Pane canvas = getRenderingPane();
+                    ScrollPane scrollPane = getRenderingScrollPane();
 
                     //dynamic scrolling 
                     if (x > canvas.getWidth() - 150) {
                         canvas.setMinWidth(canvas.getWidth() + 500);
+                        if (workspace.gridIsActive()) {
+                            System.out.println("GIRD WAS ACTIVE 1");
+                            gridEditController.renderGridLines(scrollPane,canvas);
+                        }
                     }
                     if (y > canvas.getHeight() - 300) {
                         canvas.setMinHeight(canvas.getHeight() + 500);
+                        if (workspace.gridIsActive()) {
+                            System.out.println("GIRD WAS ACTIVE 2");
+                            gridEditController.renderGridLines(scrollPane,canvas);
+                        }
                     }
                 }
             }
 
+            //when the mouse is released, push the move diagram action on the stack
             diagram.getRootContainer().setOnMouseReleased(e -> {
-                System.out.println("Drag released at X: " + diagram.getRootContainer().getLayoutX());
                 moveDiagramEvent.setFinalPosition(diagram.getRootContainer().getLayoutX(), diagram.getRootContainer().getLayoutX());
                 undoStack.push(moveDiagramEvent);
             });
@@ -347,7 +363,7 @@ public class DataManager implements AppDataComponent {
             //diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
         }
     }
-    
+
     /**
      * If the user wants to delete a variable
      */

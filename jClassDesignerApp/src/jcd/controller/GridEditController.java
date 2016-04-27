@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -58,6 +59,8 @@ public class GridEditController {
                 if (x > canvas.getWidth() - 150) {
                     canvas.setMinWidth(canvas.getWidth() + 500);
                     canvas.setMinHeight(canvas.getHeight() + 500);
+                    
+                    
                 }
                 if (y > canvas.getHeight() - 300) {
                     canvas.setMinHeight(canvas.getHeight() + 500);
@@ -93,7 +96,12 @@ public class GridEditController {
      * Renders the grid lines on the canvas
      * @param canvas 
      */
-    public void renderGridLines(Pane canvas) {
+    public void renderGridLines(ScrollPane canvasScrollPane, Pane canvas) {
+        //this will clear out all the old canvas lines
+        removeGridLines(canvas);
+        
+        System.out.println("canvasScrollPane.getVvalue()    " + canvas.getWidth());
+        
         for(int i = 0; i < canvas.getWidth(); i = i + 15){
                 GridLine gridLine = new GridLine();
                  gridLine.setStartY(0);
