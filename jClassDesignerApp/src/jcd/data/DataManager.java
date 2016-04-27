@@ -366,7 +366,6 @@ public class DataManager implements AppDataComponent {
                 System.out.println("MOVE DIAGRAM UNDO");
                 MoveDiagram moveDiagramAction = (MoveDiagram) undoStack.pop();
                 ClassDiagramObject diagram = moveDiagramAction.getDiagram();
-                System.out.println("DEBUG STATEMENT :" + moveDiagramAction.getInitialPositionX());
                 actionController.handleMoveDiagramUndo(moveDiagramAction.getInitialPositionX(), moveDiagramAction.getInitialPositionY(), diagram);
             }
         }

@@ -20,6 +20,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import jcd.controller.DiagramController;
@@ -115,7 +116,7 @@ public class VariableOptionDialog extends Stage {
         mainPane.getChildren().add(staticContainer);
 
         finalContainer = new HBox(10);
-        finalLabel = new Label("Final");
+        finalLabel = new Label("Final ");
         finalCheckBox = new CheckBox();
         finalContainer.getChildren().add(finalLabel);
         finalContainer.getChildren().add(finalCheckBox);
@@ -164,7 +165,7 @@ public class VariableOptionDialog extends Stage {
 
             //see if the method already exists
             for (VariableObject variable : diagram.getVariables()) {
-                if (toAdd.equals(toAdd)) {
+                if (variable.equals(toAdd)) {
                     alreadyExists = true;
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Variable name error");
@@ -177,11 +178,13 @@ public class VariableOptionDialog extends Stage {
 
             //if the variable doesn't already exist, add it to the list of variables
             if (!alreadyExists) {
-                diagram.getVariables().add(toAdd);
-                System.out.println(diagram.toStringCode());
+                //adds the variable to the list of variables and renders it on the diagram
+                diagramController.addVariable(diagram,toAdd);
                 
                 //update the list of variables
                 diagramController.updateVariablesTable(diagram, variablesTable);
+               // diagram.getVariablesContainer().getChildren().add(new Text(toAdd.toString()));
+                
             }
 
             VariableOptionDialog.this.hide();
@@ -192,10 +195,12 @@ public class VariableOptionDialog extends Stage {
         // MAKE IT LOOK NICE
         mainPane.setPadding(new Insets(10, 20, 20, 20));
         mainPane.setMinHeight(150);
-
+        
         // AND PUT IT IN THE WINDOW
         mainScene = new Scene(mainPane);
         this.setScene(mainScene);
+        
+        
 
     }
 

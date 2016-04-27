@@ -57,6 +57,8 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     public ArrayList<MethodObject> getMethods() {
         return methods;
     }
+    
+    
 
     public ArrayList<String> getJavaAPI_Packages() {
         return javaAPI_Packages;
@@ -86,11 +88,11 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
 
         //The second container which has all the variables and stuff
         variablesNameText = new Text("Variables");
-        variablesContainer = new VBox(variablesNameText);
+        variablesContainer = new VBox();
 
         //The third container which has all the methods and stuff
         methodsNameText = new Text("Methods");
-        methodsContainer = new VBox(methodsNameText);
+        methodsContainer = new VBox();
 
         //putting it all in
         rootContainer.getChildren().add(packageContainer);
@@ -129,11 +131,11 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
 
         //The second container which has all the variables and stuff
         variablesNameText = new Text("Variables");
-        variablesContainer = new VBox(variablesNameText);
+        variablesContainer = new VBox();
 
         //The third container which has all the methods and stuff
         methodsNameText = new Text("Methods");
-        methodsContainer = new VBox(methodsNameText);
+        methodsContainer = new VBox();
 
         //putting it all in
         rootContainer.getChildren().add(packageContainer);

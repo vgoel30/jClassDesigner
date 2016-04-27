@@ -283,9 +283,12 @@ public final class Workspace extends AppWorkspaceComponent {
         
         TableColumn<VariableObject,String> accessCol = new TableColumn<>("Access");
         accessCol.setCellValueFactory(new PropertyValueFactory("access"));
+        
+        TableColumn<VariableObject,Boolean> finalCol = new TableColumn<>("Final");
+        finalCol.setCellValueFactory(new PropertyValueFactory("isFinal"));
        
         //adding all the columns
-        variablesTable.getColumns().setAll(nameCol,typeCol,staticCol,accessCol);
+        variablesTable.getColumns().setAll(nameCol,typeCol,staticCol,accessCol,finalCol);
 
         ScrollPane variableScroll = new ScrollPane(variablesTable);
         fourthRow.getChildren().add(variableScroll);
