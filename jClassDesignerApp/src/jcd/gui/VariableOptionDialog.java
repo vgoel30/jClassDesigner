@@ -5,6 +5,8 @@
  */
 package jcd.gui;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,11 +16,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import jcd.controller.DiagramController;
 import jcd.data.ClassDiagramObject;
 import jcd.data.VariableObject;
 
@@ -31,7 +35,7 @@ public class VariableOptionDialog extends Stage {
 
     // HERE'S THE SINGLETON
     static VariableOptionDialog singleton;
-    
+
     static final String PRIVATE = "private";
     static final String PUBLIC = "public";
     static final String DEFAULT = "default";
@@ -79,7 +83,9 @@ public class VariableOptionDialog extends Stage {
         return singleton;
     }
 
-    public void init(Stage primaryStage, ClassDiagramObject diagram) {//, TableView variableTableView){
+    public void init(Stage primaryStage, ClassDiagramObject diagram, TableView variablesTable) {
+        DiagramController diagramController = new DiagramController();
+        
         // MAKE THIS DIALOG MODAL, MEANING OTHERS WILL WAIT
         // FOR IT WHEN IT IS DISPLAYED
         initModality(Modality.WINDOW_MODAL);
@@ -134,7 +140,7 @@ public class VariableOptionDialog extends Stage {
         EventHandler doneHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
             String name = nameField.getText();
             String type = typeField.getText();
-            
+
             boolean isStatic;
             if (staticCheckBox.isSelected()) {
                 isStatic = true;
@@ -148,17 +154,17 @@ public class VariableOptionDialog extends Stage {
             } else {
                 isFinal = false;
             }
-            
+
             String access = accessChoiceBox.getValue();
-            
+
             VariableObject toAdd = new VariableObject(name, type, isStatic, isFinal, access);
             System.out.println(toAdd.toStringCode());
-            
+
             boolean alreadyExists = false;
-            
+
             //see if the method already exists
-            for(VariableObject variable : diagram.getVariables()){
-                if(toAdd.equals(toAdd)){
+            for (VariableObject variable : diagram.getVariables()) {
+                if (toAdd.equals(toAdd)) {
                     alreadyExists = true;
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Variable name error");
@@ -168,15 +174,16 @@ public class VariableOptionDialog extends Stage {
                     break;
                 }
             }
-            
+
             //if the variable doesn't already exist, add it to the list of variables
-            if(!alreadyExists){
+            if (!alreadyExists) {
                 diagram.getVariables().add(toAdd);
                 System.out.println(diagram.toStringCode());
+                
+                //update the list of variables
+                diagramController.updateVariablesTable(diagram, variablesTable);
             }
-            
-           
-            
+
             VariableOptionDialog.this.hide();
         };
 

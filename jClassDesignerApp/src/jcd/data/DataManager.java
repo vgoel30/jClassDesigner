@@ -164,6 +164,7 @@ public class DataManager implements AppDataComponent {
                 //reflect the selected changes
                 workspace.classNameField.setText(diagram.getClassNameText().getText());
                 workspace.packageNameField.setText(diagram.getPackageNameText().getText());
+                diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
 
                 workspace.disableButtons(false);
 
@@ -174,8 +175,6 @@ public class DataManager implements AppDataComponent {
                     AppOptionDialog newDialog = new AppOptionDialog();
                     newDialog.init(app.getGUI().getWindow(), selectedClassDiagram);
                     newDialog.show();
-                    
-                    System.out.println("LIT SIZE :" + selectedClassDiagram.getJavaAPI_Packages());
                 }
 
             }
@@ -341,10 +340,10 @@ public class DataManager implements AppDataComponent {
             System.out.println("Variable Increment called");
 
             VariableOptionDialog newDialog = new VariableOptionDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram);
+            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.variablesTable);
             newDialog.show();
 
-            diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
+            //diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
         }
     }
 

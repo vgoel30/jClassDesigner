@@ -8,6 +8,8 @@ package jcd.gui;
 import javafx.scene.control.Button;
 import java.io.IOException;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -20,6 +22,7 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -183,7 +186,6 @@ public final class Workspace extends AppWorkspaceComponent {
 
     public void layoutGUI() {
         FlowPane toolBarPane = gui.getToolbarPane();
-        
 
         //SETTING UP ALL THE BUTTONS
         selectionButton = gui.initChildButton(toolBarPane, SELECTION_TOOL_ICON.toString(), SELECTION_TOOL_TOOLTIP.toString(), false);
@@ -231,7 +233,7 @@ public final class Workspace extends AppWorkspaceComponent {
         classNameContainer = new HBox(40);
         classNameLabel = new Label("Class/Interface ");
         classNameField = new TextField();
-        
+
         classNameContainer.getChildren().add(classNameLabel);
         classNameContainer.getChildren().add(classNameField);
         containers.add(classNameContainer);
@@ -266,14 +268,34 @@ public final class Workspace extends AppWorkspaceComponent {
         variablesDecrementButton = gui.putButtonInContainer(variablesContainer, DECREMENT_ICON.toString(), DECREMENT_TOOLTIP.toString(), false);
         fourthRow.getChildren().add(variablesContainer);
         editToolbar.getChildren().add(fourthRow);
-        variablesTable = new TableView<>();
-        variablesTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Type"), new TableColumn("Static"), new TableColumn("Access"));
-
-         //TableColumn<VariableObject,String> firstNameCol = new TableColumn<Person,String>("First Name");
         
+        variablesTable = new TableView<>();
+        //variablesTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Type"), new TableColumn("Static"), new TableColumn("Access"));
+        
+        TableColumn<VariableObject, String> nameCol = new TableColumn<>("Name");
+        nameCol.setCellValueFactory(new PropertyValueFactory("name"));
+        
+        TableColumn<VariableObject,String> typeCol = new TableColumn<>("Type");
+        typeCol.setCellValueFactory(new PropertyValueFactory("type"));
+        
+        TableColumn<VariableObject,Boolean> staticCol = new TableColumn<>("Static");
+        staticCol.setCellValueFactory(new PropertyValueFactory("isStatic"));
+        
+        TableColumn<VariableObject,String> accessCol = new TableColumn<>("Access");
+        accessCol.setCellValueFactory(new PropertyValueFactory("access"));
+       
+        //adding all the columns
+        variablesTable.getColumns().setAll(nameCol,typeCol,staticCol,accessCol);
+
         ScrollPane variableScroll = new ScrollPane(variablesTable);
         fourthRow.getChildren().add(variableScroll);
         variablesTable.setMinWidth(400);
+        
+        //Obser
+//        ObservableList<VariableObject> value = FXCollections.observableArrayList();
+//        value.add(new VariableObject("myMethod", "int", false, false, "private"));
+//        
+//        variablesTable.setItems(value);
 
         //the 5th and final row
         fifthRow = new VBox(10);
@@ -285,10 +307,10 @@ public final class Workspace extends AppWorkspaceComponent {
         fifthRow.getChildren().add(methodsContainer);
         editToolbar.getChildren().add(fifthRow);
         methodsTable = new TableView();
-        methodsTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Return"), new TableColumn("Static"), new TableColumn("Abstract"), new TableColumn("Access"));
-        
+       methodsTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Return"), new TableColumn("Static"), new TableColumn("Abstract"), new TableColumn("Access"));
+       
+       
 // methodsTable.g
-        
         ScrollPane methodsScroll = new ScrollPane(methodsTable);
         fifthRow.getChildren().add(methodsScroll);
         variablesTable.setMinWidth(400);
@@ -303,7 +325,6 @@ public final class Workspace extends AppWorkspaceComponent {
         ((BorderPane) workspace).setCenter(canvasScrollPane);
         canvasScrollPane.setContent(canvas);
 
-       
     }
 
     public void setupHandlers() throws Exception {
@@ -334,7 +355,7 @@ public final class Workspace extends AppWorkspaceComponent {
             System.out.println("Selection was clicked");
             mainScene.getRoot().setCursor(Cursor.MOVE);
         });
-        
+
         variablesIncrementButton.setOnAction(variableIncrementClicked -> {
             drawingActive = false;
             selectionActive = true;
@@ -348,7 +369,7 @@ public final class Workspace extends AppWorkspaceComponent {
         codeButton.setOnAction(codeButtonClicked -> {
             dataManager.handleExportCode(gui.getWindow());
         });
-        
+
         undoButton.setOnAction(undoButtonClicked -> {
             drawingActive = false;
             selectionActive = false;
@@ -376,8 +397,6 @@ public final class Workspace extends AppWorkspaceComponent {
                 dataManager.validateNameOfClass(oldValue, newValue);
             }
         });
-        
-
 
         //when the enter key is clicked, validate the name of the package
         packageNameField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -392,6 +411,7 @@ public final class Workspace extends AppWorkspaceComponent {
         classNameField.setText("");
         packageNameField.setText("");
         disableButtons(true);
+        variablesTable.getItems().clear();
         // canvas.getChildren().clear();
         if (selected != null) {
             selected.getStyleClass().remove("pressed");
@@ -413,6 +433,7 @@ public final class Workspace extends AppWorkspaceComponent {
         methodsIncrementButton.setDisable(disable);
         methodsDecrementButton.setDisable(disable);
         removeButton.setDisable(disable);
+        variablesTable.setDisable(disable);
     }
 
     @Override
@@ -444,7 +465,7 @@ public final class Workspace extends AppWorkspaceComponent {
         fifthRow.getStyleClass().add(EDIT_TOOLBAR_ROW);
         canvas.getStyleClass().add(RENDERING_CANVAS);
         canvasScrollPane.getStyleClass().add(RENDERING_CANVAS);
-        
+
         methodsTable.getStyleClass().add(TABLES);
         variablesTable.getStyleClass().add(TABLES);
 
