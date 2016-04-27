@@ -21,6 +21,16 @@ public class DiagramController {
 
     public void updateVariablesTable(ClassDiagramObject selectedClassDiagram, TableView<VariableObject> variablesTable) {
        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       for(VariableObject variable: selectedClassDiagram.getVariables()){
+           String name = variable.getName();
+           String type = variable.getType();
+           boolean isStatic = variable.getIsStatic();
+           boolean isFinal = variable.getIsFinal();
+           String access = variable.getAccess();    
+       }
+       
+      // variablesTable.setI
+       //System.out.println(variablesTable.getColumns().get(0).getCellData(0));
     }
     
 }

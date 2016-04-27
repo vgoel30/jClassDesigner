@@ -174,6 +174,8 @@ public class DataManager implements AppDataComponent {
                     AppOptionDialog newDialog = new AppOptionDialog();
                     newDialog.init(app.getGUI().getWindow(), selectedClassDiagram);
                     newDialog.show();
+                    
+                    System.out.println("LIT SIZE :" + selectedClassDiagram.getJavaAPI_Packages());
                 }
 
             }
