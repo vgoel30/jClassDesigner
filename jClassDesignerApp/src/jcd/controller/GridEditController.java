@@ -160,4 +160,14 @@ public class GridEditController {
                 diagramToFix.getRootContainer().setLayoutY(diagramToFix.getY() - (diagramToFix.getY()%15));
                 }
     }
+
+    public void zoomIn(Pane canvas) {
+        canvas.setScaleX(canvas.getScaleX() + 0.05);
+        canvas.setScaleY(canvas.getScaleY() + 0.05);
+    }
+    
+    public void zoomOut(Pane canvas) {
+        canvas.setScaleX(canvas.getScaleX() - 0.05);
+        canvas.setScaleY(canvas.getScaleY() - 0.05);
+    }
 }

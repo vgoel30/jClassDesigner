@@ -214,9 +214,9 @@ public final class Workspace extends AppWorkspaceComponent {
         toolbarButtons.add(undoButton);
         redoButton = gui.initChildButton(toolBarPane, REDO_ICON.toString(), REDO_TOOLTIP.toString(), true);
         toolbarButtons.add(redoButton);
-        zoomInButton = gui.initChildButton(toolBarPane, ZOOM_IN_ICON.toString(), ZOOM_IN_TOOLTIP.toString(), true);
+        zoomInButton = gui.initChildButton(toolBarPane, ZOOM_IN_ICON.toString(), ZOOM_IN_TOOLTIP.toString(), false);
         toolbarButtons.add(zoomInButton);
-        zoomOutButton = gui.initChildButton(toolBarPane, ZOOM_OUT_ICON.toString(), ZOOM_OUT_TOOLTIP.toString(), true);
+        zoomOutButton = gui.initChildButton(toolBarPane, ZOOM_OUT_ICON.toString(), ZOOM_OUT_TOOLTIP.toString(), false);
         toolbarButtons.add(zoomOutButton);
         screenshotButton = gui.initChildButton(toolBarPane, PHOTO_ICON.toString(), PHOTO_TOOLTIP.toString(), false);
         toolbarButtons.add(screenshotButton);
@@ -421,6 +421,34 @@ public final class Workspace extends AppWorkspaceComponent {
             if(snapCheckBox.isSelected())
                 gridEditController.snapToGrid(dataManager.classesOnCanvas);
         });
+        
+        //if the user wants to zoom in
+        zoomInButton.setOnAction(e -> {
+            if(canvas.getScaleX() >= 1.6 || canvas.getScaleY() >= 1.6){
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Zoom In Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("You have attained maximum zoom level. The only way now is back.");
+                alert.show();
+            }
+                else{
+                gridEditController.zoomIn(canvas);
+            }
+        });
+        
+        //if the user wants to zoom out
+        zoomOutButton.setOnAction(e -> {
+            if(canvas.getScaleX() <= 1 || canvas.getScaleY() <= 1){
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Zoom Out Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("You have attained minimum zoom level. The only way now is forward.");
+                alert.show();
+            }
+                else{
+                gridEditController.zoomOut(canvas);
+            }
+        });
 
         //testing the event handler for text field
         classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -468,6 +496,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
     @Override
     public void initStyle() {
+        
         System.out.println(toolbarButtons.size());
         //stylize the buttons in the toolbar
         for (Button button : toolbarButtons) {
