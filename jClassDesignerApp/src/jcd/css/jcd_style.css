@@ -104,7 +104,7 @@ and open the template in the editor.
 }
 
 .diagram_text_field{
-    -fx-font-size:16px;
+    -fx-font-size:15px;
     -fx-font-family: Dosis;
     -fx-text-fill: black;
     

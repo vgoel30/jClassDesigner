@@ -86,7 +86,7 @@ public class DataManager implements AppDataComponent {
 
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         Pane canvas = workspace.getCanvas();
-        
+
         //snaps the new diagram to grid if snap is active
         if (workspace.snapIsActive()) {
             gridEditController.snapToGrid(classesOnCanvas);
@@ -177,11 +177,7 @@ public class DataManager implements AppDataComponent {
 
                 selectedClassDiagram = diagram;
                 //reflect the selected changes
-                workspace.classNameField.setText(diagram.getClassNameText().getText());
-                workspace.packageNameField.setText(diagram.getPackageNameText().getText());
-
-                diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
-                diagramController.updateParentNamePicker(selectedClassDiagram, workspace.getParentNamePicker(), classesOnCanvas);
+                reflectChangesForSelectedDiagram(workspace, selectedClassDiagram);
 
                 workspace.disableButtons(false);
 
@@ -363,7 +359,6 @@ public class DataManager implements AppDataComponent {
         if (selectedClassDiagram != null) {
 
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
-            System.out.println("Variable Increment called");
 
             VariableOptionDialog newDialog = new VariableOptionDialog();
             newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.variablesTable);
@@ -380,7 +375,6 @@ public class DataManager implements AppDataComponent {
         if (selectedClassDiagram != null) {
 
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
-            System.out.println("Variable Decrement called");
 
             VariableRemoveDialog newDialog = new VariableRemoveDialog();
             newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.variablesTable);
@@ -388,6 +382,15 @@ public class DataManager implements AppDataComponent {
 
             //diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
         }
+    }
+
+    /**
+     * When the parent drop down box gets a new parent name for the diagram
+     *
+     * @param value
+     */
+    public void setParentName(String value) {
+        selectedClassDiagram.setParentName(value);
     }
 
     public void handleUndo() {
@@ -414,6 +417,21 @@ public class DataManager implements AppDataComponent {
         }
     }
 
+    /**
+     * When a shape is selected, we want to show the user it's relevant
+     * information
+     *
+     * @param workspace
+     * @param selectedClassDiagram
+     */
+    private void reflectChangesForSelectedDiagram(Workspace workspace, ClassDiagramObject selectedClassDiagram) {
+        workspace.classNameField.setText(selectedClassDiagram.getClassNameText().getText());
+        workspace.packageNameField.setText(selectedClassDiagram.getPackageNameText().getText());
+        workspace.getParentNamePicker().setValue(selectedClassDiagram.getParentName());
+        diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
+        diagramController.updateParentNamePicker(selectedClassDiagram, workspace.getParentNamePicker(), classesOnCanvas);
+    }
+
     @Override
     public void reset() {
         //remove all the children
@@ -422,4 +440,5 @@ public class DataManager implements AppDataComponent {
         undoStack.clear();
         ((Workspace) app.getWorkspaceComponent()).getCanvas().getChildren().clear();
     }
+
 }

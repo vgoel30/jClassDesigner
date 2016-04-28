@@ -181,7 +181,7 @@ public final class Workspace extends AppWorkspaceComponent {
     public Pane getCanvas() {
         return canvas;
     }
-    
+
     public ScrollPane getCanvasScrollPane() {
         return canvasScrollPane;
     }
@@ -189,16 +189,16 @@ public final class Workspace extends AppWorkspaceComponent {
     public Scene getScene() {
         return mainScene;
     }
-    
-    public boolean gridIsActive(){
+
+    public boolean gridIsActive() {
         return gridCheckBox.isSelected();
     }
-    
-    public boolean snapIsActive(){
+
+    public boolean snapIsActive() {
         return snapCheckBox.isSelected();
     }
-    
-    public ComboBox<String> getParentNamePicker(){
+
+    public ComboBox<String> getParentNamePicker() {
         return parentNamePicker;
     }
 
@@ -274,7 +274,6 @@ public final class Workspace extends AppWorkspaceComponent {
         parentSelectionContainer.getChildren().add(parentNamePicker);
         containers.add(parentSelectionContainer);
         editToolbar.getChildren().add(parentSelectionContainer);
-       
 
         //the 4th row
         fourthRow = new VBox(10);
@@ -417,42 +416,42 @@ public final class Workspace extends AppWorkspaceComponent {
         });
 
         gridCheckBox.setOnAction(e -> {
-            if(gridCheckBox.isSelected())
+            if (gridCheckBox.isSelected()) {
                 gridEditController.renderGridLines(canvas);
-            else
+            } else {
                 gridEditController.removeGridLines(canvas);
+            }
         });
-        
+
         snapCheckBox.setOnAction(e -> {
             //pass all the classes on canvas as the paramater
-            if(snapCheckBox.isSelected())
+            if (snapCheckBox.isSelected()) {
                 gridEditController.snapToGrid(dataManager.classesOnCanvas);
+            }
         });
-        
+
         //if the user wants to zoom in
         zoomInButton.setOnAction(e -> {
-            if(canvas.getScaleX() >= 1.6 || canvas.getScaleY() >= 1.6){
+            if (canvas.getScaleX() >= 1.6 || canvas.getScaleY() >= 1.6) {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Zoom In Warning");
                 alert.setHeaderText(null);
                 alert.setContentText("You have attained maximum zoom level. The only way now is back.");
                 alert.show();
-            }
-                else{
+            } else {
                 gridEditController.zoomIn(canvas);
             }
         });
-        
+
         //if the user wants to zoom out
         zoomOutButton.setOnAction(e -> {
-            if(canvas.getScaleX() <= 1 || canvas.getScaleY() <= 1){
+            if (canvas.getScaleX() <= 1 || canvas.getScaleY() <= 1) {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Zoom Out Warning");
                 alert.setHeaderText(null);
                 alert.setContentText("You have attained minimum zoom level. The only way now is forward.");
                 alert.show();
-            }
-                else{
+            } else {
                 gridEditController.zoomOut(canvas);
             }
         });
@@ -470,16 +469,12 @@ public final class Workspace extends AppWorkspaceComponent {
                 dataManager.validateNameOfPackage(oldValue, newValue);
             }
         });
-        
-       
-       //the event handler for the parent name clicker 
-        parentNamePicker.getEditor().addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent E) -> {
-        switch(E.getCode()){
-            case ENTER:{
-                System.out.println("Enter was clicked in ");
-            }
-        }
-    });
+
+        //the event handler for the parent name clicker 
+        parentNamePicker.setOnAction(e -> {
+            System.out.println("Parent : " + parentNamePicker.getValue());
+            dataManager.setParentName(parentNamePicker.getValue());
+        });
     }
 
     @Override
@@ -513,7 +508,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
     @Override
     public void initStyle() {
-        
+
         System.out.println(toolbarButtons.size());
         //stylize the buttons in the toolbar
         for (Button button : toolbarButtons) {
@@ -553,8 +548,6 @@ public final class Workspace extends AppWorkspaceComponent {
         canvasScrollPane.setFitToWidth(true);
         canvasScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
         canvasScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-        
-       
 
         disableButtons(true);
     }
