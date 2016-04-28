@@ -76,11 +76,15 @@ public class GridEditController {
 
                 dataManager.addClassDiagram(objectToPut);
             }
-            if (workspace.gridIsActive()) {
-                renderGridLines(canvas);
-            }
+            
         });
 
+        if(workspace.snapIsActive()){
+            System.out.println("SNAP IS ACTIVE");
+            System.out.println(dataManager.classesOnCanvas);
+            snapToGrid(dataManager.classesOnCanvas);
+        }
+        
     }
 
     public void processSnapshot() {

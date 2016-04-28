@@ -69,10 +69,10 @@ and open the template in the editor.
 }
 
 .table{
-    -fx-background-color: #1F4788;
+    -fx-background-color: white;
     -fx-border-color: #1F4788 ;
      -fx-border-width: 0 0 0 0;
-     -fx-font-family: Dosis;
+     -fx-font-family: Lato;
      -fx-text-fill: black;
 }
 

@@ -83,6 +83,14 @@ public class DataManager implements AppDataComponent {
         classNames.add(diagramToAdd.getClassNameText().getText());
         packageNames.add(diagramToAdd.getPackageNameText().getText());
         classPackageCombos.add(diagramToAdd.getClassNameText().getText() + ":" + diagramToAdd.getPackageNameText().getText());
+
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        Pane canvas = workspace.getCanvas();
+        
+        //snaps the new diagram to grid if snap is active
+        if (workspace.snapIsActive()) {
+            gridEditController.snapToGrid(classesOnCanvas);
+        }
     }
 
     public void addPackage(String packageName) {
@@ -96,8 +104,8 @@ public class DataManager implements AppDataComponent {
     public Pane getRenderingPane() {
         return ((Workspace) app.getWorkspaceComponent()).getCanvas();
     }
-    
-    public ScrollPane getRenderingScrollPane(){
+
+    public ScrollPane getRenderingScrollPane() {
         return ((Workspace) app.getWorkspaceComponent()).getCanvasScrollPane();
     }
 
@@ -119,7 +127,6 @@ public class DataManager implements AppDataComponent {
 
                 //set the inital position of the mouse event
                 moveDiagramEvent.setInitialPosition(diagram.getRootContainer().getLayoutX(), diagram.getRootContainer().getLayoutY());
-                
 
                 //event handlers for the left line (resizing from the left)
                 diagram.getLeftLine().setOnMouseDragged(mouseDraggedEvent -> {
@@ -172,13 +179,10 @@ public class DataManager implements AppDataComponent {
                 //reflect the selected changes
                 workspace.classNameField.setText(diagram.getClassNameText().getText());
                 workspace.packageNameField.setText(diagram.getPackageNameText().getText());
-                
+
                 diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
                 diagramController.updateParentNamePicker(selectedClassDiagram, workspace.getParentNamePicker(), classesOnCanvas);
-                
-                
-                
-                
+
                 workspace.disableButtons(false);
 
                 //if the user clicked twice on the diagram, ask them to add API classes
