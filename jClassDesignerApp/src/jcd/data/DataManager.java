@@ -118,8 +118,8 @@ public class DataManager implements AppDataComponent {
         diagram.getRootContainer().setOnMouseClicked((MouseEvent mouseClicked) -> {
             if (workspace.selectionActive) {
                 diagram.getRootContainer().getStyleClass().add(SELECTED_DIAGRAM_CONTAINER);
-                diagram.getLeftLine().setVisible(true);
                 diagram.getRightLine().setVisible(true);
+                diagram.getBottomLine().setVisible(true);
 
                 if (selectedClassDiagram != null) {
                     restoreSelectedProperties(selectedClassDiagram);
@@ -128,22 +128,7 @@ public class DataManager implements AppDataComponent {
                 //set the inital position of the mouse event
                 moveDiagramEvent.setInitialPosition(diagram.getRootContainer().getLayoutX(), diagram.getRootContainer().getLayoutY());
 
-                //event handlers for the left line (resizing from the left)
-                diagram.getLeftLine().setOnMouseDragged(mouseDraggedEvent -> {
-                    if (diagram.getEndPoint() - mouseDraggedEvent.getX() >= 185 && diagram.getEndPoint() - mouseDraggedEvent.getX() <= 450) {
-                        diagram.getRootContainer().setPrefWidth((diagram.getEndPoint() - mouseDraggedEvent.getX()));
-                        diagram.getRootContainer().setLayoutX(mouseDraggedEvent.getX());
-                    }
-                });
-
-                diagram.getLeftLine().setOnMouseEntered(mouseEnteredEvent -> {
-                    workspace.getScene().getRoot().setCursor(Cursor.W_RESIZE);
-                });
-
-                diagram.getLeftLine().setOnMouseExited(mouseEnteredEvent -> {
-                    workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
-                });
-
+               
                 //if the user is resizing to the right, create a new resize right action
                 ResizeRight resizeRightMove = new ResizeRight(diagram);
 
@@ -174,6 +159,25 @@ public class DataManager implements AppDataComponent {
                 diagram.getRightLine().setOnMouseExited(mouseEnteredEvent -> {
                     workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
                 });
+                
+                //RIGHT LINE EVENT HANDLERS DONE
+                
+                //NOW DOING THE BOTTOM MOST LINE RESIZING STUFF
+                diagram.getBottomLine().setOnMouseDragged(mouseDraggedEvent -> {
+                   // if (mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() >= 185 && mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() <= 450) {
+                        diagram.getMethodsContainer().setPrefHeight(mouseDraggedEvent.getY() - diagram.getMethodsContainer().getLayoutY()-100);
+                    //}
+                });
+                
+                diagram.getBottomLine().setOnMouseEntered(mouseEnteredEvent -> {
+                    workspace.getScene().getRoot().setCursor(Cursor.N_RESIZE);
+                });
+
+                
+                diagram.getBottomLine().setOnMouseExited(mouseEnteredEvent -> {
+                    workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
+                });
+                
 
                 selectedClassDiagram = diagram;
                 //reflect the selected changes
@@ -243,7 +247,6 @@ public class DataManager implements AppDataComponent {
     public void restoreSelectedProperties(ClassDiagramObject selectedClassDiagram) {
         System.out.println("CSS REMOVAL");
         selectedClassDiagram.getRootContainer().getStyleClass().remove(SELECTED_DIAGRAM_CONTAINER);
-        selectedClassDiagram.getLeftLine().setVisible(false);
         selectedClassDiagram.getRightLine().setVisible(false);
     }
 
