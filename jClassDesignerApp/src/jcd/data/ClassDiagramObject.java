@@ -25,7 +25,7 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
 
     //class or interface
     String diagramType;
-    
+
     String parent;
 
     //this will hold the three panes and serve as the skeleton for the diagram
@@ -59,12 +59,12 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     public ArrayList<MethodObject> getMethods() {
         return methods;
     }
-    
-    public void setParentName(String parent){
+
+    public void setParentName(String parent) {
         this.parent = parent;
     }
-    
-    public String getParentName(){
+
+    public String getParentName() {
         return parent;
     }
 
@@ -78,7 +78,9 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
 
     //for drag to resize
     Line rightLine;
+    Line leftLine;
     Line bottomLine;
+    Line middleLine;
 
     //helper constructor for testing load and save
     public ClassDiagramObject(String name, String type, ArrayList<MethodObject> methods, ArrayList<VariableObject> variables) {
@@ -107,7 +109,6 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         rootContainer.getChildren().add(variablesContainer);
         rootContainer.getChildren().add(methodsContainer);
 
-        
         rightLine = new Line();
 
         //root.getChildren().add(rootContainer);
@@ -150,8 +151,10 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         rootContainer.getChildren().add(variablesContainer);
         rootContainer.getChildren().add(methodsContainer);
 
+        middleLine = new Line();
         bottomLine = new Line();
         rightLine = new Line();
+        leftLine = new Line();
 
         setStandardDimensions();
 
@@ -161,7 +164,9 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     public void putOnCanvas(Pane root) {
         root.getChildren().add(rootContainer);
         root.getChildren().add(rightLine);
-        root.getChildren().add(bottomLine);
+        root.getChildren().add(leftLine);
+        //root.getChildren().add(bottomLine);
+        //root.getChildren().add(middleLine);
     }
 
     public double getEndPoint() {
@@ -185,8 +190,17 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         rootContainer.setMinHeight(80);
         rootContainer.setMinWidth(175);
         rootContainer.setMaxWidth(450);
-
         
+        //setting up the left line
+        leftLine.startXProperty().bind(rootContainer.layoutXProperty());
+        leftLine.startYProperty().bind(rootContainer.layoutYProperty());
+
+        leftLine.endXProperty().bind(leftLine.startXProperty());
+        leftLine.endYProperty().bind(leftLine.startYProperty().add(rootContainer.heightProperty()));
+
+        leftLine.setStroke(Color.WHITE);
+        leftLine.setStrokeWidth(5);
+        leftLine.setVisible(false);
 
         //setting up the right line
         rightLine.startXProperty().bind(rootContainer.layoutXProperty().add(rootContainer.widthProperty()));
@@ -202,22 +216,32 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         //setting up the bottom line
         bottomLine.startXProperty().bind(rootContainer.layoutXProperty());
         bottomLine.startYProperty().bind(rootContainer.layoutYProperty().add(rootContainer.heightProperty()));
-        
+
         bottomLine.endXProperty().bind(bottomLine.startXProperty().add(rootContainer.widthProperty()));
         bottomLine.endYProperty().bind(bottomLine.startYProperty());
-        
+
         bottomLine.setStroke(Color.WHITE);
         bottomLine.setStrokeWidth(5);
         bottomLine.setVisible(false);
-        
+
+        //bottom line set up done
+        //setting up the middle line (in between the methods and variables container)
+        middleLine.startXProperty().bind(rootContainer.layoutXProperty().add(10));
+        middleLine.startYProperty().bind(rootContainer.layoutYProperty().add(packageContainer.heightProperty()).add(methodsContainer.heightProperty()).add(variablesContainer.heightProperty()));
+
+        middleLine.endXProperty().bind(middleLine.startXProperty().add(rootContainer.widthProperty()).subtract(30));
+        middleLine.endYProperty().bind(middleLine.startYProperty());
+
+        middleLine.setStroke(Color.WHITE);
+        middleLine.setOpacity(0);
+        middleLine.setStrokeWidth(1);
+        middleLine.setVisible(false);
+        //middle line set up done
         packageContainer.setMinHeight(10);
         packageContainer.setMinWidth(100);
         packageContainer.setMaxWidth(100);
 
         nameContainer.setMinHeight(20);
-        
-        //bottom line set up done
-        
         packageContainer.setMinHeight(10);
         packageContainer.setMinWidth(100);
         packageContainer.setMaxWidth(100);
@@ -243,8 +267,7 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         classNameText.setWrappingWidth(rootContainer.getMinWidth());
         methodsNameText.setWrappingWidth(rootContainer.getMinWidth());
         variablesNameText.setWrappingWidth(rootContainer.getMinWidth());
-        
-        
+
     }
 
     public VBox getRootContainer() {
@@ -263,14 +286,21 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         return this.variablesContainer;
     }
 
-   
     public Line getRightLine() {
         return this.rightLine;
     }
+
+    public Line getMiddleLine() {
+        return middleLine;
+    }
     
-   public Line getBottomLine() {
+    public Line getLeftLine() {
+        return this.leftLine;
+    }
+
+    public Line getBottomLine() {
         return this.bottomLine;
-    } 
+    }
 
     public Text getClassNameText() {
         return this.classNameText;
@@ -373,9 +403,8 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         return this.getClassNameText().getText().compareTo(o.getClassNameText().getText());
     }
 
-    public boolean equals(ClassDiagramObject o){
+    public boolean equals(ClassDiagramObject o) {
         return this.compareTo(o) == 0;
     }
-    
 
 }

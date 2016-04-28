@@ -79,8 +79,7 @@ public class DiagramController {
         Label variableText = new Label(toAdd.toString());
         variableText.getStyleClass().add("diagram_text_field");
         diagram.getVariablesContainer().getChildren().add(variableText);
-        
-        //ariableText.getStyleClass().add("diagram_text_field");
+        variableText.toFront();
     }
 
     public void removeVariable(ClassDiagramObject diagram, VariableObject toRemove) {

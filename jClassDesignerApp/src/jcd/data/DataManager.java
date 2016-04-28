@@ -119,7 +119,9 @@ public class DataManager implements AppDataComponent {
             if (workspace.selectionActive) {
                 diagram.getRootContainer().getStyleClass().add(SELECTED_DIAGRAM_CONTAINER);
                 diagram.getRightLine().setVisible(true);
-                diagram.getBottomLine().setVisible(true);
+                diagram.getLeftLine().setVisible(true);
+                //diagram.getBottomLine().setVisible(true);
+                //diagram.getMiddleLine().setVisible(true);
 
                 if (selectedClassDiagram != null) {
                     restoreSelectedProperties(selectedClassDiagram);
@@ -128,56 +130,8 @@ public class DataManager implements AppDataComponent {
                 //set the inital position of the mouse event
                 moveDiagramEvent.setInitialPosition(diagram.getRootContainer().getLayoutX(), diagram.getRootContainer().getLayoutY());
 
-               
-                //if the user is resizing to the right, create a new resize right action
-                ResizeRight resizeRightMove = new ResizeRight(diagram);
-
-                //when the right line is pressed for the resizing, that's the initial width for resizing
-                diagram.getRightLine().setOnMousePressed(mouseClickedEvent -> {
-                    resizeRightMove.setInitialWidth(diagram.getRootContainer().getWidth());
-
-                });
-
-                //event handlers for the right line (resizing from the right)
-                diagram.getRightLine().setOnMouseDragged(mouseDraggedEvent -> {
-                    if (mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() >= 185 && mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() <= 450) {
-                        diagram.getRootContainer().setPrefWidth(mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX());
-                    }
-                });
-
-                //when the mouse has been released, we set the final width and push the acion on the undo stack
-                diagram.getRightLine().setOnMouseReleased(mouseDragReleased -> {
-                    resizeRightMove.setFinalWidth(diagram.getRootContainer().getWidth());
-                    System.out.println(resizeRightMove);
-                    undoStack.push(resizeRightMove);
-                });
-
-                diagram.getRightLine().setOnMouseEntered(mouseEnteredEvent -> {
-                    workspace.getScene().getRoot().setCursor(Cursor.W_RESIZE);
-                });
-
-                diagram.getRightLine().setOnMouseExited(mouseEnteredEvent -> {
-                    workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
-                });
-                
-                //RIGHT LINE EVENT HANDLERS DONE
-                
-                //NOW DOING THE BOTTOM MOST LINE RESIZING STUFF
-                diagram.getBottomLine().setOnMouseDragged(mouseDraggedEvent -> {
-                   // if (mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() >= 185 && mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() <= 450) {
-                        diagram.getMethodsContainer().setPrefHeight(mouseDraggedEvent.getY() - diagram.getMethodsContainer().getLayoutY()-100);
-                    //}
-                });
-                
-                diagram.getBottomLine().setOnMouseEntered(mouseEnteredEvent -> {
-                    workspace.getScene().getRoot().setCursor(Cursor.N_RESIZE);
-                });
-
-                
-                diagram.getBottomLine().setOnMouseExited(mouseEnteredEvent -> {
-                    workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
-                });
-                
+                //all the event handlers for the resizing stuff
+                attachResizingHandlers(diagram,workspace);
 
                 selectedClassDiagram = diagram;
                 //reflect the selected changes
@@ -247,6 +201,7 @@ public class DataManager implements AppDataComponent {
     public void restoreSelectedProperties(ClassDiagramObject selectedClassDiagram) {
         System.out.println("CSS REMOVAL");
         selectedClassDiagram.getRootContainer().getStyleClass().remove(SELECTED_DIAGRAM_CONTAINER);
+        selectedClassDiagram.getLeftLine().setVisible(false);
         selectedClassDiagram.getRightLine().setVisible(false);
     }
 
@@ -442,6 +397,89 @@ public class DataManager implements AppDataComponent {
         //remove all the actions from the undo stack
         undoStack.clear();
         ((Workspace) app.getWorkspaceComponent()).getCanvas().getChildren().clear();
+    }
+
+    private void attachResizingHandlers(ClassDiagramObject diagram, Workspace workspace) {
+        //if the user is resizing to the right, create a new resize right action
+                ResizeRight resizeRightMove = new ResizeRight(diagram);
+
+                //when the right line is pressed for the resizing, that's the initial width for resizing
+                diagram.getRightLine().setOnMousePressed(mouseClickedEvent -> {
+                    resizeRightMove.setInitialWidth(diagram.getRootContainer().getWidth());
+
+                });
+
+                //RIGHT LINE EVENT HANDLERS
+                diagram.getRightLine().setOnMouseDragged(mouseDraggedEvent -> {
+                    if (mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() >= 185 && mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX() <= 450) {
+                        diagram.getRootContainer().setPrefWidth(mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX());
+                    }
+                });
+
+                //when the mouse has been released, we set the final width and push the acion on the undo stack
+                diagram.getRightLine().setOnMouseReleased(mouseDragReleased -> {
+                    resizeRightMove.setFinalWidth(diagram.getRootContainer().getWidth());
+                    System.out.println(resizeRightMove);
+                    undoStack.push(resizeRightMove);
+                });
+
+                diagram.getRightLine().setOnMouseEntered(mouseEnteredEvent -> {
+                    workspace.getScene().getRoot().setCursor(Cursor.W_RESIZE);
+                });
+
+                diagram.getRightLine().setOnMouseExited(mouseEnteredEvent -> {
+                    workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
+                });
+                
+                //LEFT LINE
+                 //event handlers for the left line (resizing from the left)
+                diagram.getLeftLine().setOnMouseDragged(mouseDraggedEvent -> {
+                    if (diagram.getEndPoint() - mouseDraggedEvent.getX() >= 185 && diagram.getEndPoint() - mouseDraggedEvent.getX() <= 450) {
+                        diagram.getRootContainer().setPrefWidth((diagram.getEndPoint() - mouseDraggedEvent.getX()));
+                        diagram.getRootContainer().setLayoutX(mouseDraggedEvent.getX());
+                    }
+                });
+
+                diagram.getLeftLine().setOnMouseEntered(mouseEnteredEvent -> {
+                    workspace.getScene().getRoot().setCursor(Cursor.W_RESIZE);
+                });
+
+                diagram.getLeftLine().setOnMouseExited(mouseEnteredEvent -> {
+                    workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
+                });
+                //LEFT LINE HANDLERS DONE
+                
+                
+                
+                //RIGHT LINE EVENT HANDLERS DONE
+                //NOW DOING THE BOTTOM MOST LINE RESIZING STUFF
+                diagram.getBottomLine().setOnMouseDragged(mouseDraggedEvent -> {
+                    diagram.getMethodsContainer().setPrefHeight(mouseDraggedEvent.getY() - diagram.getMethodsContainer().getLayoutY() - 100);
+                });
+
+                diagram.getBottomLine().setOnMouseEntered(mouseEnteredEvent -> {
+                    workspace.getScene().getRoot().setCursor(Cursor.N_RESIZE);
+                });
+
+                diagram.getBottomLine().setOnMouseExited(mouseEnteredEvent -> {
+                    workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
+                });
+
+                //BOTTOM LINE HANDLERS DONE
+                //EVENT HANDLERS FOR THE MIDDLE LINE
+                diagram.getMiddleLine().setOnMouseDragged(mouseDraggedEvent -> {
+                    diagram.getVariablesContainer().setPrefHeight(mouseDraggedEvent.getY() - diagram.getMethodsContainer().getLayoutY() - 100);
+                    diagram.getMethodsContainer().setLayoutY(diagram.getRootContainer().getHeight() - diagram.getMethodsContainer().getHeight());
+                });
+                
+                diagram.getMiddleLine().setOnMouseEntered(mouseEnteredEvent -> {
+                    workspace.getScene().getRoot().setCursor(Cursor.N_RESIZE);
+                });
+
+                diagram.getMiddleLine().setOnMouseExited(mouseEnteredEvent -> {
+                    workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
+                });
+                //MIDDLE LINE HANDLERS DONE
     }
 
 }
