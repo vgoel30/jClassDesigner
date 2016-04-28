@@ -5,9 +5,11 @@
  */
 package jcd.controller;
 
+import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
@@ -23,7 +25,28 @@ public class DiagramController {
     public DiagramController(){
         
     }
+    
+    public void updateParentNamePicker(ClassDiagramObject selectedClassDiagram, ComboBox<String> parentNamePicker, ArrayList<ClassDiagramObject> classesOnCanvas) {
+      
+        parentNamePicker.getItems().clear();
+        
+        ObservableList<String> potentialParents = FXCollections.observableArrayList();
+        
+        for(ClassDiagramObject potentialParent: classesOnCanvas){
+            if(!selectedClassDiagram.equals(potentialParent))
+                potentialParents.add(potentialParent.toString());
+        }
+        
+//        if(!selectedClassDiagram.getParentName().equals("") || selectedClassDiagram.getParentName() != null)
+//            parentNamePicker.getSelectionModel().select(selectedClassDiagram.getParentName());
+        parentNamePicker.setItems(potentialParents);
+    }
 
+    /**
+     * Updates the variable table to show the variables of the selected class
+     * @param selectedClassDiagram
+     * @param variablesTable 
+     */
     public  void updateVariablesTable(ClassDiagramObject selectedClassDiagram, TableView<VariableObject> variablesTable) {
       System.out.println("Update variables table called");
         
@@ -89,5 +112,7 @@ public class DiagramController {
         //decreases the height of the container to compensate for the removal of the variable 
         diagram.getVariablesContainer().setPrefHeight(diagram.getVariablesContainer().getHeight()-heightToSubtract);
     }
+
+    
     
 }

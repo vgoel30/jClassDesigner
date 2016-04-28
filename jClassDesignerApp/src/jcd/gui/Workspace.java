@@ -23,6 +23,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -126,7 +128,7 @@ public final class Workspace extends AppWorkspaceComponent {
     //3rd row
     HBox parentSelectionContainer;
     Label parentNameLabel;
-    public ComboBox parentNamePicker;
+    public ComboBox<String> parentNamePicker;
 
     //4th row which has the variables increase/decrease control and the table
     VBox fourthRow;
@@ -194,6 +196,10 @@ public final class Workspace extends AppWorkspaceComponent {
     
     public boolean snapIsActive(){
         return snapCheckBox.isSelected();
+    }
+    
+    public ComboBox<String> getParentNamePicker(){
+        return parentNamePicker;
     }
 
     public void layoutGUI() {
@@ -268,6 +274,7 @@ public final class Workspace extends AppWorkspaceComponent {
         parentSelectionContainer.getChildren().add(parentNamePicker);
         containers.add(parentSelectionContainer);
         editToolbar.getChildren().add(parentSelectionContainer);
+       
 
         //the 4th row
         fourthRow = new VBox(10);
@@ -463,6 +470,16 @@ public final class Workspace extends AppWorkspaceComponent {
                 dataManager.validateNameOfPackage(oldValue, newValue);
             }
         });
+        
+       
+       //the event handler for the parent name clicker 
+        parentNamePicker.getEditor().addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent E) -> {
+        switch(E.getCode()){
+            case ENTER:{
+                System.out.println("Enter was clicked in ");
+            }
+        }
+    });
     }
 
     @Override

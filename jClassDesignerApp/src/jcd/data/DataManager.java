@@ -172,11 +172,13 @@ public class DataManager implements AppDataComponent {
                 //reflect the selected changes
                 workspace.classNameField.setText(diagram.getClassNameText().getText());
                 workspace.packageNameField.setText(diagram.getPackageNameText().getText());
+                
                 diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
+                diagramController.updateParentNamePicker(selectedClassDiagram, workspace.getParentNamePicker(), classesOnCanvas);
                 
                 
                 
-
+                
                 workspace.disableButtons(false);
 
                 //if the user clicked twice on the diagram, ask them to add API classes

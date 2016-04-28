@@ -25,6 +25,8 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
 
     //class or interface
     String diagramType;
+    
+    String parent;
 
     //this will hold the three panes and serve as the skeleton for the diagram
     VBox rootContainer;
@@ -58,7 +60,13 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         return methods;
     }
     
+    public void setParentName(String parent){
+        this.parent = parent;
+    }
     
+    public String getParentName(){
+        return parent;
+    }
 
     public ArrayList<String> getJavaAPI_Packages() {
         return javaAPI_Packages;
@@ -321,7 +329,7 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     }
 
     public String toString() {
-        return diagramType + ": " + this.classNameText.getText() + " Package :" + this.packageNameText.getText();
+        return this.classNameText.getText() + ": " + this.packageNameText.getText();
     }
 
     public String toStringCode() {
@@ -362,7 +370,9 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         return this.getClassNameText().getText().compareTo(o.getClassNameText().getText());
     }
 
-
+    public boolean equals(ClassDiagramObject o){
+        return this.compareTo(o) == 0;
+    }
     
 
 }
