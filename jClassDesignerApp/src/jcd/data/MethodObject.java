@@ -13,6 +13,10 @@ import java.util.ArrayList;
  * @author varungoel
  */
 public class MethodObject {
+    static final String PRIVATE = "private";
+    static final String PUBLIC = "public";
+    static final String DEFAULT = "default";
+    static final String PROTECTED = "protected";
 
     String name;
     boolean isStatic;
@@ -68,14 +72,33 @@ public class MethodObject {
     }
 
     public String toString() {
+        String toReturn = "";
+        
         String privacy;
-        if (this.access.equals("private")) {
-            privacy = "-";
-        } else {
-            privacy = "+";
+        if (this.access.equals(PRIVATE)) {
+            toReturn += "- ";
+        } else if (this.access.equals(PUBLIC)) {
+            toReturn += "+ ";
+        } else if (this.access.equals(PROTECTED)) {
+            toReturn += "# ";
         }
+        
+        if(isStatic)
+            toReturn += "$";
+        
+        toReturn += name + "(";
+        
+        //adding all the arguments
+        for (int i = 0; i < arguments.size(); i++) {
+            if (i < arguments.size() - 1) {
+                toReturn += arguments.get(i).toStringCode() + ", ";
+            } else {
+                toReturn += arguments.get(i).toStringCode() + " ";
+            }
+        }
+        toReturn += "): " + returnType;
 
-        return privacy + name + "(" + arguments + "):" + returnType;
+        return toReturn;
     }
     
     

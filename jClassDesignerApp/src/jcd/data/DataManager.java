@@ -25,6 +25,7 @@ import jcd.controller.ActionController;
 import jcd.controller.DiagramController;
 import jcd.controller.GridEditController;
 import jcd.gui.AppOptionDialog;
+import jcd.gui.MethodOptionDialog;
 import jcd.gui.VariableOptionDialog;
 import jcd.gui.VariableRemoveDialog;
 import jcd.gui.Workspace;
@@ -328,6 +329,19 @@ public class DataManager implements AppDataComponent {
             VariableRemoveDialog newDialog = new VariableRemoveDialog();
             newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.variablesTable);
             newDialog.show();
+        }
+    }
+    
+    public void handleMethodIncrement() {
+        if (selectedClassDiagram != null) {
+
+            Workspace workspace = (Workspace) app.getWorkspaceComponent();
+
+            MethodOptionDialog newDialog = new MethodOptionDialog();
+            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.methodsTable);
+            newDialog.show();
+
+            diagramController.updateMethodsTable(selectedClassDiagram, workspace.methodsTable);
         }
     }
 

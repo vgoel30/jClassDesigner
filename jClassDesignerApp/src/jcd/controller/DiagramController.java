@@ -12,7 +12,9 @@ import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import jcd.data.ArgumentObject;
 import jcd.data.ClassDiagramObject;
+import jcd.data.MethodObject;
 import jcd.data.VariableObject;
 import org.controlsfx.control.CheckComboBox;
 
@@ -92,6 +94,29 @@ public class DiagramController {
         }
         variablesTable.setItems(value);
     }
+    
+    public void updateMethodsTable(ClassDiagramObject selectedClassDiagram, TableView<MethodObject> methodsTable){
+        System.out.println("Update methods table called");
+        
+        //clear the previous values to make space for the new
+        methodsTable.getItems().clear();
+        
+        ArrayList<ArgumentObject> arguments = new ArrayList<>();
+        
+        ObservableList<MethodObject> value = FXCollections.observableArrayList();
+        
+        for(MethodObject method: selectedClassDiagram.getMethods()){
+            String name = method.getName();
+            String returnType = method.getReturnType();
+            boolean isStatic = method.getIsStatic();
+            boolean isAbstract = method.getIsAbstract();
+            String access = method.getAccess();
+             
+            value.add(new MethodObject(name, isStatic, isAbstract, arguments, returnType, access));
+        }
+        System.out.println(value);
+        methodsTable.setItems(value);
+    }
 
     /**
      * Renders the variables and adds to the list of variables
@@ -106,6 +131,21 @@ public class DiagramController {
         Label variableText = new Label(toAdd.toString());
         variableText.getStyleClass().add("diagram_text_field");
         diagram.getVariablesContainer().getChildren().add(variableText);
+        variableText.toFront();
+    }
+    
+    /**
+     * Adds a method to the diagram and renders it
+     * @param diagram
+     * @param toAdd 
+     */
+    public void addMethod(ClassDiagramObject diagram, MethodObject toAdd) {
+        //add to the list of methods for the class
+       diagram.getMethods().add(toAdd);
+
+        Label variableText = new Label(toAdd.toString());
+        variableText.getStyleClass().add("diagram_text_field");
+        diagram.getMethodsContainer().getChildren().add(variableText);
         variableText.toFront();
     }
 

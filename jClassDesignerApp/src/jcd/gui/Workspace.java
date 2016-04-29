@@ -65,6 +65,7 @@ import static jcd.PropertyType.ZOOM_OUT_ICON;
 import static jcd.PropertyType.ZOOM_OUT_TOOLTIP;
 import jcd.controller.GridEditController;
 import jcd.data.DataManager;
+import jcd.data.MethodObject;
 import jcd.data.VariableObject;
 import maf.AppTemplate;
 import static maf.components.AppStyleArbiter.CHECKBOX;
@@ -144,7 +145,9 @@ public final class Workspace extends AppWorkspaceComponent {
     HBox interfaceSelectionContainer;
     Button localInterfaceButton;
     Button externalInterfaceButton;
+    Button externalParentButton;
     Button addPackageButton;
+    
 
 //4th row which has the variables increase/decrease control and the table
     VBox fourthRow;
@@ -160,7 +163,7 @@ public final class Workspace extends AppWorkspaceComponent {
     Label methodsLabel;
     Button methodsIncrementButton;
     Button methodsDecrementButton;
-    TableView methodsTable;
+    public TableView<MethodObject> methodsTable;
 
     //THE AREA WHERE ALL THE STUFF WILL BE RENDERED
     Pane canvas;
@@ -292,7 +295,7 @@ public final class Workspace extends AppWorkspaceComponent {
         editToolbar.getChildren().add(parentSelectionContainer);
 
         //the interface thing row
-        interfaceSelectionContainer = new HBox(2);
+        interfaceSelectionContainer = new HBox();
 
         localInterfaceButton = new Button("Local Interface");
         localInterfaceButton.setDisable(true);
@@ -303,6 +306,11 @@ public final class Workspace extends AppWorkspaceComponent {
         externalInterfaceButton.setDisable(true);
         interfaceSelectionContainer.getChildren().add(externalInterfaceButton);
         buttonsInEditBar.add(externalInterfaceButton);
+        
+        externalParentButton = new Button("External Parent");
+        externalParentButton.setDisable(true);
+        interfaceSelectionContainer.getChildren().add(externalParentButton);
+        buttonsInEditBar.add(externalParentButton);
 
         addPackageButton = new Button("Package");
         addPackageButton.setDisable(true);
@@ -358,8 +366,25 @@ public final class Workspace extends AppWorkspaceComponent {
         fifthRow.getChildren().add(methodsContainer);
         editToolbar.getChildren().add(fifthRow);
         methodsTable = new TableView();
-        methodsTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Return"), new TableColumn("Static"), new TableColumn("Abstract"), new TableColumn("Access"));
+        //methodsTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Return"), new TableColumn("Static"), new TableColumn("Abstract"), new TableColumn("Access"));
 
+        TableColumn<MethodObject, String> methodNameCol = new TableColumn<>("Name");
+        methodNameCol.setCellValueFactory(new PropertyValueFactory("name"));
+
+        TableColumn<MethodObject, String> returnTypeCol = new TableColumn<>("Type");
+        returnTypeCol.setCellValueFactory(new PropertyValueFactory("returnType"));
+
+        TableColumn<MethodObject, Boolean> isStaticCol = new TableColumn<>("Static");
+        isStaticCol.setCellValueFactory(new PropertyValueFactory("isStatic"));
+
+        TableColumn<MethodObject, Boolean> isAbstractCol = new TableColumn<>("Abstract");
+        isAbstractCol.setCellValueFactory(new PropertyValueFactory("isAbstract"));
+
+
+        //adding all the columns
+        methodsTable.getColumns().setAll(methodNameCol, returnTypeCol, isStaticCol, isAbstractCol);
+        
+        
         ScrollPane methodsScroll = new ScrollPane(methodsTable);
         fifthRow.getChildren().add(methodsScroll);
         variablesTable.setMinWidth(400);
@@ -416,6 +441,12 @@ public final class Workspace extends AppWorkspaceComponent {
         variablesDecrementButton.setOnAction(variableDecrementClicked -> {
             drawingActive = false;
             dataManager.handleVariableDecrement();
+        });
+        
+        //add a method
+        methodsIncrementButton.setOnAction(variableIncrementClicked -> {
+            drawingActive = false;
+            dataManager.handleMethodIncrement();
         });
 
         //when the resize button is clicked
@@ -504,10 +535,6 @@ public final class Workspace extends AppWorkspaceComponent {
         });
 
         //the event handler for the parent name clicker 
-//        parentNamePicker.setOnAction(e -> {
-//            System.out.println("Parent : " + parentNamePicker.getValue());
-//            dataManager.setParentName(parentNamePicker.getValue());
-//        });
         parentNamePicker.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
      public void onChanged(ListChangeListener.Change<? extends String> c) {
          ArrayList<String> parents = new ArrayList<>();
@@ -557,6 +584,7 @@ public final class Workspace extends AppWorkspaceComponent {
         variablesTable.setDisable(disable);
         localInterfaceButton.setDisable(disable);
         externalInterfaceButton.setDisable(disable);
+        externalParentButton.setDisable(disable);
         addPackageButton.setDisable(disable);
     }
 
