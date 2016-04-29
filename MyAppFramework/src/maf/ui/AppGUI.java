@@ -355,7 +355,17 @@ public class AppGUI implements AppStyleArbiter {
 
         // PUT THE BUTTON IN THE CONTAINER
         buttonContainer.getChildren().add(button);
-        button.getStyleClass().add(CONTAINER_BUTTON);
+         button.getStyleClass().add(EDIT_BAR_BUTTON);
+
+            button.setOnMouseEntered((MouseEvent mouseEnteredEvent) -> {
+                button.getStyleClass().remove(EDIT_BAR_BUTTON);
+                button.getStyleClass().add(EDIT_BAR_BUTTON_HOVERED);
+            });
+
+            button.setOnMouseExited(mouseExitedEvent -> {
+                button.getStyleClass().add(EDIT_BAR_BUTTON);
+                button.getStyleClass().remove(EDIT_BAR_BUTTON_HOVERED);
+            });
         
         button.setMaxHeight(35);
         button.setMinHeight(35);
