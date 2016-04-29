@@ -139,14 +139,6 @@ public class DataManager implements AppDataComponent {
 
                 workspace.disableButtons(false);
 
-                //if the user clicked twice on the diagram, ask them to add API classes
-                if (mouseClicked.getClickCount() == 2) {
-                    System.out.println("Twice");
-
-                    AppOptionDialog newDialog = new AppOptionDialog();
-                    newDialog.init(app.getGUI().getWindow(), selectedClassDiagram);
-                    newDialog.show();
-                }
 
             }
         });

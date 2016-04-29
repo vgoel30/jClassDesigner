@@ -75,6 +75,10 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     public ArrayList<VariableObject> getVariables() {
         return variables;
     }
+    
+    public boolean isInterface(){
+        return diagramType.equalsIgnoreCase("interface");
+    }
 
     //for drag to resize
     Line rightLine;

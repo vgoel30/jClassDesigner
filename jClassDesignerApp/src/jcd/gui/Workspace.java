@@ -143,7 +143,7 @@ public final class Workspace extends AppWorkspaceComponent {
     Button localInterfaceButton;
     Button externalInterfaceButton;
     Button addPackageButton;
-    
+
 //4th row which has the variables increase/decrease control and the table
     VBox fourthRow;
     HBox variablesContainer;
@@ -302,13 +302,11 @@ public final class Workspace extends AppWorkspaceComponent {
         interfaceSelectionContainer.getChildren().add(externalInterfaceButton);
         buttonsInEditBar.add(externalInterfaceButton);
 
-        addPackageButton = new Button("Packages");
+        addPackageButton = new Button("Package");
         addPackageButton.setDisable(true);
         interfaceSelectionContainer.getChildren().add(addPackageButton);
         buttonsInEditBar.add(addPackageButton);
 
-//        interfaceIncrementButton = gui.putButtonInContainer(interfaceSelectionContainer, INCREMENT_ICON.toString(), INCREMENT_TOOLTIP.toString(), false);
-//        interfaceDecrementButton = gui.putButtonInContainer(interfaceSelectionContainer, DECREMENT_ICON.toString(), DECREMENT_TOOLTIP.toString(), false);
         containers.add(interfaceSelectionContainer);
         editToolbar.getChildren().add(interfaceSelectionContainer);
 
@@ -507,6 +505,13 @@ public final class Workspace extends AppWorkspaceComponent {
         parentNamePicker.setOnAction(e -> {
             System.out.println("Parent : " + parentNamePicker.getValue());
             dataManager.setParentName(parentNamePicker.getValue());
+        });
+
+        //the user wants to add a package to the class
+        addPackageButton.setOnAction(e -> {
+            AppOptionDialog newDialog = new AppOptionDialog();
+            newDialog.init(app.getGUI().getWindow(), dataManager.selectedClassDiagram);
+            newDialog.show();
         });
     }
 
