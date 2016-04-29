@@ -24,7 +24,6 @@ import jcd.actions.ResizeRight;
 import jcd.controller.ActionController;
 import jcd.controller.DiagramController;
 import jcd.controller.GridEditController;
-import jcd.gui.AppOptionDialog;
 import jcd.gui.MethodOptionDialog;
 import jcd.gui.VariableOptionDialog;
 import jcd.gui.VariableRemoveDialog;
@@ -32,7 +31,6 @@ import jcd.gui.Workspace;
 import maf.AppTemplate;
 import maf.components.AppDataComponent;
 import static maf.components.AppStyleArbiter.SELECTED_DIAGRAM_CONTAINER;
-import org.controlsfx.control.CheckComboBox;
 
 /**
  *
@@ -151,6 +149,9 @@ public class DataManager implements AppDataComponent {
                     workspace.drawingActive = false;
                     diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getSceneY() - 50);
                     diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX() - 450);
+                    
+                    if(workspace.gridIsActive())
+                        gridEditController.snapToGrid(classesOnCanvas);
 
                     double x = diagram.getRootContainer().getLayoutX();
                     double y = diagram.getRootContainer().getLayoutY();
