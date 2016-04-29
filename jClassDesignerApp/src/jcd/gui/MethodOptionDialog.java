@@ -162,30 +162,9 @@ public class MethodOptionDialog extends Stage {
 
             MethodObject toAdd = new MethodObject(name, isStatic, isAbstract, arguments, type, access);
 
-            boolean alreadyExists = false;
+            //boolean alreadyExists = false;
 
-            //see if the method already exists
-//            for (VariableObject variable : diagram.getVariables()) {
-//                if (variable.equals(toAdd)) {
-//                    alreadyExists = true;
-//                    Alert alert = new Alert(Alert.AlertType.ERROR);
-//                    alert.setTitle("Variable name error");
-//                    alert.setHeaderText(null);
-//                    alert.setContentText("Variable already exists in this class!");
-//                    alert.showAndWait();
-//                    break;
-//                }
-//            }
-
-            //if the variable doesn't already exist, add it to the list of variables
-            if (!alreadyExists) {
-                //adds the variable to the list of variables and renders it on the diagram
-                
-                
-                //update the list of variables
-                
-                
-            }
+           
             System.out.println("METHOD TO ADD : " + toAdd);
             diagramController.addMethod(diagram,toAdd);
             diagramController.updateMethodsTable(diagram, methodsTable);
@@ -201,9 +180,7 @@ public class MethodOptionDialog extends Stage {
         // AND PUT IT IN THE WINDOW
         mainScene = new Scene(mainPane);
         this.setScene(mainScene);
-        
-        
-
+     
     }
 
 }
