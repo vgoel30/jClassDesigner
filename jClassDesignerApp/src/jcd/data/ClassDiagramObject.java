@@ -61,8 +61,8 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     }
 
     public void setParentNames(ArrayList<String> parentList) {
-        //this.parents.clear();
-        this.parents.addAll(parentList);
+        this.parents = parentList;
+        System.out.println("PARENTS UPDATED TO : " + this.parents);
     }
 
     public ArrayList<String> getParentsName() {

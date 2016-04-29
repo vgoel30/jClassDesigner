@@ -37,6 +37,7 @@ public class DiagramController {
         boolean isInterface = selectedClassDiagram.isInterface();
 
         parentNamePicker.getItems().clear();
+        
 
         ObservableList<String> potentialParents = FXCollections.observableArrayList();
 
@@ -59,6 +60,8 @@ public class DiagramController {
 //       
         parentNamePicker.getItems().addAll(potentialParents);
         System.out.println("PARENTS: " + selectedClassDiagram.getParentsName());
+        parentNamePicker.getCheckModel().clearChecks();
+        System.out.println("ITEMS : " + parentNamePicker.getCheckModel().getCheckedIndices());
         for (String parent : selectedClassDiagram.getParentsName()) {
             parentNamePicker.getCheckModel().check(parent);
         }
