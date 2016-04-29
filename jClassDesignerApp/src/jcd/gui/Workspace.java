@@ -17,6 +17,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableColumn;
@@ -25,6 +26,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -66,6 +68,9 @@ import jcd.data.VariableObject;
 import maf.AppTemplate;
 import static maf.components.AppStyleArbiter.CHECKBOX;
 import static maf.components.AppStyleArbiter.CLASS_FILE_BUTTON;
+import static maf.components.AppStyleArbiter.CLASS_FILE_BUTTON_CONTAINER;
+import static maf.components.AppStyleArbiter.CLASS_FILE_BUTTON_CONTAINER_HOVERED;
+import static maf.components.AppStyleArbiter.CLASS_FILE_BUTTON_HOVERED;
 import static maf.components.AppStyleArbiter.EDIT_TOOLBAR_ROW;
 import static maf.components.AppStyleArbiter.RENDERING_CANVAS;
 import maf.components.AppWorkspaceComponent;
@@ -90,6 +95,8 @@ public final class Workspace extends AppWorkspaceComponent {
 
     //all the rows in the editing toolbar
     ArrayList<HBox> containers = new ArrayList<>();
+
+    ArrayList<Button> buttonsInEditBar = new ArrayList<>();
 
     ArrayList<Button> toolbarButtons = new ArrayList<>();
     Button selectionButton;
@@ -130,7 +137,14 @@ public final class Workspace extends AppWorkspaceComponent {
     Label parentNameLabel;
     public ComboBox<String> parentNamePicker;
 
-    //4th row which has the variables increase/decrease control and the table
+    //temp 4th row
+    //the add interfaces/package row
+    HBox interfaceSelectionContainer;
+    Button localInterfaceButton;
+    Button externalInterfaceButton;
+    Button addPackageButton;
+    
+//4th row which has the variables increase/decrease control and the table
     VBox fourthRow;
     HBox variablesContainer;
     Label variablesLabel;
@@ -275,10 +289,34 @@ public final class Workspace extends AppWorkspaceComponent {
         containers.add(parentSelectionContainer);
         editToolbar.getChildren().add(parentSelectionContainer);
 
+        //the interface thing row
+        interfaceSelectionContainer = new HBox(2);
+
+        localInterfaceButton = new Button("Local Interface");
+        localInterfaceButton.setDisable(true);
+        interfaceSelectionContainer.getChildren().add(localInterfaceButton);
+        buttonsInEditBar.add(localInterfaceButton);
+
+        externalInterfaceButton = new Button("External Interface");
+        externalInterfaceButton.setDisable(true);
+        interfaceSelectionContainer.getChildren().add(externalInterfaceButton);
+        buttonsInEditBar.add(externalInterfaceButton);
+
+        addPackageButton = new Button("Packages");
+        addPackageButton.setDisable(true);
+        interfaceSelectionContainer.getChildren().add(addPackageButton);
+        buttonsInEditBar.add(addPackageButton);
+
+//        interfaceIncrementButton = gui.putButtonInContainer(interfaceSelectionContainer, INCREMENT_ICON.toString(), INCREMENT_TOOLTIP.toString(), false);
+//        interfaceDecrementButton = gui.putButtonInContainer(interfaceSelectionContainer, DECREMENT_ICON.toString(), DECREMENT_TOOLTIP.toString(), false);
+        containers.add(interfaceSelectionContainer);
+        editToolbar.getChildren().add(interfaceSelectionContainer);
+
+        //the 4th row;
         //the 4th row
         fourthRow = new VBox(10);
         variablesContainer = new HBox(78);
-        variablesLabel = new Label("Variables: ");
+        variablesLabel = new Label("Variables:   ");
         variablesContainer.getChildren().add(variablesLabel);
         variablesIncrementButton = gui.putButtonInContainer(variablesContainer, INCREMENT_ICON.toString(), INCREMENT_TOOLTIP.toString(), false);
         variablesDecrementButton = gui.putButtonInContainer(variablesContainer, DECREMENT_ICON.toString(), DECREMENT_TOOLTIP.toString(), false);
@@ -310,15 +348,10 @@ public final class Workspace extends AppWorkspaceComponent {
         fourthRow.getChildren().add(variableScroll);
         variablesTable.setMinWidth(400);
 
-        //Obser
-//        ObservableList<VariableObject> value = FXCollections.observableArrayList();
-//        value.add(new VariableObject("myMethod", "int", false, false, "private"));
-//        
-//        variablesTable.setItems(value);
-        //the 5th and final row
+        //the 5th  row
         fifthRow = new VBox(10);
         methodsContainer = new HBox(78);
-        methodsLabel = new Label("Methods:  ");
+        methodsLabel = new Label("Methods:   ");
         methodsContainer.getChildren().add(methodsLabel);
         methodsIncrementButton = gui.putButtonInContainer(methodsContainer, INCREMENT_ICON.toString(), INCREMENT_TOOLTIP.toString(), false);
         methodsDecrementButton = gui.putButtonInContainer(methodsContainer, DECREMENT_ICON.toString(), DECREMENT_TOOLTIP.toString(), false);
@@ -327,11 +360,11 @@ public final class Workspace extends AppWorkspaceComponent {
         methodsTable = new TableView();
         methodsTable.getColumns().addAll(new TableColumn("Name"), new TableColumn("Return"), new TableColumn("Static"), new TableColumn("Abstract"), new TableColumn("Access"));
 
-// methodsTable.g
         ScrollPane methodsScroll = new ScrollPane(methodsTable);
         fifthRow.getChildren().add(methodsScroll);
         variablesTable.setMinWidth(400);
 
+        //the final row
         // AND NOW SETUP THE WORKSPACE
         workspace = new BorderPane();
 
@@ -504,6 +537,9 @@ public final class Workspace extends AppWorkspaceComponent {
         methodsDecrementButton.setDisable(disable);
         removeButton.setDisable(disable);
         variablesTable.setDisable(disable);
+        localInterfaceButton.setDisable(disable);
+        externalInterfaceButton.setDisable(disable);
+        addPackageButton.setDisable(disable);
     }
 
     @Override
@@ -527,6 +563,20 @@ public final class Workspace extends AppWorkspaceComponent {
                         selected.getStyleClass().add(BUTTON_PRESSED);
                     }
                 }
+            });
+        }
+
+        for (Button button : buttonsInEditBar) {
+            button.getStyleClass().add(EDIT_BAR_BUTTON);
+
+            button.setOnMouseEntered((MouseEvent mouseEnteredEvent) -> {
+                button.getStyleClass().remove(EDIT_BAR_BUTTON);
+                button.getStyleClass().add(EDIT_BAR_BUTTON_HOVERED);
+            });
+
+            button.setOnMouseExited(mouseExitedEvent -> {
+                button.getStyleClass().add(EDIT_BAR_BUTTON);
+                button.getStyleClass().remove(EDIT_BAR_BUTTON_HOVERED);
             });
         }
 
