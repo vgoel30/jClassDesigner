@@ -20,7 +20,7 @@ import javafx.stage.Modality;
 import jcd.data.ClassDiagramObject;
 
 /**
- *
+ * Custom Dialog box to allow users to add new external packages
  * @author varungoel
  */
 public class AppOptionDialog extends Stage {
@@ -33,7 +33,6 @@ public class AppOptionDialog extends Stage {
     Scene messageScene;
     Label messageLabel;
     Button addPackage;
-    Button noButton;
     Button doneButton;
     String selection;
 
@@ -95,19 +94,20 @@ public class AppOptionDialog extends Stage {
         VBox buttonBox = new VBox(10);
         buttonBox.getChildren().add(addPackage);
         buttonBox.getChildren().add(doneButton);
-        buttonBox.getChildren().add(textField);
+        buttonBox.getChildren().add(0,textField);
 
         EventHandler addPackageHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
             TextField newTextField = new TextField();
             textFields.add(newTextField);
-            buttonBox.getChildren().add(newTextField);
+            buttonBox.getChildren().add(0,newTextField);
         };
         
         System.out.println("JAVA APIS included: " + diagram.getJavaAPI_Packages().size());
+        //this will display all the old packages that have been included for import
         for(String API : diagram.getJavaAPI_Packages()){
             textField = new TextField(API);
             textFields.add(textField);
-            buttonBox.getChildren().add(textField);
+            buttonBox.getChildren().add(0,textField);
         }
         
         //clear the APIs to add new ones

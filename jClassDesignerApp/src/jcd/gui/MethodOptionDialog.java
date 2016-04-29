@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import jcd.controller.DiagramController;
 import jcd.data.ArgumentObject;
 import jcd.data.ClassDiagramObject;
+import jcd.data.DataManager;
 import jcd.data.MethodObject;
 import jcd.data.VariableObject;
 
@@ -67,7 +68,20 @@ public class MethodOptionDialog extends Stage {
     Label accessLabel;
     ChoiceBox<String> accessChoiceBox;
 
+    HBox argumentContainer;
+
+    Label argumentNameLabel;
+    Label argumentTypeLabel;
+
+    TextField argNameField;
+    TextField argTypeField;
+
+    Button argumentsButton;
     Button doneButton;
+
+    ArrayList<HBox> argumentContainers = new ArrayList<>();
+    ArrayList<TextField> argumentNameFields = new ArrayList<>();
+    ArrayList<TextField> argumentTypeFields = new ArrayList<>();
 
     public MethodOptionDialog() {
     }
@@ -84,9 +98,9 @@ public class MethodOptionDialog extends Stage {
         return singleton;
     }
 
-    public void init(Stage primaryStage, ClassDiagramObject diagram, TableView methodsTable) {
+    public void init(Stage primaryStage, ClassDiagramObject diagram, TableView methodsTable, DataManager dataManager) {
         DiagramController diagramController = new DiagramController();
-        
+
         // MAKE THIS DIALOG MODAL, MEANING OTHERS WILL WAIT
         // FOR IT WHEN IT IS DISPLAYED
         initModality(Modality.WINDOW_MODAL);
@@ -95,21 +109,21 @@ public class MethodOptionDialog extends Stage {
         mainPane = new VBox(15);
 
         nameContainer = new HBox(10);
-        nameLabel = new Label("Name");
+        nameLabel = new Label("Method Name");
         nameField = new TextField();
         nameContainer.getChildren().add(nameLabel);
         nameContainer.getChildren().add(nameField);
         mainPane.getChildren().add(nameContainer);
 
         typeContainer = new HBox(10);
-        typeLabel = new Label("Type ");
+        typeLabel = new Label("Return Type ");
         typeField = new TextField();
         typeContainer.getChildren().add(typeLabel);
         typeContainer.getChildren().add(typeField);
         mainPane.getChildren().add(typeContainer);
 
         staticContainer = new HBox(10);
-        staticLabel = new Label("Static");
+        staticLabel = new Label("Static      ");
         staticCheckBox = new CheckBox();
         staticContainer.getChildren().add(staticLabel);
         staticContainer.getChildren().add(staticCheckBox);
@@ -135,12 +149,40 @@ public class MethodOptionDialog extends Stage {
         accessContainer.getChildren().add(accessChoiceBox);
         mainPane.getChildren().add(accessContainer);
 
-        doneButton = new Button("Add Method");
+        //making the input for arguments
+        argumentContainer = new HBox(10);
+
+        argumentNameLabel = new Label("Argument Name");
+        argNameField = new TextField();
+
+        argumentContainer.getChildren().add(argumentNameLabel);
+        argumentContainer.getChildren().add(argNameField);
+        argumentNameFields.add(argNameField);
+
+        argumentTypeLabel = new Label("Argument Type");
+        argTypeField = new TextField();
+        argumentTypeFields.add(argTypeField);
+
+        argumentContainer.getChildren().add(argumentTypeLabel);
+        argumentContainer.getChildren().add(argTypeField);
+        argumentContainers.add(argumentContainer);
+
+        mainPane.getChildren().add(argumentContainer);
+        //arguments inputs done
+
+        doneButton = new Button("Done");
         mainPane.getChildren().add(doneButton);
 
+        argumentsButton = new Button("Add argument");
+        mainPane.getChildren().add(mainPane.getChildren().size() - 1, argumentsButton);
+
+        //when the user has clicked the done button, close this box and send the method's data back to the workspace 
         EventHandler doneHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
             String name = nameField.getText();
             String type = typeField.getText();
+            if(type.equals("")){
+                type = "void";
+            }
 
             boolean isStatic;
             if (staticCheckBox.isSelected()) {
@@ -157,30 +199,75 @@ public class MethodOptionDialog extends Stage {
             }
 
             String access = accessChoiceBox.getValue();
-            
+
             ArrayList<ArgumentObject> arguments = new ArrayList<>();
 
-            MethodObject toAdd = new MethodObject(name, isStatic, isAbstract, arguments, type, access);
+            //get all the arguments
+            for (int i = 0; i < argumentContainers.size(); i++) {
+                String argumentNameToAdd = argumentNameFields.get(i).getText();
+                String argumentTypeToAdd = argumentTypeFields.get(i).getText();
 
-            //boolean alreadyExists = false;
+                ArgumentObject argumentToAdd = new ArgumentObject(argumentNameToAdd, argumentTypeToAdd);
+                arguments.add(argumentToAdd);
+            }
 
-           
-            System.out.println("METHOD TO ADD : " + toAdd);
-            diagramController.addMethod(diagram,toAdd);
-            diagramController.updateMethodsTable(diagram, methodsTable);
-            MethodOptionDialog.this.hide();
+            //create the method object to add
+            if (!name.equals("")) {
+                MethodObject toAdd = new MethodObject(name, isStatic, isAbstract, arguments, type, access);
+                System.out.println("METHOD TO ADD : " + toAdd.toStringCode());
+                //this will add the method to the class's list of methods and render it
+                diagramController.addMethod(diagram, toAdd);
+                //this will update the method table
+                diagramController.updateMethodsTable(diagram, methodsTable);
+                MethodOptionDialog.this.hide();
+            }
+            else{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid method name");
+                alert.setHeaderText(null);
+                alert.setContentText("Specify proper method name");
+
+                alert.showAndWait();
+                
+               MethodOptionDialog.this.hide(); 
+            }
+        };
+
+        //if the user wants to add an argument
+        EventHandler argumentAdditionHander = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
+            HBox newArgumentContainer = new HBox(10);
+
+            Label newArgumentNameLabel = new Label("Argument Name");
+            TextField newArgNameField = new TextField();
+
+            newArgumentContainer.getChildren().add(newArgumentNameLabel);
+            newArgumentContainer.getChildren().add(newArgNameField);
+
+            Label newArgumentTypeLabel = new Label("Argument Type");
+            TextField newArgTypeField = new TextField();
+
+            newArgumentContainer.getChildren().add(newArgumentTypeLabel);
+            newArgumentContainer.getChildren().add(newArgTypeField);
+
+            mainPane.getChildren().add(mainPane.getChildren().size() - 2, newArgumentContainer);
+
+            //add all the relative information in the lists
+            argumentContainers.add(newArgumentContainer);
+            argumentNameFields.add(newArgNameField);
+            argumentTypeFields.add(newArgTypeField);
         };
 
         doneButton.setOnAction(doneHandler);
+        argumentsButton.setOnAction(argumentAdditionHander);
 
         // MAKE IT LOOK NICE
         mainPane.setPadding(new Insets(10, 20, 20, 20));
         mainPane.setMinHeight(150);
-        
+
         // AND PUT IT IN THE WINDOW
         mainScene = new Scene(mainPane);
         this.setScene(mainScene);
-     
+
     }
 
 }

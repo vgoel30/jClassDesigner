@@ -61,9 +61,7 @@ public class DiagramController {
         }
 //       
         parentNamePicker.getItems().addAll(potentialParents);
-        System.out.println("PARENTS: " + selectedClassDiagram.getParentsName());
         parentNamePicker.getCheckModel().clearChecks();
-        System.out.println("ITEMS : " + parentNamePicker.getCheckModel().getCheckedIndices());
         for (String parent : selectedClassDiagram.getParentsName()) {
             parentNamePicker.getCheckModel().check(parent);
         }
@@ -134,21 +132,7 @@ public class DiagramController {
         variableText.toFront();
     }
     
-    /**
-     * Adds a method to the diagram and renders it
-     * @param diagram
-     * @param toAdd 
-     */
-    public void addMethod(ClassDiagramObject diagram, MethodObject toAdd) {
-        //add to the list of methods for the class
-       diagram.getMethods().add(toAdd);
-
-        Label variableText = new Label(toAdd.toString());
-        variableText.getStyleClass().add("diagram_text_field");
-        diagram.getMethodsContainer().getChildren().add(variableText);
-        variableText.toFront();
-    }
-
+    
     public void removeVariable(ClassDiagramObject diagram, VariableObject toRemove) {
         VariableObject toRemoveTemp = new VariableObject();
 
@@ -179,4 +163,19 @@ public class DiagramController {
         diagram.getVariablesContainer().setPrefHeight(diagram.getVariablesContainer().getHeight() - heightToSubtract);
     }
 
+    /**
+     * Adds a method to the diagram and renders it
+     * @param diagram
+     * @param toAdd 
+     */
+    public void addMethod(ClassDiagramObject diagram, MethodObject toAdd) {
+        //add to the list of methods for the class
+       diagram.getMethods().add(toAdd);
+
+        Label variableText = new Label(toAdd.toString());
+        variableText.getStyleClass().add("diagram_text_field");
+        diagram.getMethodsContainer().getChildren().add(variableText);
+        variableText.toFront();
+    }
+    
 }

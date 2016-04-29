@@ -91,9 +91,9 @@ public class MethodObject {
         //adding all the arguments
         for (int i = 0; i < arguments.size(); i++) {
             if (i < arguments.size() - 1) {
-                toReturn += arguments.get(i).toStringCode() + ", ";
+                toReturn += arguments.get(i).toString() + ", ";
             } else {
-                toReturn += arguments.get(i).toStringCode() + " ";
+                toReturn += arguments.get(i).toString() + "";
             }
         }
         toReturn += "): " + returnType;

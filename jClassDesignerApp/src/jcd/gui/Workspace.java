@@ -287,7 +287,6 @@ public final class Workspace extends AppWorkspaceComponent {
         parentSelectionContainer = new HBox(75);
         parentNameLabel = new Label("Parent         ");
         parentNamePicker = new CheckComboBox();
-        //parentNamePicker.setEditable(true);
         parentNamePicker.setMaxWidth(210);
         parentSelectionContainer.getChildren().add(parentNameLabel);
         parentSelectionContainer.getChildren().add(parentNamePicker);
@@ -412,14 +411,12 @@ public final class Workspace extends AppWorkspaceComponent {
         addClassButton.setOnAction(e -> {
             drawingActive = true;
             selectionActive = false;
-            System.out.println("Add class was clicked");
             gridEditController.addDiagram(canvas, "class");
         });
 
         addInterfaceButton.setOnAction(e -> {
             drawingActive = true;
             selectionActive = false;
-            System.out.println("Add interface was clicked");
             gridEditController.addDiagram(canvas, "interface");
         });
 
@@ -427,7 +424,6 @@ public final class Workspace extends AppWorkspaceComponent {
         selectionButton.setOnAction(selectionButtonClicked -> {
             drawingActive = false;
             selectionActive = true;
-            System.out.println("Selection was clicked");
             mainScene.getRoot().setCursor(Cursor.MOVE);
         });
 
@@ -591,7 +587,6 @@ public final class Workspace extends AppWorkspaceComponent {
     @Override
     public void initStyle() {
 
-        System.out.println(toolbarButtons.size());
         //stylize the buttons in the toolbar
         for (Button button : toolbarButtons) {
             button.getStyleClass().add(CLASS_FILE_BUTTON);

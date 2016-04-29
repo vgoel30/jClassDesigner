@@ -77,8 +77,6 @@ public class DataManager implements AppDataComponent {
     }
 
     public void addClassDiagram(ClassDiagramObject diagramToAdd) {
-        System.out.print("A class was added  ");
-
         classesOnCanvas.add(diagramToAdd);
         classNames.add(diagramToAdd.getClassNameText().getText());
         packageNames.add(diagramToAdd.getPackageNameText().getText());
@@ -193,7 +191,6 @@ public class DataManager implements AppDataComponent {
      * @param selectedClassDiagram
      */
     public void restoreSelectedProperties(ClassDiagramObject selectedClassDiagram) {
-        System.out.println("CSS REMOVAL");
         selectedClassDiagram.getRootContainer().getStyleClass().remove(SELECTED_DIAGRAM_CONTAINER);
         selectedClassDiagram.getLeftLine().setVisible(false);
         selectedClassDiagram.getRightLine().setVisible(false);
@@ -339,7 +336,7 @@ public class DataManager implements AppDataComponent {
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
             MethodOptionDialog newDialog = new MethodOptionDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.methodsTable);
+            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.methodsTable,this);
             newDialog.show();
 
             diagramController.updateMethodsTable(selectedClassDiagram, workspace.methodsTable);
