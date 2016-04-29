@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -75,6 +76,7 @@ import static maf.components.AppStyleArbiter.EDIT_TOOLBAR_ROW;
 import static maf.components.AppStyleArbiter.RENDERING_CANVAS;
 import maf.components.AppWorkspaceComponent;
 import maf.ui.AppGUI;
+import org.controlsfx.control.CheckComboBox;
 
 /**
  *
@@ -135,7 +137,7 @@ public final class Workspace extends AppWorkspaceComponent {
     //3rd row
     HBox parentSelectionContainer;
     Label parentNameLabel;
-    public ComboBox<String> parentNamePicker;
+    public CheckComboBox<String> parentNamePicker;
 
     //temp 4th row
     //the add interfaces/package row
@@ -212,7 +214,7 @@ public final class Workspace extends AppWorkspaceComponent {
         return snapCheckBox.isSelected();
     }
 
-    public ComboBox<String> getParentNamePicker() {
+    public CheckComboBox<String> getParentNamePicker() {
         return parentNamePicker;
     }
 
@@ -281,8 +283,8 @@ public final class Workspace extends AppWorkspaceComponent {
         //the third row
         parentSelectionContainer = new HBox(75);
         parentNameLabel = new Label("Parent         ");
-        parentNamePicker = new ComboBox();
-        parentNamePicker.setEditable(true);
+        parentNamePicker = new CheckComboBox();
+        //parentNamePicker.setEditable(true);
         parentNamePicker.setMaxWidth(210);
         parentSelectionContainer.getChildren().add(parentNameLabel);
         parentSelectionContainer.getChildren().add(parentNamePicker);
@@ -502,10 +504,21 @@ public final class Workspace extends AppWorkspaceComponent {
         });
 
         //the event handler for the parent name clicker 
-        parentNamePicker.setOnAction(e -> {
-            System.out.println("Parent : " + parentNamePicker.getValue());
-            dataManager.setParentName(parentNamePicker.getValue());
-        });
+//        parentNamePicker.setOnAction(e -> {
+//            System.out.println("Parent : " + parentNamePicker.getValue());
+//            dataManager.setParentName(parentNamePicker.getValue());
+//        });
+        parentNamePicker.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+     public void onChanged(ListChangeListener.Change<? extends String> c) {
+         ArrayList<String> parents = new ArrayList<>();
+         
+         for(String parent: parentNamePicker.getCheckModel().getCheckedItems()){
+             parents.add(parent);
+         }
+         
+         dataManager.setParents(parents);
+     }
+ });
 
         //the user wants to add a package to the class
         addPackageButton.setOnAction(e -> {

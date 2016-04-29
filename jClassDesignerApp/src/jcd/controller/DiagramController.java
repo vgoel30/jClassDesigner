@@ -12,9 +12,9 @@ import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
-import javafx.scene.text.Text;
 import jcd.data.ClassDiagramObject;
 import jcd.data.VariableObject;
+import org.controlsfx.control.CheckComboBox;
 
 /**
  *
@@ -26,7 +26,14 @@ public class DiagramController {
 
     }
 
-    public void updateParentNamePicker(ClassDiagramObject selectedClassDiagram, ComboBox<String> parentNamePicker, ArrayList<ClassDiagramObject> classesOnCanvas) {
+    /**
+     * Updates the parent name picker based on the current selected shape
+     *
+     * @param selectedClassDiagram
+     * @param parentNamePicker
+     * @param classesOnCanvas
+     */
+    public void updateParentNamePicker(ClassDiagramObject selectedClassDiagram, CheckComboBox<String> parentNamePicker, ArrayList<ClassDiagramObject> classesOnCanvas) {
         boolean isInterface = selectedClassDiagram.isInterface();
 
         parentNamePicker.getItems().clear();
@@ -49,9 +56,12 @@ public class DiagramController {
                 }
             }
         }
-//        if(!selectedClassDiagram.getParentName().equals("") || selectedClassDiagram.getParentName() != null)
-//            parentNamePicker.getSelectionModel().select(selectedClassDiagram.getParentName());
-        parentNamePicker.setItems(potentialParents);
+//       
+        parentNamePicker.getItems().addAll(potentialParents);
+        System.out.println("PARENTS: " + selectedClassDiagram.getParentsName());
+        for (String parent : selectedClassDiagram.getParentsName()) {
+            parentNamePicker.getCheckModel().check(parent);
+        }
     }
 
     /**

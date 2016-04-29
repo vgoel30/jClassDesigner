@@ -323,14 +323,11 @@ public class DataManager implements AppDataComponent {
      */
     public void handleVariableDecrement() {
         if (selectedClassDiagram != null) {
-
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
             VariableRemoveDialog newDialog = new VariableRemoveDialog();
             newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.variablesTable);
             newDialog.show();
-
-            //diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
         }
     }
 
@@ -339,8 +336,8 @@ public class DataManager implements AppDataComponent {
      *
      * @param value
      */
-    public void setParentName(String value) {
-        selectedClassDiagram.setParentName(value);
+    public void setParents(ArrayList<String> value) {
+        selectedClassDiagram.setParentNames(value);
     }
 
     public void handleUndo() {
@@ -377,8 +374,8 @@ public class DataManager implements AppDataComponent {
     private void reflectChangesForSelectedDiagram(Workspace workspace, ClassDiagramObject selectedClassDiagram) {
         workspace.classNameField.setText(selectedClassDiagram.getClassNameText().getText());
         workspace.packageNameField.setText(selectedClassDiagram.getPackageNameText().getText());
-        workspace.getParentNamePicker().setValue(selectedClassDiagram.getParentName());
-        diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
+       workspace.getParentNamePicker().getCheckModel().clearChecks(); 
+       diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
         diagramController.updateParentNamePicker(selectedClassDiagram, workspace.getParentNamePicker(), classesOnCanvas);
     }
 
