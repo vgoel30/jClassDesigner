@@ -18,14 +18,19 @@ public interface AppStyleArbiter {
     public static final String CLASS_SUBHEADING_LABEL = "subheading_label";
     public static final String CLASS_PROMPT_LABEL = "prompt_label";
     public static final String CLASS_PROMPT_TEXT_FIELD = "prompt_text_field";
+    
     public static final String CLASS_FILE_BUTTON = "file_button";
     public static final String CLASS_FILE_BUTTON_CONTAINER = "toolbar_container";
     public static final String CLASS_FILE_BUTTON_HOVERED = "file_button_hovered";
     public static final String CLASS_FILE_BUTTON_CONTAINER_HOVERED = "toolbar_container_hovered";
+    
+    public static final String EDIT_BAR_BUTTON = "edit_bar_button";
+    public static final String EDIT_BAR_BUTTON_HOVERED = "edit_bar_button_hovered";
+    
     public static final String CHECKBOX = "checkbox";
     public static final String EDIT_TOOLBAR = "edit_toolbar"; //the toolbar on the right side
     public static final String EDIT_TOOLBAR_ROW = "edit_toolbar_row"; //each row in the toolbar
-    public static final String LABEL = "label";
+    //public static final String LABEL = "label";
     public static final String CONTAINER_BUTTON = "container_button";
     public static final String RENDERING_CANVAS = "rendering_canvas";
     public static final String TABLES = "table";

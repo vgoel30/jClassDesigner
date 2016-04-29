@@ -123,6 +123,7 @@ public class AppFileController {
      *
      */
     public void handleLoadRequest() {
+        
         try {
             // WE MAY HAVE TO SAVE CURRENT WORK
             boolean continueToOpen = true;
