@@ -442,9 +442,15 @@ public final class Workspace extends AppWorkspaceComponent {
         });
         
         //add a method
-        methodsIncrementButton.setOnAction(variableIncrementClicked -> {
+        methodsIncrementButton.setOnAction(methodIncrementClicked -> {
             drawingActive = false;
             dataManager.handleMethodIncrement();
+        });
+        
+        //remove a method
+        methodsDecrementButton.setOnAction(methodDecrementClicked -> {
+            drawingActive = false;
+            dataManager.handleMethodDecrement();
         });
 
         //when the resize button is clicked
@@ -557,6 +563,8 @@ public final class Workspace extends AppWorkspaceComponent {
     public void reloadWorkspace() {
         classNameField.setText("");
         packageNameField.setText("");
+        gridCheckBox.setSelected(false);
+        snapCheckBox.setSelected(false);
         disableButtons(true);
         variablesTable.getItems().clear();
         if (selected != null) {

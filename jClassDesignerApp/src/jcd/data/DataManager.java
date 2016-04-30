@@ -25,6 +25,7 @@ import jcd.controller.ActionController;
 import jcd.controller.DiagramController;
 import jcd.controller.GridEditController;
 import jcd.gui.MethodOptionDialog;
+import jcd.gui.MethodRemoveDialog;
 import jcd.gui.VariableOptionDialog;
 import jcd.gui.VariableRemoveDialog;
 import jcd.gui.Workspace;
@@ -316,6 +317,22 @@ public class DataManager implements AppDataComponent {
             //diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
         }
     }
+    
+    /**
+     * Adds a method
+     */
+    public void handleMethodIncrement() {
+        if (selectedClassDiagram != null) {
+
+            Workspace workspace = (Workspace) app.getWorkspaceComponent();
+
+            MethodOptionDialog newDialog = new MethodOptionDialog();
+            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.methodsTable,this);
+            newDialog.show();
+
+            diagramController.updateMethodsTable(selectedClassDiagram, workspace.methodsTable);
+        }
+    }
 
     /**
      * If the user wants to delete a variable
@@ -330,16 +347,14 @@ public class DataManager implements AppDataComponent {
         }
     }
     
-    public void handleMethodIncrement() {
+    
+    public void handleMethodDecrement(){
         if (selectedClassDiagram != null) {
-
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
-            MethodOptionDialog newDialog = new MethodOptionDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.methodsTable,this);
+            MethodRemoveDialog newDialog = new MethodRemoveDialog();
+            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.methodsTable);
             newDialog.show();
-
-            diagramController.updateMethodsTable(selectedClassDiagram, workspace.methodsTable);
         }
     }
 
@@ -403,6 +418,9 @@ public class DataManager implements AppDataComponent {
     public void reset() {
         //remove all the children
         classesOnCanvas.clear();
+        classNames.clear();
+        packageNames.clear();
+        classPackageCombos.clear();
         //remove all the actions from the undo stack
         undoStack.clear();
         ClassDiagramObject.counter = 0;

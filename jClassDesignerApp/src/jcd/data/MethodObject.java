@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author varungoel
  */
-public class MethodObject {
+public class MethodObject{
     static final String PRIVATE = "private";
     static final String PUBLIC = "public";
     static final String DEFAULT = "default";
@@ -33,6 +33,9 @@ public class MethodObject {
         System.out.println(sampleMethod.toStringCode());
     }
     
+    public MethodObject(){
+        
+    }
     
     public MethodObject(String name, boolean isStatic, boolean isAbstract, ArrayList<ArgumentObject> arguments, String returnType, String access) {
         this.name = name;
@@ -69,6 +72,14 @@ public class MethodObject {
 
     public String getAccess() {
         return access;
+    }
+    
+    public boolean equals(MethodObject o){
+        if(!this.getName().equals(o.getName()))
+            return false;
+        if(!this.getReturnType().equals(o.getReturnType()))
+            return false;
+        return (this.getArguments().size() == o.getArguments().size());
     }
 
     public String toString() {

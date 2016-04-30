@@ -134,7 +134,11 @@ public class DiagramController {
         variableText.toFront();
     }
     
-    
+    /**
+     * Removes the variable from the list and removes it from the diagram
+     * @param diagram
+     * @param toRemove 
+     */
     public void removeVariable(ClassDiagramObject diagram, VariableObject toRemove) {
         VariableObject toRemoveTemp = new VariableObject();
 
@@ -163,6 +167,35 @@ public class DiagramController {
         diagram.getVariablesContainer().getChildren().remove(labelToRemove);
         //decreases the height of the container to compensate for the removal of the variable 
         diagram.getVariablesContainer().setPrefHeight(diagram.getVariablesContainer().getHeight() - heightToSubtract);
+    }
+    
+    public void removeMethod(ClassDiagramObject diagram, MethodObject toRemove) {
+        MethodObject toRemoveTemp = new MethodObject();
+        
+        for (MethodObject method : diagram.getMethods()) {
+            if (method.equals(toRemove)) {
+                toRemoveTemp = method;
+                break;
+            }
+        }
+        diagram.getMethods().remove(toRemoveTemp);
+        
+        double heightToSubtract = 0;
+        Label labelToRemove = new Label();
+        
+        for (Node child : diagram.getMethodsContainer().getChildren()) {
+            if (child instanceof Label) {
+                if (((Label) child).getText().equals(toRemove.toString())) {
+                    labelToRemove = (Label) child;
+                    heightToSubtract = ((Label) child).getHeight();
+                    break;
+                }
+            }
+        }
+        
+        diagram.getMethodsContainer().getChildren().remove(labelToRemove);
+        //decreases the height of the container to compensate for the removal of the variable 
+        diagram.getMethodsContainer().setPrefHeight(diagram.getVariablesContainer().getHeight() - heightToSubtract);
     }
 
     /**
