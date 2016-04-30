@@ -379,9 +379,11 @@ public final class Workspace extends AppWorkspaceComponent {
         TableColumn<MethodObject, Boolean> isAbstractCol = new TableColumn<>("Abstract");
         isAbstractCol.setCellValueFactory(new PropertyValueFactory("isAbstract"));
 
+        TableColumn<MethodObject, String> arg1Col = new TableColumn<>("Arguments");
+        arg1Col.setCellValueFactory(new PropertyValueFactory("arguments"));
 
         //adding all the columns
-        methodsTable.getColumns().setAll(methodNameCol, returnTypeCol, isStaticCol, isAbstractCol);
+        methodsTable.getColumns().setAll(methodNameCol, returnTypeCol, isStaticCol, isAbstractCol,arg1Col);
         
         
         ScrollPane methodsScroll = new ScrollPane(methodsTable);

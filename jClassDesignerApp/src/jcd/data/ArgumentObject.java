@@ -14,25 +14,29 @@ public class ArgumentObject {
     String name;
     String type;
     
-    public ArgumentObject(String name, String type){
+    public ArgumentObject(String name, String type) {
         this.name = name;
         this.type = type;
     }
-
+    
     public String getName() {
         return name;
     }
-
+    
     public String getType() {
         return type;
     }
     
-    
-    public String toString(){
-        return name + ":" + type;
+    public String toString() {
+        if (!name.equals("")) {
+            return name + ":" + type;
+        }
+        else{
+            return "";
+        }
     }
     
-    public String toStringCode(){
+    public String toStringCode() {
         return type + " " + name;
     }
 }

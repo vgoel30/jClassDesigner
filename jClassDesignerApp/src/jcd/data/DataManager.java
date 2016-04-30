@@ -395,7 +395,7 @@ public class DataManager implements AppDataComponent {
         workspace.classNameField.setText(selectedClassDiagram.getClassNameText().getText());
         workspace.packageNameField.setText(selectedClassDiagram.getPackageNameText().getText());
         diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
-
+        diagramController.updateMethodsTable(selectedClassDiagram, workspace.methodsTable);
         diagramController.updateParentNamePicker(selectedClassDiagram, workspace.getParentNamePicker(), classesOnCanvas);
     }
 

@@ -180,7 +180,7 @@ public class MethodOptionDialog extends Stage {
         EventHandler doneHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
             String name = nameField.getText();
             String type = typeField.getText();
-            if(type.equals("")){
+            if (type.equals("")) {
                 type = "void";
             }
 
@@ -207,8 +207,10 @@ public class MethodOptionDialog extends Stage {
                 String argumentNameToAdd = argumentNameFields.get(i).getText();
                 String argumentTypeToAdd = argumentTypeFields.get(i).getText();
 
-                ArgumentObject argumentToAdd = new ArgumentObject(argumentNameToAdd, argumentTypeToAdd);
-                arguments.add(argumentToAdd);
+                if (!argumentNameToAdd.equals("") || !argumentTypeToAdd.equals("")) {
+                    ArgumentObject argumentToAdd = new ArgumentObject(argumentNameToAdd, argumentTypeToAdd);
+                    arguments.add(argumentToAdd);
+                }
             }
 
             //create the method object to add
@@ -220,16 +222,15 @@ public class MethodOptionDialog extends Stage {
                 //this will update the method table
                 diagramController.updateMethodsTable(diagram, methodsTable);
                 MethodOptionDialog.this.hide();
-            }
-            else{
+            } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Invalid method name");
                 alert.setHeaderText(null);
                 alert.setContentText("Specify proper method name");
 
                 alert.showAndWait();
-                
-               MethodOptionDialog.this.hide(); 
+
+                MethodOptionDialog.this.hide();
             }
         };
 

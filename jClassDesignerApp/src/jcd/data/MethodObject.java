@@ -76,11 +76,11 @@ public class MethodObject {
         
         String privacy;
         if (this.access.equals(PRIVATE)) {
-            toReturn += "- ";
+            toReturn += "-";
         } else if (this.access.equals(PUBLIC)) {
-            toReturn += "+ ";
+            toReturn += "+";
         } else if (this.access.equals(PROTECTED)) {
-            toReturn += "# ";
+            toReturn += "#";
         }
         
         if(isStatic)

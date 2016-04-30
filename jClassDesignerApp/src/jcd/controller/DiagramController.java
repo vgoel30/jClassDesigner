@@ -94,7 +94,7 @@ public class DiagramController {
     }
     
     public void updateMethodsTable(ClassDiagramObject selectedClassDiagram, TableView<MethodObject> methodsTable){
-        System.out.println("Update methods table called");
+        //System.out.println("Update methods table called");
         
         //clear the previous values to make space for the new
         methodsTable.getItems().clear();
@@ -109,11 +109,13 @@ public class DiagramController {
             boolean isStatic = method.getIsStatic();
             boolean isAbstract = method.getIsAbstract();
             String access = method.getAccess();
-             
+            arguments = method.getArguments();
             value.add(new MethodObject(name, isStatic, isAbstract, arguments, returnType, access));
+             methodsTable.setItems(value);
         }
-        System.out.println(value);
-        methodsTable.setItems(value);
+        System.out.println("UPDATE METHODS TABLE : " + value);
+        //methodsTable.getColumns().get(2).set
+       
     }
 
     /**
