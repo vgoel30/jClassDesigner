@@ -64,6 +64,7 @@ import static jcd.PropertyType.ZOOM_IN_TOOLTIP;
 import static jcd.PropertyType.ZOOM_OUT_ICON;
 import static jcd.PropertyType.ZOOM_OUT_TOOLTIP;
 import jcd.controller.GridEditController;
+import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
 import jcd.data.MethodObject;
 import jcd.data.VariableObject;
@@ -285,7 +286,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //the third row
         parentSelectionContainer = new HBox(75);
-        parentNameLabel = new Label("Parent         ");
+        parentNameLabel = new Label("Local Parent");
         parentNamePicker = new CheckComboBox();
         parentNamePicker.setMaxWidth(210);
         parentSelectionContainer.getChildren().add(parentNameLabel);
@@ -354,6 +355,7 @@ public final class Workspace extends AppWorkspaceComponent {
         ScrollPane variableScroll = new ScrollPane(variablesTable);
         fourthRow.getChildren().add(variableScroll);
         variablesTable.setMinWidth(400);
+        variableScroll.setMaxWidth(420);
 
         //the 5th  row
         fifthRow = new VBox(10);
@@ -373,6 +375,9 @@ public final class Workspace extends AppWorkspaceComponent {
         TableColumn<MethodObject, String> returnTypeCol = new TableColumn<>("Type");
         returnTypeCol.setCellValueFactory(new PropertyValueFactory("returnType"));
 
+        TableColumn<MethodObject, String> methodAccessCol = new TableColumn<>("Access");
+        methodAccessCol.setCellValueFactory(new PropertyValueFactory("access"));
+        
         TableColumn<MethodObject, Boolean> isStaticCol = new TableColumn<>("Static");
         isStaticCol.setCellValueFactory(new PropertyValueFactory("isStatic"));
 
@@ -383,12 +388,13 @@ public final class Workspace extends AppWorkspaceComponent {
         arg1Col.setCellValueFactory(new PropertyValueFactory("arguments"));
 
         //adding all the columns
-        methodsTable.getColumns().setAll(methodNameCol, returnTypeCol, isStaticCol, isAbstractCol,arg1Col);
+        methodsTable.getColumns().setAll(methodNameCol, returnTypeCol,methodAccessCol, isStaticCol, isAbstractCol,arg1Col);
         
         
         ScrollPane methodsScroll = new ScrollPane(methodsTable);
         fifthRow.getChildren().add(methodsScroll);
-        variablesTable.setMinWidth(400);
+        methodsTable.setMinWidth(400);
+        methodsScroll.setMaxWidth(420);
 
         //the final row
         // AND NOW SETUP THE WORKSPACE
@@ -561,6 +567,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
     @Override
     public void reloadWorkspace() {
+        ClassDiagramObject.counter = 0;
         classNameField.setText("");
         packageNameField.setText("");
         gridCheckBox.setSelected(false);

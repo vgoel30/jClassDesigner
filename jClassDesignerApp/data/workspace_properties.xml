@@ -20,7 +20,7 @@
         <property name="CODE_ICON"		value="code.png"></property>
         <property name="GRID_ICON"		value="grid.png"></property>
         <property name="SNAP_ICON"		value="snap.png"></property>
-        <property name="INCREMENT_ICON"		value="increase.png"></property>
+        <property name="INCREMENT_ICON"		value="increment.png"></property>
         <property name="DECREMENT_ICON"		value="decrease.png"></property>
         
         <!-- TOOLTIPS FOR BUTTONS -->

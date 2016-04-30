@@ -21,7 +21,7 @@ import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
  */
 public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramObject> {
 
-    static int counter = 0;
+   public static int counter = 0;
 
     //class or interface
     String diagramType;
@@ -139,7 +139,7 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         packageContainer = new VBox(packageNameText);
 
         //The first container which has the class name
-        classNameText = new Text("diagram" + counter);
+        classNameText = new Text(diagramType + counter);
         nameContainer = new VBox(classNameText);
 
         //The second container which has all the variables and stuff
