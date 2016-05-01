@@ -559,9 +559,19 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //the user wants to add a package to the class
         addPackageButton.setOnAction(e -> {
+            dataManager.selectedClassDiagram.getJavaAPI_Packages().remove("");
             AppOptionDialog newDialog = new AppOptionDialog();
             newDialog.init(app.getGUI().getWindow(), dataManager.selectedClassDiagram);
             newDialog.show();
+        });
+        
+        //the user wants to add an external interface to the class
+        externalInterfaceButton.setOnAction(e -> {
+            dataManager.selectedClassDiagram.getInterfaces().remove("");
+            ExternalInterfaceDialog newDialog = new ExternalInterfaceDialog();
+            newDialog.init(app.getGUI().getWindow(), dataManager.selectedClassDiagram);
+            newDialog.show();
+            //System.out.println("TOTAL INTERFACES : " + dataManager.selectedClassDiagram.getInterfaces());
         });
     }
 

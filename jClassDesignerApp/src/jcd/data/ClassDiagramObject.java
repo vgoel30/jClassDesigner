@@ -26,7 +26,9 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     //class or interface
     String diagramType;
 
+    
     ArrayList<String> parents = new ArrayList<>();
+    ArrayList<String> interfaces = new ArrayList<>();
 
     //this will hold the three panes and serve as the skeleton for the diagram
     VBox rootContainer;
@@ -55,6 +57,10 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     ArrayList<VariableObject> variables = new ArrayList<>();
 
     ArrayList<String> javaAPI_Packages = new ArrayList<>();
+    
+    public ArrayList<String> getInterfaces(){
+        return interfaces;
+    }
 
     public ArrayList<MethodObject> getMethods() {
         return methods;
@@ -187,7 +193,12 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         if (!javaAPI_Packages.contains(API)) {
             javaAPI_Packages.add(API);
         }
-
+    }
+    
+    public void addInterface(String interfaceName){
+        if (!interfaces.contains(interfaceName)) {
+            interfaces.add(interfaceName);
+        }
     }
 
     //sets the standard dimensions for the containers inside the boxes

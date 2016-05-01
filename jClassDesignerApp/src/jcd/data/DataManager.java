@@ -376,6 +376,8 @@ public class DataManager implements AppDataComponent {
     }
 
     public void handleUndo() {
+        System.out.print("UNDO STACK : "  + undoStack.size() + "  ");
+        
         if (selectedClassDiagram != null) {
             restoreSelectedProperties(selectedClassDiagram);
             selectedClassDiagram = null;
@@ -384,6 +386,7 @@ public class DataManager implements AppDataComponent {
         }
 
         if (undoStack.size() > 0) {
+            System.out.println(undoStack.peek().getActionType());
             //if the user wants to resize
             if (undoStack.peek().getActionType().equals(RESIZE_RIGHT)) {
                 ResizeRight resizeRightMove = (ResizeRight) undoStack.pop();

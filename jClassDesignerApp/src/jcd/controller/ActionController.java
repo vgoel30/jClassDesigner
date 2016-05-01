@@ -29,10 +29,8 @@ public class ActionController {
     }
 
     public void handleMoveDiagramUndo(double initialPositionX, double initialPositionY, ClassDiagramObject diagram) {
-        System.out.println("INVOKES HERE: " + initialPositionX + "AND HERE " + initialPositionY);
         diagram.getRootContainer().setLayoutX(initialPositionX);
         diagram.getRootContainer().setLayoutY(initialPositionY);
-        System.out.println("FINAL FRUTYSA: " + diagram.getRootContainer().getLayoutX() + " y:  " + diagram.getRootContainer().getLayoutY());
     }
     
    
