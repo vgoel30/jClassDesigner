@@ -27,11 +27,18 @@ public class ActionController {
     public void handleResizeRightUndo(double initialWidth, ClassDiagramObject diagram){
         diagram.getRootContainer().setPrefWidth(initialWidth);
     }
+    
+     public void handleResizeRightUndo(double initialWidth, double initialX, ClassDiagramObject diagram) {
+        diagram.getRootContainer().setPrefWidth(initialWidth);
+        diagram.getRootContainer().setLayoutX(initialX);
+    }
 
     public void handleMoveDiagramUndo(double initialPositionX, double initialPositionY, ClassDiagramObject diagram) {
         diagram.getRootContainer().setLayoutX(initialPositionX);
         diagram.getRootContainer().setLayoutY(initialPositionY);
     }
+
+   
     
    
     

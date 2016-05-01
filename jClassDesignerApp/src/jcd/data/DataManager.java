@@ -20,6 +20,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
 import jcd.actions.Action;
 import jcd.actions.MoveDiagram;
+import jcd.actions.ResizeLeft;
 import jcd.actions.ResizeRight;
 import jcd.controller.ActionController;
 import jcd.controller.DiagramController;
@@ -40,6 +41,7 @@ import static maf.components.AppStyleArbiter.SELECTED_DIAGRAM_CONTAINER;
 public class DataManager implements AppDataComponent {
 
     public static final String RESIZE_RIGHT = "resize_right";
+    public static final String RESIZE_LEFT = "resize_left";
     public static final String MOVE_DIAGRAM = "move_diagram";
 
     // THIS IS A SHARED REFERENCE TO THE APPLICATION
@@ -390,6 +392,11 @@ public class DataManager implements AppDataComponent {
                 ClassDiagramObject diagram = moveDiagramAction.getDiagram();
                 actionController.handleMoveDiagramUndo(moveDiagramAction.getInitialPositionX(), moveDiagramAction.getInitialPositionY(), diagram);
             }
+            else if(undoStack.peek().getActionType().equals(RESIZE_LEFT)){
+                ResizeLeft resizeLeftMove = (ResizeLeft) undoStack.pop();
+                ClassDiagramObject diagram = resizeLeftMove.getDiagram();
+                actionController.handleResizeRightUndo(resizeLeftMove.getInitialWidth(), resizeLeftMove.getInitialX(), diagram);
+            }
         }
     }
 
@@ -425,11 +432,20 @@ public class DataManager implements AppDataComponent {
     private void attachResizingHandlers(ClassDiagramObject diagram, Workspace workspace) {
         //if the user is resizing to the right, create a new resize right action
         ResizeRight resizeRightMove = new ResizeRight(diagram);
-
+        
+        //if the user is reszing to the left
+        ResizeLeft resizeLeftMove = new ResizeLeft(diagram);
+        
         //when the right line is pressed for the resizing, that's the initial width for resizing
         diagram.getRightLine().setOnMousePressed(mouseClickedEvent -> {
             resizeRightMove.setInitialWidth(diagram.getRootContainer().getWidth());
 
+        });
+        
+        //when the left line is pressed for the resizing, that's the initial width for resizing
+        diagram.getLeftLine().setOnMousePressed(mouseClickedEvent -> {
+            resizeLeftMove.setInitialWidth(diagram.getRootContainer().getWidth());
+            resizeLeftMove.setInitialX(diagram.getRootContainer().getLayoutX());
         });
 
         //RIGHT LINE EVENT HANDLERS
@@ -438,11 +454,17 @@ public class DataManager implements AppDataComponent {
                 diagram.getRootContainer().setPrefWidth(mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX());
             }
         });
+        
+        //when the mouse has been released, we set the final width and final xand push the acion on the undo stack
+        diagram.getLeftLine().setOnMouseReleased(mouseDragReleased -> {
+            resizeLeftMove.setFinalWidth(diagram.getRootContainer().getWidth());
+            resizeLeftMove.setFinalX(diagram.getRootContainer().getLayoutX());
+            undoStack.push(resizeLeftMove);
+        });
 
         //when the mouse has been released, we set the final width and push the acion on the undo stack
         diagram.getRightLine().setOnMouseReleased(mouseDragReleased -> {
             resizeRightMove.setFinalWidth(diagram.getRootContainer().getWidth());
-            System.out.println(resizeRightMove);
             undoStack.push(resizeRightMove);
         });
 
