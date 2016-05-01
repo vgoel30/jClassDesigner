@@ -307,7 +307,6 @@ public final class Workspace extends AppWorkspaceComponent {
         interfaceSelectionContainer.getChildren().add(externalInterfaceButton);
         buttonsInEditBar.add(externalInterfaceButton);
 
-
         addPackageButton = new Button("Package");
         addPackageButton.setDisable(true);
         interfaceSelectionContainer.getChildren().add(addPackageButton);
@@ -543,12 +542,13 @@ public final class Workspace extends AppWorkspaceComponent {
         parentNamePicker.setOnAction(e -> {
             System.out.println("parentNamePicker value changed");
             System.out.println(parentNamePicker.getValue());
-            if (parentNamePicker.getValue() != null && parentNamePicker.getValue().equals("")) {
-                dataManager.selectedClassDiagram.setParentName(parentNamePicker.getValue());
-            }
-            else if(parentNamePicker.getValue().equals("NONE")){
-                dataManager.selectedClassDiagram.setParentName(null);
-            }
+            if (parentNamePicker.getValue() != null) {
+                if (parentNamePicker.getValue().equals("NONE") || parentNamePicker.getValue().equals("")) {
+                    dataManager.selectedClassDiagram.setParentName(null);
+                } else {
+                    dataManager.selectedClassDiagram.setParentName(parentNamePicker.getValue());
+                }
+            } 
         });
 //        
 
@@ -577,7 +577,6 @@ public final class Workspace extends AppWorkspaceComponent {
             newDialog.show();
         });
 
-        
     }
 
     @Override

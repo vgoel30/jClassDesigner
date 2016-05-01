@@ -146,7 +146,7 @@ public class AppGUI implements AppStyleArbiter {
     public void updateToolbarControls(boolean saved) {
         // THIS TOGGLES WITH WHETHER THE CURRENT COURSE
         // HAS BEEN SAVED OR NOT
-        saveButton.setDisable(saved);
+        saveButton.setDisable(false);
 
         // ALL THE OTHER BUTTONS ARE ALWAYS ENABLED
         // ONCE EDITING THAT FIRST COURSE BEGINS
