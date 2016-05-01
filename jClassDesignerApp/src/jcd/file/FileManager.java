@@ -47,6 +47,9 @@ public class FileManager implements AppFileComponent {
     static final String DIAGRAM_TYPE = "diagram_type";
     static final String CLASS = "class";
     static final String INTERFACE = "interface";
+    
+    static final String PARENT = "parent";
+    static final String JSON_INTERFACES_IMPLEMENTED = "interfaces_implemented";
     //The dimensions of the diagram
     static final String JSON_DIAGRAM_DIMENSIONS = "dimensions";
 

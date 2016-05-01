@@ -79,7 +79,7 @@ public class LocalInterfaceDialog extends Stage {
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
 
-        mainPane = new VBox(10);
+        mainPane = new VBox(20);
 
         interfaceNameBox = new HBox(10);
         mainPane.getChildren().add(interfaceNameBox);

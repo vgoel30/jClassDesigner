@@ -40,13 +40,13 @@ and open the template in the editor.
 .edit_bar_button{
     -fx-background-color: #1F4788;
     -fx-text-fill:white;
-    -fx-font-size:14.8px;
+    -fx-font-size:20px;
 }
 
 .edit_bar_button_hovered{
     -fx-background-color: #22A7F0;
     -fx-text-fill:white;
-     -fx-font-size:14.8px;
+     -fx-font-size:20px;
 }
 
 .pressed{

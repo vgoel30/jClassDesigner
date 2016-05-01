@@ -147,7 +147,6 @@ public final class Workspace extends AppWorkspaceComponent {
     HBox interfaceSelectionContainer;
     Button localInterfaceButton;
     Button externalInterfaceButton;
-    Button externalParentButton;
     Button addPackageButton;
 
 //4th row which has the variables increase/decrease control and the table
@@ -286,10 +285,10 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //the third row
         parentSelectionContainer = new HBox(70);
-        parentNameLabel = new Label("Local Parent");
+        parentNameLabel = new Label("Parent         ");
         parentNamePicker = new ComboBox<>();
         parentNamePicker.setMaxWidth(210);
-        parentNamePicker.setEditable(false);
+        parentNamePicker.setEditable(true);
         parentSelectionContainer.getChildren().add(parentNameLabel);
         parentSelectionContainer.getChildren().add(parentNamePicker);
         containers.add(parentSelectionContainer);
@@ -308,10 +307,6 @@ public final class Workspace extends AppWorkspaceComponent {
         interfaceSelectionContainer.getChildren().add(externalInterfaceButton);
         buttonsInEditBar.add(externalInterfaceButton);
 
-        externalParentButton = new Button("External Parent");
-        externalParentButton.setDisable(true);
-        interfaceSelectionContainer.getChildren().add(externalParentButton);
-        buttonsInEditBar.add(externalParentButton);
 
         addPackageButton = new Button("Package");
         addPackageButton.setDisable(true);
@@ -548,10 +543,10 @@ public final class Workspace extends AppWorkspaceComponent {
         parentNamePicker.setOnAction(e -> {
             System.out.println("parentNamePicker value changed");
             System.out.println(parentNamePicker.getValue());
-            if (parentNamePicker.getValue() != null || parentNamePicker.getValue().equals("")) {
+            if (parentNamePicker.getValue() != null && parentNamePicker.getValue().equals("")) {
                 dataManager.selectedClassDiagram.setParentName(parentNamePicker.getValue());
             }
-            if(parentNamePicker.getValue().equals("NONE")){
+            else if(parentNamePicker.getValue().equals("NONE")){
                 dataManager.selectedClassDiagram.setParentName(null);
             }
         });
@@ -582,18 +577,7 @@ public final class Workspace extends AppWorkspaceComponent {
             newDialog.show();
         });
 
-        //the user wants to add an external parent
-        externalParentButton.setOnAction(e -> {
-
-            if (dataManager.selectedClassDiagram.getParentName() != null && dataManager.selectedClassDiagram.getParentName().length() > 0) {
-                Alert alert = new Alert(AlertType.WARNING);
-                alert.setTitle("Inheritance warning");
-                alert.setHeaderText(null);
-                alert.setContentText("You have already specified a local parent for this class. Multiple inheritance is not allowed in Java!");
-                alert.show();
-            }
-
-        });
+        
     }
 
     @Override
@@ -628,7 +612,6 @@ public final class Workspace extends AppWorkspaceComponent {
         variablesTable.setDisable(disable);
         localInterfaceButton.setDisable(disable);
         externalInterfaceButton.setDisable(disable);
-        externalParentButton.setDisable(disable);
         addPackageButton.setDisable(disable);
     }
 
