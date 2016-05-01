@@ -21,6 +21,7 @@ import jcd.data.ClassDiagramObject;
 
 /**
  * Custom Dialog box to allow users to add new external packages
+ *
  * @author varungoel
  */
 public class ExternalInterfaceDialog extends Stage {
@@ -70,8 +71,9 @@ public class ExternalInterfaceDialog extends Stage {
      *
      * @param primaryStage The window above which this dialog will be centered.
      * @param diagram
+     * @param classesOnCanvas
      */
-    public void init(Stage primaryStage, ClassDiagramObject diagram) {
+    public void init(Stage primaryStage, ClassDiagramObject diagram, ArrayList<ClassDiagramObject> classesOnCanvas) {
         // MAKE THIS DIALOG MODAL, MEANING OTHERS WILL WAIT
         // FOR IT WHEN IT IS DISPLAYED
         initModality(Modality.WINDOW_MODAL);
@@ -79,8 +81,6 @@ public class ExternalInterfaceDialog extends Stage {
 
         // LABEL TO DISPLAY THE CUSTOM MESSAGE
         messageLabel = new Label();
-        
-        
 
         textField = new TextField();
         textFields.add(textField);
@@ -94,35 +94,35 @@ public class ExternalInterfaceDialog extends Stage {
         VBox buttonBox = new VBox(10);
         buttonBox.getChildren().add(addPackage);
         buttonBox.getChildren().add(doneButton);
-        buttonBox.getChildren().add(0,textField);
+        buttonBox.getChildren().add(0, textField);
 
         EventHandler addInterfaceHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
             TextField newTextField = new TextField();
             textFields.add(newTextField);
-            buttonBox.getChildren().add(0,newTextField);
+            buttonBox.getChildren().add(0, newTextField);
         };
-        
-        
-        //this will display all the old packages that have been included for import
-        for(String interfaceInList : diagram.getInterfaces()){
-            textField = new TextField(interfaceInList);
-            textFields.add(textField);
-            buttonBox.getChildren().add(0,textField);
+
+        //this will display all the old interfaces that have been included
+        for (String interfaceInList : diagram.getExternalInterfaces()) {
+                    textField = new TextField(interfaceInList);
+                    textFields.add(textField);
+                    buttonBox.getChildren().add(0, textField);
+                
         }
-        
-        //clear the APIs to add new ones
-        diagram.getJavaAPI_Packages().clear();
+
+       
 
         EventHandler doneHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
-            ExternalInterfaceDialog.this.hide();
-
+             //clear the old interfaces to add new ones
+        diagram.getExternalInterfaces().clear();
             for (TextField textField : textFields) {
                 String interfaceName = textField.getText();
                 //add the API 
-                if (interfaceName != "") {
-                    diagram.addInterface(interfaceName);
+                if (!interfaceName.equals("")) {
+                    diagram.addExternalInterface(interfaceName);
                 }
             }
+            ExternalInterfaceDialog.this.hide();
         };
 
         // AND THEN REGISTER THEM TO RESPOND TO INTERACTIONS

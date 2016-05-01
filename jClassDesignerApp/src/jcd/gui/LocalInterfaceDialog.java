@@ -24,7 +24,8 @@ import jcd.data.ClassDiagramObject;
 import org.controlsfx.control.CheckComboBox;
 
 /**
- * Custom Dialog box to allow users to add new external packages
+ * Custom Dialog box to allow users to add local interfaces
+ *
  * @author varungoel
  */
 public class LocalInterfaceDialog extends Stage {
@@ -35,14 +36,13 @@ public class LocalInterfaceDialog extends Stage {
     // GUI CONTROLS FOR OUR DIALOG
     VBox mainPane;
     Scene mainScene;
-    
+
     HBox interfaceNameBox;
     CheckComboBox<String> localInterfaces;
-   
+
     Label interfaceNamesLabel;
     Button doneButton;
 
-   
     // CONSTANT CHOICES
     public static final String DONE = "Done";
 
@@ -71,6 +71,7 @@ public class LocalInterfaceDialog extends Stage {
      *
      * @param primaryStage The window above which this dialog will be centered.
      * @param diagram
+     * @param classesOnCanvas
      */
     public void init(Stage primaryStage, ClassDiagramObject diagram, ArrayList<ClassDiagramObject> classesOnCanvas) {
         // MAKE THIS DIALOG MODAL, MEANING OTHERS WILL WAIT
@@ -79,46 +80,60 @@ public class LocalInterfaceDialog extends Stage {
         initOwner(primaryStage);
 
         mainPane = new VBox(10);
-        
+
         interfaceNameBox = new HBox(10);
         mainPane.getChildren().add(interfaceNameBox);
-        
+
         interfaceNamesLabel = new Label("Interfaces");
-        
+
         ObservableList<String> potentialInterfacesToAdd = FXCollections.observableArrayList();
-        
-        for(ClassDiagramObject diagramOnCanvas: classesOnCanvas){
-            if(diagramOnCanvas.getDiagramType().equals("interface") && !diagramOnCanvas.equals(diagram)){
+
+        //builds the check combo box with all the appropriate interfaces
+        for (ClassDiagramObject diagramOnCanvas : classesOnCanvas) {
+            if (diagramOnCanvas.getDiagramType().equals("interface") && !diagramOnCanvas.equals(diagram)) {
                 potentialInterfacesToAdd.add(diagramOnCanvas.getClassNameText().getText());
             }
         }
-        
+
         localInterfaces = new CheckComboBox<>();
         localInterfaces.getItems().addAll(potentialInterfacesToAdd);
-        
+
+        for (String implementedInterface : diagram.getLocalInterfaces()) {
+            localInterfaces.getCheckModel().check(implementedInterface);
+        }
+
         interfaceNameBox.getChildren().add(interfaceNamesLabel);
         interfaceNameBox.getChildren().add(localInterfaces);
 
+        //the event handler for done is clicked
+        EventHandler doneHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
+            diagram.getLocalInterfaces().clear();
+            ObservableList<String> interfacesToAdd = localInterfaces.getCheckModel().getCheckedItems();
+
+            for(String interfaceToAdd: interfacesToAdd){
+                diagram.addLocalInterface(interfaceToAdd);
+            }
+            
+            LocalInterfaceDialog.this.hide();
+        };
+
         // YES, NO, AND CANCEL BUTTONS
         doneButton = new Button(DONE);
+        doneButton.setOnAction(doneHandler);
 
         // NOW ORGANIZE OUR BUTTONS
-       mainPane.getChildren().add(doneButton);
-
-       
+        mainPane.getChildren().add(doneButton);
 
         // AND THEN REGISTER THEM TO RESPOND TO INTERACTIONS
         //doneButton.setOnAction(doneHandler);
-
-
         // MAKE IT LOOK NICE
         mainPane.setPadding(new Insets(10, 20, 20, 20));
         mainPane.setSpacing(10);
+        mainPane.setMinHeight(75);
 
         // AND PUT IT IN THE WINDOW
         mainScene = new Scene(mainPane);
         this.setScene(mainScene);
     }
 
-    
 }

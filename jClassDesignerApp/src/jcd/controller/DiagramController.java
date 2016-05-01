@@ -74,7 +74,7 @@ public class DiagramController {
      * @param variablesTable
      */
     public void updateVariablesTable(ClassDiagramObject selectedClassDiagram, TableView<VariableObject> variablesTable) {
-        System.out.println("Update variables table called");
+        
 
         //clear the previous values to make space for the new
         variablesTable.getItems().clear();
@@ -94,7 +94,7 @@ public class DiagramController {
     }
     
     public void updateMethodsTable(ClassDiagramObject selectedClassDiagram, TableView<MethodObject> methodsTable){
-        //System.out.println("Update methods table called");
+        
         
         //clear the previous values to make space for the new
         methodsTable.getItems().clear();
@@ -113,9 +113,6 @@ public class DiagramController {
             value.add(new MethodObject(name, isStatic, isAbstract, arguments, returnType, access));
              methodsTable.setItems(value);
         }
-        System.out.println("UPDATE METHODS TABLE : " + value);
-        //methodsTable.getColumns().get(2).set
-       
     }
 
     /**

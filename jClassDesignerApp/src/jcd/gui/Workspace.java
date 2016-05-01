@@ -567,16 +567,16 @@ public final class Workspace extends AppWorkspaceComponent {
         
         //the user wants to add an external interface to the class
         externalInterfaceButton.setOnAction(e -> {
-            dataManager.selectedClassDiagram.getInterfaces().remove("");
+            dataManager.selectedClassDiagram.getExternalInterfaces().remove("");
             ExternalInterfaceDialog newDialog = new ExternalInterfaceDialog();
-            newDialog.init(app.getGUI().getWindow(), dataManager.selectedClassDiagram);
+            newDialog.init(app.getGUI().getWindow(), dataManager.selectedClassDiagram, dataManager.classesOnCanvas);
             newDialog.show();
             //System.out.println("TOTAL INTERFACES : " + dataManager.selectedClassDiagram.getInterfaces());
         });
         
         //the user wants to add a local interface
         localInterfaceButton.setOnAction(e -> {
-            dataManager.selectedClassDiagram.getInterfaces().remove("");
+            dataManager.selectedClassDiagram.getLocalInterfaces().remove("");
             LocalInterfaceDialog newDialog = new LocalInterfaceDialog();
             newDialog.init(app.getGUI().getWindow(), dataManager.selectedClassDiagram, dataManager.classesOnCanvas);
             newDialog.show();
