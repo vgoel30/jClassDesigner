@@ -547,15 +547,18 @@ public final class Workspace extends AppWorkspaceComponent {
         //the event handler for the parent name clicker 
         parentNamePicker.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
      public void onChanged(ListChangeListener.Change<? extends String> c) {
+         
          ArrayList<String> parents = new ArrayList<>();
          
          for(String parent: parentNamePicker.getCheckModel().getCheckedItems()){
              parents.add(parent);
          }
-         
-         dataManager.setParents(parents);
+        // System.out.println("PARENTS onChanged: " + parents);
+         //this MOFO is causing all the hellish stuff
+         dataManager.selectedClassDiagram.setParentNames(parents);
      }
  });
+       
 
         //the user wants to add a package to the class
         addPackageButton.setOnAction(e -> {
@@ -580,6 +583,19 @@ public final class Workspace extends AppWorkspaceComponent {
             LocalInterfaceDialog newDialog = new LocalInterfaceDialog();
             newDialog.init(app.getGUI().getWindow(), dataManager.selectedClassDiagram, dataManager.classesOnCanvas);
             newDialog.show();
+        });
+        
+        //the user wants to add an external parent
+        externalParentButton.setOnAction(e -> {
+            
+            if(dataManager.selectedClassDiagram.getDiagramType().equals("class") && dataManager.selectedClassDiagram.getParentsName().size() > 0){
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Inheritance warning");
+                alert.setHeaderText(null);
+                alert.setContentText("You have already specified a local parent for this class. Classes can't have multiple inheritance!");
+                alert.show();
+            }
+            
         });
     }
 

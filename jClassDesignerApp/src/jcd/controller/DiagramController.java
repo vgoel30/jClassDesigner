@@ -39,7 +39,6 @@ public class DiagramController {
         boolean isInterface = selectedClassDiagram.isInterface();
 
         parentNamePicker.getItems().clear();
-        
 
         ObservableList<String> potentialParents = FXCollections.observableArrayList();
 
@@ -59,11 +58,16 @@ public class DiagramController {
                 }
             }
         }
-//       
+        System.out.println("ALL PARENTS : " + selectedClassDiagram.getParentsName());
         parentNamePicker.getItems().addAll(potentialParents);
+//        parentNamePicker.getCheckModel().clearChecks();
+//        for (String parent : selectedClassDiagram.getParentsName()) {
+//                parentNamePicker.getCheckModel().check(parent);
+//            }
+
         parentNamePicker.getCheckModel().clearChecks();
-        for (String parent : selectedClassDiagram.getParentsName()) {
-            parentNamePicker.getCheckModel().check(parent);
+        if (selectedClassDiagram.getParentsName().size() > 0) {
+            parentNamePicker.getCheckModel().check(selectedClassDiagram.getParentsName().get(0));
         }
     }
 
@@ -74,7 +78,6 @@ public class DiagramController {
      * @param variablesTable
      */
     public void updateVariablesTable(ClassDiagramObject selectedClassDiagram, TableView<VariableObject> variablesTable) {
-        
 
         //clear the previous values to make space for the new
         variablesTable.getItems().clear();
@@ -92,18 +95,17 @@ public class DiagramController {
         }
         variablesTable.setItems(value);
     }
-    
-    public void updateMethodsTable(ClassDiagramObject selectedClassDiagram, TableView<MethodObject> methodsTable){
-        
-        
+
+    public void updateMethodsTable(ClassDiagramObject selectedClassDiagram, TableView<MethodObject> methodsTable) {
+
         //clear the previous values to make space for the new
         methodsTable.getItems().clear();
-        
+
         ArrayList<ArgumentObject> arguments = new ArrayList<>();
-        
+
         ObservableList<MethodObject> value = FXCollections.observableArrayList();
-        
-        for(MethodObject method: selectedClassDiagram.getMethods()){
+
+        for (MethodObject method : selectedClassDiagram.getMethods()) {
             String name = method.getName();
             String returnType = method.getReturnType();
             boolean isStatic = method.getIsStatic();
@@ -111,7 +113,7 @@ public class DiagramController {
             String access = method.getAccess();
             arguments = method.getArguments();
             value.add(new MethodObject(name, isStatic, isAbstract, arguments, returnType, access));
-             methodsTable.setItems(value);
+            methodsTable.setItems(value);
         }
     }
 
@@ -130,11 +132,12 @@ public class DiagramController {
         diagram.getVariablesContainer().getChildren().add(variableText);
         variableText.toFront();
     }
-    
+
     /**
      * Removes the variable from the list and removes it from the diagram
+     *
      * @param diagram
-     * @param toRemove 
+     * @param toRemove
      */
     public void removeVariable(ClassDiagramObject diagram, VariableObject toRemove) {
         VariableObject toRemoveTemp = new VariableObject();
@@ -165,10 +168,10 @@ public class DiagramController {
         //decreases the height of the container to compensate for the removal of the variable 
         diagram.getVariablesContainer().setPrefHeight(diagram.getVariablesContainer().getHeight() - heightToSubtract);
     }
-    
+
     public void removeMethod(ClassDiagramObject diagram, MethodObject toRemove) {
         MethodObject toRemoveTemp = new MethodObject();
-        
+
         for (MethodObject method : diagram.getMethods()) {
             if (method.equals(toRemove)) {
                 toRemoveTemp = method;
@@ -176,10 +179,10 @@ public class DiagramController {
             }
         }
         diagram.getMethods().remove(toRemoveTemp);
-        
+
         double heightToSubtract = 0;
         Label labelToRemove = new Label();
-        
+
         for (Node child : diagram.getMethodsContainer().getChildren()) {
             if (child instanceof Label) {
                 if (((Label) child).getText().equals(toRemove.toString())) {
@@ -189,7 +192,7 @@ public class DiagramController {
                 }
             }
         }
-        
+
         diagram.getMethodsContainer().getChildren().remove(labelToRemove);
         //decreases the height of the container to compensate for the removal of the variable 
         diagram.getMethodsContainer().setPrefHeight(diagram.getVariablesContainer().getHeight() - heightToSubtract);
@@ -197,17 +200,18 @@ public class DiagramController {
 
     /**
      * Adds a method to the diagram and renders it
+     *
      * @param diagram
-     * @param toAdd 
+     * @param toAdd
      */
     public void addMethod(ClassDiagramObject diagram, MethodObject toAdd) {
         //add to the list of methods for the class
-       diagram.getMethods().add(toAdd);
+        diagram.getMethods().add(toAdd);
 
         Label variableText = new Label(toAdd.toString());
         variableText.getStyleClass().add("diagram_text_field");
         diagram.getMethodsContainer().getChildren().add(variableText);
         variableText.toFront();
     }
-    
+
 }
