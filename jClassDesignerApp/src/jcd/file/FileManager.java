@@ -47,14 +47,16 @@ public class FileManager implements AppFileComponent {
     static final String DIAGRAM_TYPE = "diagram_type";
     static final String CLASS = "class";
     static final String INTERFACE = "interface";
-    
+
     static final String PARENT = "parent";
-    
+
     static final String JSON_EXTERNAL_INTERFACES_IMPLEMENTED = "external_interfaces_implemented";
     static final String JSON_LOCAL_INTERFACES_IMPLEMENTED = "local_interfaces_implemented";
-    
+    static final String JSON_IMPORTED_PACKAGES = "imported_packages";
+
     static final String EXTERNAL_INTERFACE_NAME = "external_interface_name";
-     static final String LOCAL_INTERFACE_NAME = "local_interface_name";
+    static final String LOCAL_INTERFACE_NAME = "local_interface_name";
+    static final String IMPORTED_PACKAGE = "imported_package";
     //The dimensions of the diagram
     static final String JSON_DIAGRAM_DIMENSIONS = "dimensions";
 
@@ -209,15 +211,17 @@ public class FileManager implements AppFileComponent {
             type = "interface";
         }
 
-        if(diagram.getParentName() == null)
+        if (diagram.getParentName() == null) {
             diagram.setParentName("");
-        
+        }
+
         JsonObject jso = Json.createObjectBuilder().add(DIAGRAM_TYPE, type)
                 .add(DIAGRAM_NAME, diagram.getClassNameText().getText())
                 .add(PACKAGE_NAME, diagram.getPackageNameText().getText())
                 .add(PARENT, diagram.getParentName())
                 .add(JSON_EXTERNAL_INTERFACES_IMPLEMENTED, makeExternalImplementedInterfacesJsonArray(diagram))
-               .add(JSON_LOCAL_INTERFACES_IMPLEMENTED, makeLocalImplementedInterfacesJsonArray(diagram))
+                .add(JSON_LOCAL_INTERFACES_IMPLEMENTED, makeLocalImplementedInterfacesJsonArray(diagram))
+                .add(JSON_IMPORTED_PACKAGES, makeImportedPackagesJsonArray(diagram))
                 .add(JSON_DIAGRAM_DIMENSIONS, makeDimensionsJsonArray(diagram))
                 .add(JSON_VARIABLES, makeVariablesJsonArray(diagram))
                 .add(JSON_METHODS, makeMethodsJsonArray(diagram))
@@ -227,13 +231,35 @@ public class FileManager implements AppFileComponent {
     }
 
     /**
-     * Builds and returns an array of all the external interfaces implemented in the class
+     * Builds and returns an array of all the imported packages
      * @param diagram
      * @return 
      */
-    private JsonArray makeExternalImplementedInterfacesJsonArray(ClassDiagramObject diagram){
-       JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-       
+    private JsonArray makeImportedPackagesJsonArray(ClassDiagramObject diagram) {
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+        ArrayList<String> importedPackages = diagram.getJavaAPI_Packages();
+
+        for (String packageToAdd : importedPackages) {
+            JsonObject jso = Json.createObjectBuilder()
+                    .add(IMPORTED_PACKAGE, packageToAdd)
+                    .build();
+            arrayBuilder.add(jso);
+        }
+        JsonArray jA = arrayBuilder.build();
+        return jA;
+    }
+
+    /**
+     * Builds and returns an array of all the external interfaces implemented in
+     * the class
+     *
+     * @param diagram
+     * @return
+     */
+    private JsonArray makeExternalImplementedInterfacesJsonArray(ClassDiagramObject diagram) {
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
         ArrayList<String> externalInterfaces = diagram.getExternalInterfaces();
 
         for (String interfaceToAdd : externalInterfaces) {
@@ -243,29 +269,33 @@ public class FileManager implements AppFileComponent {
             arrayBuilder.add(jso);
         }
         JsonArray jA = arrayBuilder.build();
-        return jA;  
+        return jA;
     }
-    
+
     /**
-     * Builds and returns an array of all the local interfaces implemented in the class
+     * Builds and returns an array of all the local interfaces implemented in
+     * the class
+     *
      * @param diagram
-     * @return 
+     * @return
      */
-    private JsonArray makeLocalImplementedInterfacesJsonArray(ClassDiagramObject diagram){
-       JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-       
+    private JsonArray makeLocalImplementedInterfacesJsonArray(ClassDiagramObject diagram) {
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
         ArrayList<String> externalInterfaces = diagram.getLocalInterfaces();
 
         for (String interfaceToAdd : externalInterfaces) {
             JsonObject jso = Json.createObjectBuilder()
-                    .add(EXTERNAL_INTERFACE_NAME, interfaceToAdd)
+                    .add(LOCAL_INTERFACE_NAME, interfaceToAdd)
                     .build();
             arrayBuilder.add(jso);
         }
         JsonArray jA = arrayBuilder.build();
-        return jA;  
+        return jA;
     }
     
+  
+
     /**
      * Builds and returns the dimension array for a diagram object
      *
@@ -292,7 +322,7 @@ public class FileManager implements AppFileComponent {
                 .add(VARIABLES_CONTAINER_HEIGHT, variablesContainer.getHeight())
                 .add(VARIABLES_CONTAINER_WIDTH, variablesContainer.getWidth())
                 .build();
-        
+
         arrayBuilder.add(jso);
         JsonArray jA = arrayBuilder.build();
         return jA;
@@ -375,14 +405,15 @@ public class FileManager implements AppFileComponent {
 
     /**
      * Testing load data
+     *
      * @param filePath
      * @return a list of diagrams
-     * @throws IOException 
+     * @throws IOException
      */
     public ArrayList<ClassDiagramObject> testLoadData(String filePath) throws IOException {
         System.out.println("TEST LOAD DATA CALLED");
         JsonObject json = loadJSONFile(filePath);
-        
+
         ArrayList<ClassDiagramObject> diagrams = new ArrayList<>();
 
         // AND NOW LOAD ALL THE SHAPES
@@ -436,6 +467,8 @@ public class FileManager implements AppFileComponent {
         //setting the class and package names
         toAdd.setPackageNameText(jsonDiagram.getString(PACKAGE_NAME));
         toAdd.setClassNameText(jsonDiagram.getString(DIAGRAM_NAME));
+        //setting the parent name
+        toAdd.setParentName(jsonDiagram.getString(PARENT));
 
         int rootContainerWidth = dimensionsJsonObject.getInt(ROOT_CONTAINER_WIDTH);
         int rootContainerHeight = dimensionsJsonObject.getInt(ROOT_CONTAINER_HEIGHT);
@@ -453,6 +486,33 @@ public class FileManager implements AppFileComponent {
         int variablesContainerWidth = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_WIDTH);
         int variablesContainerHeight = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_HEIGHT);
         toAdd.getPackageContainer().setPrefSize(variablesContainerWidth, variablesContainerHeight);
+
+//        //ALL THE EXTERNAL INTERFACES OF THE CLASS
+        JsonArray externalInterfacesArray = jsonDiagram.getJsonArray(JSON_EXTERNAL_INTERFACES_IMPLEMENTED);
+        for (int i = 0; i < externalInterfacesArray.size(); i++) {
+            JsonObject current = externalInterfacesArray.getJsonObject(i);
+            String interfaceName = current.getString(EXTERNAL_INTERFACE_NAME);
+            //add the external interface to the list of external interfaces
+            toAdd.addExternalInterface(interfaceName);
+        }
+
+//         //ALL THE LOCAL INTERFACES OF THE CLASS
+        JsonArray localInterfacesArray = jsonDiagram.getJsonArray(JSON_LOCAL_INTERFACES_IMPLEMENTED);
+        for (int i = 0; i < localInterfacesArray.size(); i++) {
+            JsonObject current = localInterfacesArray.getJsonObject(i);
+            String interfaceName = current.getString(LOCAL_INTERFACE_NAME);
+            //add the external interface to the list of external interfaces
+            toAdd.addLocalInterface(interfaceName);
+        }
+        
+        //ALL THE PACKAGES TO BE IMPORTED
+        JsonArray packagesArray = jsonDiagram.getJsonArray(JSON_IMPORTED_PACKAGES);
+        for (int i = 0; i < packagesArray.size(); i++) {
+            JsonObject current = packagesArray.getJsonObject(i);
+            String packageImported = current.getString(IMPORTED_PACKAGE);
+            //add the external interface to the list of external interfaces
+            toAdd.addAPI(packageImported);
+        }
 
         //ALL THE VARIABLES OF THE CLASS
         JsonArray variablesArray = jsonDiagram.getJsonArray(JSON_VARIABLES);
@@ -477,20 +537,20 @@ public class FileManager implements AppFileComponent {
             String name = current.getString(METHOD_NAME);
             boolean isStatic = current.getBoolean(METHOD_IS_STATIC);
             boolean isAbstract = current.getBoolean(METHOD_IS_ABSTRACT);
-            
+
             String returnType = current.getString(METHOD_RETURN_TYPE);
             String access = current.getString(METHOD_ACCESS);
 
             JsonArray methodArguments = current.getJsonArray(METHOD_ARGUMENTS);
             ArrayList<ArgumentObject> arguments = new ArrayList<>();
 
-           // ALL THE ARGUMENTS
+            // ALL THE ARGUMENTS
             for (int j = 0; j < methodArguments.size(); j++) {
                 JsonObject argument = methodArguments.getJsonObject(j);
-                
+
                 String argName = argument.getString(ARGUMENT_NAME);
                 String argType = argument.getString(ARGUMENT_TYPE);
-                
+
                 ArgumentObject argumentToAdd = new ArgumentObject(argName, argType);
                 arguments.add(argumentToAdd);
             }
