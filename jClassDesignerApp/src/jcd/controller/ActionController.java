@@ -7,6 +7,8 @@ package jcd.controller;
 
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
+import jcd.data.VariableObject;
+import jcd.gui.Workspace;
 import maf.AppTemplate;
 
 /**
@@ -18,10 +20,13 @@ public class ActionController {
     AppTemplate app;
 
     DataManager dataManager;
+    
+    DiagramController diagramController;
 
     public ActionController(AppTemplate initApp) {
         app = initApp;
         dataManager = (DataManager) app.getDataComponent();
+        diagramController = new DiagramController();
     }
     
     public void handleResizeRightUndo(double initialWidth, ClassDiagramObject diagram){
@@ -36,6 +41,14 @@ public class ActionController {
     public void handleMoveDiagramUndo(double initialPositionX, double initialPositionY, ClassDiagramObject diagram) {
         diagram.getRootContainer().setLayoutX(initialPositionX);
         diagram.getRootContainer().setLayoutY(initialPositionY);
+    }
+
+    public void handleRemoveVariableUndo(ClassDiagramObject diagram, VariableObject removedVariable) {
+        Workspace workspace = (Workspace)app.getWorkspaceComponent();
+        //adds the variable to the list of variables and renders it on the diagram
+                diagramController.addVariable(diagram,removedVariable);
+                //updates the variables table
+                diagramController.updateVariablesTable(diagram, workspace.variablesTable);
     }
 
    

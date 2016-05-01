@@ -5,6 +5,7 @@
  */
 package jcd.gui;
 
+import java.util.Stack;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +20,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import jcd.actions.Action;
+import jcd.actions.RemoveVariable;
 import jcd.controller.DiagramController;
 import jcd.data.ClassDiagramObject;
 import jcd.data.VariableObject;
@@ -59,7 +62,7 @@ public class VariableRemoveDialog extends Stage {
         return singleton;
     }
 
-    public void init(Stage primaryStage, ClassDiagramObject diagram, TableView variablesTable) {
+    public void init(Stage primaryStage, ClassDiagramObject diagram, TableView variablesTable, Stack<Action> undoStack) {
         DiagramController diagramController = new DiagramController();
 
         // MAKE THIS DIALOG MODAL, MEANING OTHERS WILL WAIT
@@ -101,13 +104,17 @@ public class VariableRemoveDialog extends Stage {
             //get the variable object to remove
             VariableObject toRemove = variableChoiceBox.getValue();
 
-            VariableRemoveDialog.this.hide();
+          RemoveVariable removeVariableMove = new RemoveVariable(diagram);
+          removeVariableMove.setRemovedVariable(toRemove);
+          undoStack.push(removeVariableMove);
 
             //removes the variable from the list of variables and shows the change  on the diagram
             diagramController.removeVariable(diagram, toRemove);
 
             //update the list of variables
             diagramController.updateVariablesTable(diagram, variablesTable);
+            
+            VariableRemoveDialog.this.hide();
         };
 
         removeVariableButton.setOnAction(removeHandler);
