@@ -6,6 +6,7 @@
 package jcd.data;
 
 import java.util.ArrayList;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -26,7 +27,7 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     //class or interface
     String diagramType;
     
-    ArrayList<String> parents = new ArrayList<>();
+    String parent = new String();
     ArrayList<String> externalParents = new ArrayList<>();
     ArrayList<String> localInterfaces = new ArrayList<>();
     ArrayList<String> externalInterfaces = new ArrayList<>();
@@ -71,17 +72,12 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
         return methods;
     }
     
-    public void setParentNames(ArrayList<String> parentList) {
-        //System.out.println("PARENTS UPDATED TO : " + this.parents);
-        for (String parent : parentList) {
-            if (!parents.contains(parent)) {
-                this.parents.add(parent);
-            }
-        }
+    public void setParentName(String name) {
+        parent = name;
     }
     
-    public ArrayList<String> getParentsName() {
-        return parents;
+    public String getParentName() {
+        return parent;
     }
     
     public ArrayList<String> getExternalParents() {

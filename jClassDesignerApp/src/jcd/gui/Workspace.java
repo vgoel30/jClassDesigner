@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -139,7 +140,7 @@ public final class Workspace extends AppWorkspaceComponent {
     //3rd row
     HBox parentSelectionContainer;
     Label parentNameLabel;
-    public CheckComboBox<String> parentNamePicker;
+    public ComboBox<String> parentNamePicker;
 
     //temp 4th row
     //the add interfaces/package row
@@ -148,7 +149,6 @@ public final class Workspace extends AppWorkspaceComponent {
     Button externalInterfaceButton;
     Button externalParentButton;
     Button addPackageButton;
-    
 
 //4th row which has the variables increase/decrease control and the table
     VBox fourthRow;
@@ -218,7 +218,7 @@ public final class Workspace extends AppWorkspaceComponent {
         return snapCheckBox.isSelected();
     }
 
-    public CheckComboBox<String> getParentNamePicker() {
+    public ComboBox<String> getParentNamePicker() {
         return parentNamePicker;
     }
 
@@ -285,10 +285,11 @@ public final class Workspace extends AppWorkspaceComponent {
         editToolbar.getChildren().add(packageNameContainer);
 
         //the third row
-        parentSelectionContainer = new HBox(75);
+        parentSelectionContainer = new HBox(70);
         parentNameLabel = new Label("Local Parent");
-        parentNamePicker = new CheckComboBox();
+        parentNamePicker = new ComboBox<>();
         parentNamePicker.setMaxWidth(210);
+        parentNamePicker.setEditable(false);
         parentSelectionContainer.getChildren().add(parentNameLabel);
         parentSelectionContainer.getChildren().add(parentNamePicker);
         containers.add(parentSelectionContainer);
@@ -306,7 +307,7 @@ public final class Workspace extends AppWorkspaceComponent {
         externalInterfaceButton.setDisable(true);
         interfaceSelectionContainer.getChildren().add(externalInterfaceButton);
         buttonsInEditBar.add(externalInterfaceButton);
-        
+
         externalParentButton = new Button("External Parent");
         externalParentButton.setDisable(true);
         interfaceSelectionContainer.getChildren().add(externalParentButton);
@@ -377,7 +378,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         TableColumn<MethodObject, String> methodAccessCol = new TableColumn<>("Access");
         methodAccessCol.setCellValueFactory(new PropertyValueFactory("access"));
-        
+
         TableColumn<MethodObject, Boolean> isStaticCol = new TableColumn<>("Static");
         isStaticCol.setCellValueFactory(new PropertyValueFactory("isStatic"));
 
@@ -388,9 +389,8 @@ public final class Workspace extends AppWorkspaceComponent {
         arg1Col.setCellValueFactory(new PropertyValueFactory("arguments"));
 
         //adding all the columns
-        methodsTable.getColumns().setAll(methodNameCol, returnTypeCol,methodAccessCol, isStaticCol, isAbstractCol,arg1Col);
-        
-        
+        methodsTable.getColumns().setAll(methodNameCol, returnTypeCol, methodAccessCol, isStaticCol, isAbstractCol, arg1Col);
+
         ScrollPane methodsScroll = new ScrollPane(methodsTable);
         fifthRow.getChildren().add(methodsScroll);
         methodsTable.setMinWidth(400);
@@ -446,13 +446,13 @@ public final class Workspace extends AppWorkspaceComponent {
             drawingActive = false;
             dataManager.handleVariableDecrement();
         });
-        
+
         //add a method
         methodsIncrementButton.setOnAction(methodIncrementClicked -> {
             drawingActive = false;
             dataManager.handleMethodIncrement();
         });
-        
+
         //remove a method
         methodsDecrementButton.setOnAction(methodDecrementClicked -> {
             drawingActive = false;
@@ -545,20 +545,17 @@ public final class Workspace extends AppWorkspaceComponent {
         });
 
         //the event handler for the parent name clicker 
-        parentNamePicker.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
-     public void onChanged(ListChangeListener.Change<? extends String> c) {
-         
-         ArrayList<String> parents = new ArrayList<>();
-         
-         for(String parent: parentNamePicker.getCheckModel().getCheckedItems()){
-             parents.add(parent);
-         }
-        // System.out.println("PARENTS onChanged: " + parents);
-         //this MOFO is causing all the hellish stuff
-         dataManager.selectedClassDiagram.setParentNames(parents);
-     }
- });
-       
+        parentNamePicker.setOnAction(e -> {
+            System.out.println("parentNamePicker value changed");
+            System.out.println(parentNamePicker.getValue());
+            if (parentNamePicker.getValue() != null || parentNamePicker.getValue().equals("")) {
+                dataManager.selectedClassDiagram.setParentName(parentNamePicker.getValue());
+            }
+            if(parentNamePicker.getValue().equals("NONE")){
+                dataManager.selectedClassDiagram.setParentName(null);
+            }
+        });
+//        
 
         //the user wants to add a package to the class
         addPackageButton.setOnAction(e -> {
@@ -567,7 +564,7 @@ public final class Workspace extends AppWorkspaceComponent {
             newDialog.init(app.getGUI().getWindow(), dataManager.selectedClassDiagram);
             newDialog.show();
         });
-        
+
         //the user wants to add an external interface to the class
         externalInterfaceButton.setOnAction(e -> {
             dataManager.selectedClassDiagram.getExternalInterfaces().remove("");
@@ -576,7 +573,7 @@ public final class Workspace extends AppWorkspaceComponent {
             newDialog.show();
             //System.out.println("TOTAL INTERFACES : " + dataManager.selectedClassDiagram.getInterfaces());
         });
-        
+
         //the user wants to add a local interface
         localInterfaceButton.setOnAction(e -> {
             dataManager.selectedClassDiagram.getLocalInterfaces().remove("");
@@ -584,18 +581,18 @@ public final class Workspace extends AppWorkspaceComponent {
             newDialog.init(app.getGUI().getWindow(), dataManager.selectedClassDiagram, dataManager.classesOnCanvas);
             newDialog.show();
         });
-        
+
         //the user wants to add an external parent
         externalParentButton.setOnAction(e -> {
-            
-            if(dataManager.selectedClassDiagram.getDiagramType().equals("class") && dataManager.selectedClassDiagram.getParentsName().size() > 0){
+
+            if (dataManager.selectedClassDiagram.getParentName() != null && dataManager.selectedClassDiagram.getParentName().length() > 0) {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Inheritance warning");
                 alert.setHeaderText(null);
-                alert.setContentText("You have already specified a local parent for this class. Classes can't have multiple inheritance!");
+                alert.setContentText("You have already specified a local parent for this class. Multiple inheritance is not allowed in Java!");
                 alert.show();
             }
-            
+
         });
     }
 

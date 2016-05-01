@@ -364,22 +364,7 @@ public class DataManager implements AppDataComponent {
         }
     }
 
-    /**
-     * When the parent drop down box gets a new parent name for the diagram
-     *
-     * @param value is the list of parents
-     */
-    public void setParents(ArrayList<String> value) {
-        if (!selectedClassDiagram.isInterface() && value.size() > 1) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Inheritance error");
-            alert.setHeaderText(null);
-            alert.setContentText("Classes don't have multiple inheritance. Only the first selected class will be added as parent.");
-            alert.show();
-        } else {
-            selectedClassDiagram.setParentNames(value);
-        }
-    }
+    
 
     public void handleUndo() {
         System.out.print("UNDO STACK : "  + undoStack.size() + "  ");
@@ -420,6 +405,7 @@ public class DataManager implements AppDataComponent {
         workspace.packageNameField.setText(selectedClassDiagram.getPackageNameText().getText());
         diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
         diagramController.updateMethodsTable(selectedClassDiagram, workspace.methodsTable);
+        workspace.getParentNamePicker().setValue(selectedClassDiagram.getParentName());
         diagramController.updateParentNamePicker(selectedClassDiagram, workspace.getParentNamePicker(), classesOnCanvas);
     }
 

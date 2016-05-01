@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -35,10 +36,11 @@ public class DiagramController {
      * @param parentNamePicker
      * @param classesOnCanvas
      */
-    public void updateParentNamePicker(ClassDiagramObject selectedClassDiagram, CheckComboBox<String> parentNamePicker, ArrayList<ClassDiagramObject> classesOnCanvas) {
+    public void updateParentNamePicker(ClassDiagramObject selectedClassDiagram, ComboBox<String> parentNamePicker, ArrayList<ClassDiagramObject> classesOnCanvas) {
         boolean isInterface = selectedClassDiagram.isInterface();
 
         parentNamePicker.getItems().clear();
+        
 
         ObservableList<String> potentialParents = FXCollections.observableArrayList();
 
@@ -58,17 +60,11 @@ public class DiagramController {
                 }
             }
         }
-        System.out.println("ALL PARENTS : " + selectedClassDiagram.getParentsName());
-        parentNamePicker.getItems().addAll(potentialParents);
-//        parentNamePicker.getCheckModel().clearChecks();
-//        for (String parent : selectedClassDiagram.getParentsName()) {
-//                parentNamePicker.getCheckModel().check(parent);
-//            }
-
-        parentNamePicker.getCheckModel().clearChecks();
-        if (selectedClassDiagram.getParentsName().size() > 0) {
-            parentNamePicker.getCheckModel().check(selectedClassDiagram.getParentsName().get(0));
-        }
+//        if(!selectedClassDiagram.getParentName().equals("") || selectedClassDiagram.getParentName() != null)
+//            parentNamePicker.getSelectionModel().select(selectedClassDiagram.getParentName());
+        parentNamePicker.setItems(potentialParents);
+        parentNamePicker.getItems().add("NONE");
+        parentNamePicker.getSelectionModel().select(selectedClassDiagram.getParentName());
     }
 
     /**
