@@ -20,6 +20,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
 import jcd.actions.Action;
 import jcd.actions.MoveDiagram;
+import jcd.actions.RemoveMethod;
 import jcd.actions.RemoveVariable;
 import jcd.actions.ResizeLeft;
 import jcd.actions.ResizeRight;
@@ -45,6 +46,7 @@ public class DataManager implements AppDataComponent {
     public static final String RESIZE_LEFT = "resize_left";
     public static final String MOVE_DIAGRAM = "move_diagram";
     public static final String REMOVE_VARIABLE = "remove_variable";
+    public static final String REMOVE_METHOD = "remove_method";
 
     // THIS IS A SHARED REFERENCE TO THE APPLICATION
     AppTemplate app;
@@ -363,7 +365,7 @@ public class DataManager implements AppDataComponent {
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
             MethodRemoveDialog newDialog = new MethodRemoveDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.methodsTable);
+            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.methodsTable, undoStack);
             newDialog.show();
         }
     }
@@ -403,6 +405,11 @@ public class DataManager implements AppDataComponent {
                 RemoveVariable removeVariableMove = (RemoveVariable) undoStack.pop();
                 ClassDiagramObject diagram = removeVariableMove.getDiagram();
                 actionController.handleRemoveVariableUndo(diagram,removeVariableMove.getRemovedVariable());
+            }
+            else if(undoStack.peek().getActionType().equals(REMOVE_METHOD)){
+                RemoveMethod removeMethodMove = (RemoveMethod) undoStack.pop();
+                ClassDiagramObject diagram = removeMethodMove.getDiagram();
+                actionController.handleRemoveMethodUndo(diagram,removeMethodMove.getRemovedMethod());
             }
         }
     }

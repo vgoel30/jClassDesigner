@@ -7,6 +7,7 @@ package jcd.controller;
 
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
+import jcd.data.MethodObject;
 import jcd.data.VariableObject;
 import jcd.gui.Workspace;
 import maf.AppTemplate;
@@ -16,11 +17,11 @@ import maf.AppTemplate;
  * @author varungoel
  */
 public class ActionController {
-    
+
     AppTemplate app;
 
     DataManager dataManager;
-    
+
     DiagramController diagramController;
 
     public ActionController(AppTemplate initApp) {
@@ -28,12 +29,12 @@ public class ActionController {
         dataManager = (DataManager) app.getDataComponent();
         diagramController = new DiagramController();
     }
-    
-    public void handleResizeRightUndo(double initialWidth, ClassDiagramObject diagram){
+
+    public void handleResizeRightUndo(double initialWidth, ClassDiagramObject diagram) {
         diagram.getRootContainer().setPrefWidth(initialWidth);
     }
-    
-     public void handleResizeRightUndo(double initialWidth, double initialX, ClassDiagramObject diagram) {
+
+    public void handleResizeRightUndo(double initialWidth, double initialX, ClassDiagramObject diagram) {
         diagram.getRootContainer().setPrefWidth(initialWidth);
         diagram.getRootContainer().setLayoutX(initialX);
     }
@@ -44,15 +45,17 @@ public class ActionController {
     }
 
     public void handleRemoveVariableUndo(ClassDiagramObject diagram, VariableObject removedVariable) {
-        Workspace workspace = (Workspace)app.getWorkspaceComponent();
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
         //adds the variable to the list of variables and renders it on the diagram
-                diagramController.addVariable(diagram,removedVariable);
-                //updates the variables table
-                diagramController.updateVariablesTable(diagram, workspace.variablesTable);
+        diagramController.addVariable(diagram, removedVariable);
+        //updates the variables table
+        diagramController.updateVariablesTable(diagram, workspace.variablesTable);
     }
 
-   
-    
-   
-    
+    public void handleRemoveMethodUndo(ClassDiagramObject diagram, MethodObject removedMethod) {
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        diagramController.addMethod(diagram, removedMethod);
+        diagramController.updateMethodsTable(diagram, workspace.methodsTable);
+    }
+
 }

@@ -6,6 +6,7 @@
 package jcd.gui;
 
 import java.util.ArrayList;
+import java.util.Stack;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +21,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import jcd.actions.Action;
+import jcd.actions.RemoveMethod;
 import jcd.controller.DiagramController;
 import jcd.data.ArgumentObject;
 import jcd.data.ClassDiagramObject;
@@ -62,7 +65,7 @@ public class MethodRemoveDialog extends Stage {
         return singleton;
     }
 
-    public void init(Stage primaryStage, ClassDiagramObject diagram, TableView variablesTable) {
+    public void init(Stage primaryStage, ClassDiagramObject diagram, TableView variablesTable, Stack<Action> undoStack) {
         DiagramController diagramController = new DiagramController();
 
         // MAKE THIS DIALOG MODAL, MEANING OTHERS WILL WAIT
@@ -105,6 +108,11 @@ public class MethodRemoveDialog extends Stage {
         EventHandler removeHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
             //get the variable object to remove
             MethodObject toRemove = methodChoiceBox.getValue();
+            
+            //push the remove move on the stack
+            RemoveMethod removeMethodMove = new RemoveMethod(diagram);
+          removeMethodMove.setRemovedMethod(toRemove);
+          undoStack.push(removeMethodMove);
 
             MethodRemoveDialog.this.hide();
 
