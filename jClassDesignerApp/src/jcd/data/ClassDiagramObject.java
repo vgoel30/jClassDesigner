@@ -86,6 +86,8 @@ public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramO
     public boolean isInterface(){
         return diagramType.equalsIgnoreCase("interface");
     }
+    
+    
 
     //for drag to resize
     Line rightLine;

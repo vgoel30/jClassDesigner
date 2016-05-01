@@ -63,6 +63,12 @@ public class DataManager implements AppDataComponent {
     DiagramController diagramController;
     GridEditController gridEditController;
 
+    public ArrayList<ClassDiagramObject> getClassesOnCanvas() {
+        return classesOnCanvas;
+    }
+    
+    
+
     /**
      * THis constructor creates the data manager and sets up the
      *
