@@ -33,7 +33,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     ArrayList<String> externalInterfaces = new ArrayList<>();
 
     //this will hold the three panes and serve as the skeleton for the diagram
-    VBox rootContainer;
+//    VBox rootContainer;
     
     VBox packageContainer;
 
@@ -224,7 +224,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     private void setStandardDimensions() {
         rootContainer.setMinHeight(80);
         rootContainer.setMinWidth(175);
-        rootContainer.setMaxWidth(450);
+        rootContainer.setMaxWidth(500);
 
         //setting up the left line
         leftLine.startXProperty().bind(rootContainer.layoutXProperty());

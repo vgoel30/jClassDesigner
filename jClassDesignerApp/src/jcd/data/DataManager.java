@@ -218,7 +218,7 @@ public class DataManager implements AppDataComponent {
 
             }
         });
-        
+
         //FOR MOVING THE diagram
         diagram.getRootContainer().setOnMouseDragged(rectangleDraggedEvent -> {
             if (selectedClassDiagram != null) {
@@ -226,7 +226,6 @@ public class DataManager implements AppDataComponent {
                     workspace.drawingActive = false;
                     diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getSceneY() - 50);
                     diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX() - 450);
-
 
                     double x = diagram.getRootContainer().getLayoutX();
                     double y = diagram.getRootContainer().getLayoutY();
@@ -434,41 +433,43 @@ public class DataManager implements AppDataComponent {
     }
 
     public void handleUndo() {
-        ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
-        System.out.print("UNDO STACK : " + undoStack.size() + "  ");
+        if (selectedClassDiagram instanceof ClassDiagramObject) {
+            ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
+            System.out.print("UNDO STACK : " + undoStack.size() + "  ");
 
-        if (selectedClassObject != null) {
-            restoreSelectedProperties(selectedClassObject);
-            selectedClassDiagram = null;
+            if (selectedClassObject != null) {
+                restoreSelectedProperties(selectedClassObject);
+                selectedClassDiagram = null;
 
-            ((Workspace) app.getWorkspaceComponent()).disableButtons(true);
-        }
+                ((Workspace) app.getWorkspaceComponent()).disableButtons(true);
+            }
 
-        if (undoStack.size() > 0) {
-            System.out.println(undoStack.peek().getActionType());
-            //if the user wants to resize
-            if (undoStack.peek().getActionType().equals(RESIZE_RIGHT)) {
-                ResizeRight resizeRightMove = (ResizeRight) undoStack.pop();
-                ClassDiagramObject diagram = resizeRightMove.getDiagram();
-                actionController.handleResizeRightUndo(resizeRightMove.getInitialWidth(), diagram);
-            } //if the user wants to remove the diagram
-            else if (undoStack.peek().getActionType().equals(MOVE_DIAGRAM)) {
-                System.out.println("MOVE DIAGRAM UNDO");
-                MoveDiagram moveDiagramAction = (MoveDiagram) undoStack.pop();
-                ClassDiagramObject diagram = moveDiagramAction.getDiagram();
-                actionController.handleMoveDiagramUndo(moveDiagramAction.getInitialPositionX(), moveDiagramAction.getInitialPositionY(), diagram);
-            } else if (undoStack.peek().getActionType().equals(RESIZE_LEFT)) {
-                ResizeLeft resizeLeftMove = (ResizeLeft) undoStack.pop();
-                ClassDiagramObject diagram = resizeLeftMove.getDiagram();
-                actionController.handleResizeRightUndo(resizeLeftMove.getInitialWidth(), resizeLeftMove.getInitialX(), diagram);
-            } else if (undoStack.peek().getActionType().equals(REMOVE_VARIABLE)) {
-                RemoveVariable removeVariableMove = (RemoveVariable) undoStack.pop();
-                ClassDiagramObject diagram = removeVariableMove.getDiagram();
-                actionController.handleRemoveVariableUndo(diagram, removeVariableMove.getRemovedVariable());
-            } else if (undoStack.peek().getActionType().equals(REMOVE_METHOD)) {
-                RemoveMethod removeMethodMove = (RemoveMethod) undoStack.pop();
-                ClassDiagramObject diagram = removeMethodMove.getDiagram();
-                actionController.handleRemoveMethodUndo(diagram, removeMethodMove.getRemovedMethod());
+            if (undoStack.size() > 0) {
+                System.out.println(undoStack.peek().getActionType());
+                //if the user wants to resize
+                if (undoStack.peek().getActionType().equals(RESIZE_RIGHT)) {
+                    ResizeRight resizeRightMove = (ResizeRight) undoStack.pop();
+                    ClassDiagramObject diagram = resizeRightMove.getDiagram();
+                    actionController.handleResizeRightUndo(resizeRightMove.getInitialWidth(), diagram);
+                } //if the user wants to remove the diagram
+                else if (undoStack.peek().getActionType().equals(MOVE_DIAGRAM)) {
+                    System.out.println("MOVE DIAGRAM UNDO");
+                    MoveDiagram moveDiagramAction = (MoveDiagram) undoStack.pop();
+                    ClassDiagramObject diagram = moveDiagramAction.getDiagram();
+                    actionController.handleMoveDiagramUndo(moveDiagramAction.getInitialPositionX(), moveDiagramAction.getInitialPositionY(), diagram);
+                } else if (undoStack.peek().getActionType().equals(RESIZE_LEFT)) {
+                    ResizeLeft resizeLeftMove = (ResizeLeft) undoStack.pop();
+                    ClassDiagramObject diagram = resizeLeftMove.getDiagram();
+                    actionController.handleResizeRightUndo(resizeLeftMove.getInitialWidth(), resizeLeftMove.getInitialX(), diagram);
+                } else if (undoStack.peek().getActionType().equals(REMOVE_VARIABLE)) {
+                    RemoveVariable removeVariableMove = (RemoveVariable) undoStack.pop();
+                    ClassDiagramObject diagram = removeVariableMove.getDiagram();
+                    actionController.handleRemoveVariableUndo(diagram, removeVariableMove.getRemovedVariable());
+                } else if (undoStack.peek().getActionType().equals(REMOVE_METHOD)) {
+                    RemoveMethod removeMethodMove = (RemoveMethod) undoStack.pop();
+                    ClassDiagramObject diagram = removeMethodMove.getDiagram();
+                    actionController.handleRemoveMethodUndo(diagram, removeMethodMove.getRemovedMethod());
+                }
             }
         }
     }

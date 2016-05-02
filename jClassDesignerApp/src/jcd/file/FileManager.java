@@ -472,19 +472,21 @@ public class FileManager implements AppFileComponent {
         int rootContainerWidth = dimensionsJsonObject.getInt(ROOT_CONTAINER_WIDTH);
         int rootContainerHeight = dimensionsJsonObject.getInt(ROOT_CONTAINER_HEIGHT);
 
-        toAdd.getRootContainer().setPrefSize(rootContainerWidth, rootContainerHeight);
+        toAdd.getRootContainer().setMinSize(rootContainerWidth, rootContainerHeight);
 
         int packageContainerWidth = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_WIDTH);
         int packageContainerHeight = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_HEIGHT);
-        toAdd.getPackageContainer().setPrefSize(packageContainerWidth, packageContainerHeight);
+        toAdd.getPackageContainer().setMinSize(packageContainerWidth, packageContainerHeight);
         
          int variablesContainerWidth = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_WIDTH);
         int variablesContainerHeight = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_HEIGHT);
-       toAdd.getVariablesContainer().setPrefHeight(variablesContainerHeight);
+        toAdd.getVariablesContainer().setMinHeight(variablesContainerHeight);
+       //toAdd.getVariablesContainer().setPrefHeight(variablesContainerHeight);
 
         int methodsContainerWidth = dimensionsJsonObject.getInt(METHODS_CONTAINER_WIDTH);
         int methodsContainerHeight = dimensionsJsonObject.getInt(METHODS_CONTAINER_HEIGHT);
-        toAdd.getMethodsContainer().setPrefHeight(methodsContainerHeight);
+        toAdd.getMethodsContainer().setMinHeight(methodsContainerHeight);
+       // toAdd.getMethodsContainer().setPrefHeight(methodsContainerHeight);
 
        
 

@@ -15,14 +15,14 @@ import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
  *
  * @author varungoel
  */
-public class ExternalParent extends Diagram{
+public class ExternalInterface extends Diagram{
     String type;
     String name;
     Text nameText;
     
    
-    public ExternalParent(String nameToSet){
-        type = "external_parent";
+    public ExternalInterface(String nameToSet){
+        type = "external_interface";
         rootContainer = new VBox();
         nameText = new Text("\n" + "       "+nameToSet +"      "+"\n");
         this.name = nameToSet;
