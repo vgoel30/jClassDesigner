@@ -5,10 +5,42 @@
  */
 package jcd.data;
 
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINER;
+import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINERS;
+import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
+
 /**
  *
  * @author varungoel
  */
 public class ExternalParent {
+    String type;
+    String name;
+    HBox rootContainer;
+    Text nameText;
     
+    public ExternalParent(String nameToSet){
+        type = "external_parent";
+        rootContainer = new HBox();
+        nameText = new Text("\n" + "       "+nameToSet +"      "+"\n");
+        this.name = nameToSet;
+        rootContainer.getChildren().add(nameText);
+        initStyle();
+    }
+    
+    public void putOnCanvas(Pane canvas){
+        rootContainer.setLayoutX(0);
+        rootContainer.setLayoutY(0);
+        canvas.getChildren().add(rootContainer);
+        
+    }
+    
+    //set the style for the diagram
+    private void initStyle() {
+        nameText.getStyleClass().add(DIAGRAM_TEXT_FIELD);
+        rootContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
+    }
 }

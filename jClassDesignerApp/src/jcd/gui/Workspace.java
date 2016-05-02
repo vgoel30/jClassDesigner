@@ -68,6 +68,7 @@ import jcd.connector_lines.InheritanceLine;
 import jcd.controller.GridEditController;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
+import jcd.data.ExternalParent;
 import jcd.data.MethodObject;
 import jcd.data.VariableObject;
 import maf.AppTemplate;
@@ -456,6 +457,8 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //when the resize button is clicked
         resizeButton.setOnAction(resizeButtonClicked -> {
+            ExternalParent externalParent = new ExternalParent("Lit");
+            externalParent.putOnCanvas(canvas);
         });
 
         codeButton.setOnAction(codeButtonClicked -> {
@@ -547,6 +550,18 @@ public final class Workspace extends AppWorkspaceComponent {
                     dataManager.selectedClassDiagram.setParentName(null);
                 } else {
                     dataManager.selectedClassDiagram.setParentName(parentNamePicker.getValue());
+                    
+                    boolean isLocal = false;
+                    //check if it's a local parent
+                    for(ClassDiagramObject classOnCanvas: dataManager.classesOnCanvas){
+                        if(classOnCanvas.getClassNameText().getText().equals(parentNamePicker.getValue())){
+                            isLocal = true;
+                            break;
+                        }
+                    }
+                    if(!isLocal){
+                        gridEditController.renderExternalDiagramBox(parentNamePicker.getValue(), "external_parent", canvas);
+                    }
                 }
             } 
         });

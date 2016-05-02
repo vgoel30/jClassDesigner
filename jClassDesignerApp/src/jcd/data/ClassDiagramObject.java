@@ -183,12 +183,14 @@ public class ClassDiagramObject implements Comparable<ClassDiagramObject> {
         initStyle();
     }
     
+    /**
+     * Puts the diagram on the canvas with the resizing lines
+     * @param root 
+     */
     public void putOnCanvas(Pane root) {
         root.getChildren().add(rootContainer);
         root.getChildren().add(rightLine);
         root.getChildren().add(leftLine);
-        //root.getChildren().add(bottomLine);
-        //root.getChildren().add(middleLine);
     }
     
     public double getEndPoint() {
