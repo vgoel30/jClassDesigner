@@ -543,23 +543,31 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //the event handler for the parent name clicker 
         parentNamePicker.setOnAction(e -> {
+            ClassDiagramObject selectedClassObject = (ClassDiagramObject)dataManager.selectedClassDiagram;
             System.out.println("parentNamePicker value changed");
             System.out.println(parentNamePicker.getValue());
             if (parentNamePicker.getValue() != null) {
                 if (parentNamePicker.getValue().equals("NONE") || parentNamePicker.getValue().equals("")) {
-                    dataManager.selectedClassDiagram.setParentName(null);
+                    selectedClassObject.setParentName(null);
                 } else {
-                    dataManager.selectedClassDiagram.setParentName(parentNamePicker.getValue());
+                    selectedClassObject.setParentName(parentNamePicker.getValue());
                     
                     boolean isLocal = false;
+                    boolean alreadyExists = false;
                     //check if it's a local parent
                     for(ClassDiagramObject classOnCanvas: dataManager.classesOnCanvas){
-                        if(classOnCanvas.getClassNameText().getText().equals(parentNamePicker.getValue())){
+                        if(classOnCanvas.toString().equals(parentNamePicker.getValue())){
                             isLocal = true;
                             break;
                         }
                     }
-                    if(!isLocal){
+                    //check if it is already a parent to another class
+                    if(dataManager.externalParents.contains(parentNamePicker.getValue())){
+                        alreadyExists = true;
+                    }
+                        
+                    if(!isLocal && !alreadyExists){
+                        dataManager.externalParents.add(parentNamePicker.getValue());
                         gridEditController.renderExternalDiagramBox(parentNamePicker.getValue(), "external_parent", canvas);
                     }
                 }
@@ -569,26 +577,29 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //the user wants to add a package to the class
         addPackageButton.setOnAction(e -> {
-            dataManager.selectedClassDiagram.getJavaAPI_Packages().remove("");
+            ClassDiagramObject selectedClassObject = (ClassDiagramObject)dataManager.selectedClassDiagram;
+            selectedClassObject.getJavaAPI_Packages().remove("");
             AppOptionDialog newDialog = new AppOptionDialog();
-            newDialog.init(app.getGUI().getWindow(), dataManager.selectedClassDiagram);
+            newDialog.init(app.getGUI().getWindow(), selectedClassObject);
             newDialog.show();
         });
 
         //the user wants to add an external interface to the class
         externalInterfaceButton.setOnAction(e -> {
-            dataManager.selectedClassDiagram.getExternalInterfaces().remove("");
+            ClassDiagramObject selectedClassObject = (ClassDiagramObject)dataManager.selectedClassDiagram;
+            selectedClassObject.getExternalInterfaces().remove("");
             ExternalInterfaceDialog newDialog = new ExternalInterfaceDialog();
-            newDialog.init(app.getGUI().getWindow(), dataManager.selectedClassDiagram, dataManager.classesOnCanvas);
+            newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager.classesOnCanvas);
             newDialog.show();
             //System.out.println("TOTAL INTERFACES : " + dataManager.selectedClassDiagram.getInterfaces());
         });
 
         //the user wants to add a local interface
         localInterfaceButton.setOnAction(e -> {
-            dataManager.selectedClassDiagram.getLocalInterfaces().remove("");
+            ClassDiagramObject selectedClassObject = (ClassDiagramObject)dataManager.selectedClassDiagram;
+            selectedClassObject.getLocalInterfaces().remove("");
             LocalInterfaceDialog newDialog = new LocalInterfaceDialog();
-            newDialog.init(app.getGUI().getWindow(), dataManager.selectedClassDiagram, dataManager.classesOnCanvas);
+            newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager.classesOnCanvas);
             newDialog.show();
         });
 

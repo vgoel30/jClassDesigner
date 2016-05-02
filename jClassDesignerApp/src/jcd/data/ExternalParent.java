@@ -5,10 +5,9 @@
  */
 package jcd.data;
 
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINER;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINERS;
 import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
 
@@ -16,15 +15,16 @@ import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
  *
  * @author varungoel
  */
-public class ExternalParent {
+public class ExternalParent extends Diagram{
     String type;
     String name;
-    HBox rootContainer;
+    VBox rootContainer;
     Text nameText;
     
+   
     public ExternalParent(String nameToSet){
         type = "external_parent";
-        rootContainer = new HBox();
+        rootContainer = new VBox();
         nameText = new Text("\n" + "       "+nameToSet +"      "+"\n");
         this.name = nameToSet;
         rootContainer.getChildren().add(nameText);
@@ -37,6 +37,12 @@ public class ExternalParent {
         canvas.getChildren().add(rootContainer);
         
     }
+
+    public VBox getRootContainer() {
+        return rootContainer;
+    }
+    
+    
     
     //set the style for the diagram
     private void initStyle() {

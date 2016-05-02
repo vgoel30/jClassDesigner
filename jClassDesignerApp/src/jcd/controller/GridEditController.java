@@ -52,7 +52,8 @@ public class GridEditController {
     public void addDiagram(Pane canvas, String type) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         if (dataManager.selectedClassDiagram != null) {
-            dataManager.restoreSelectedProperties(dataManager.selectedClassDiagram);
+            ClassDiagramObject selectedClassObject = (ClassDiagramObject)dataManager.selectedClassDiagram;
+            dataManager.restoreSelectedProperties(selectedClassObject);
             dataManager.selectedClassDiagram = null;
 
             workspace.disableButtons(true);
@@ -105,9 +106,10 @@ public class GridEditController {
      * @param canvas 
      */
     public void renderExternalDiagramBox(String name, String type, Pane canvas){
-        if(type.endsWith(EXTERNAL_PARENT)){
+        if(type.equals(EXTERNAL_PARENT)){
             ExternalParent externalParent = new ExternalParent(name);
             externalParent.putOnCanvas(canvas);
+            dataManager.attachExternalDiagramHandlers(externalParent);
         }
     }
 

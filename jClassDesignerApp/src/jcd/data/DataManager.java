@@ -52,9 +52,10 @@ public class DataManager implements AppDataComponent {
     AppTemplate app;
 
     //THE CURRENT SELECTED CLASS DIAGRAM
-    public ClassDiagramObject selectedClassDiagram = null;
+    public Diagram selectedClassDiagram = null;
 
     public ArrayList<String> classNames = new ArrayList<>();
+    public ArrayList<String> externalParents = new ArrayList<>();
 
     //this will keep track of all the classes currently on the canvas
     public ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
@@ -72,8 +73,6 @@ public class DataManager implements AppDataComponent {
     public ArrayList<ClassDiagramObject> getClassesOnCanvas() {
         return classesOnCanvas;
     }
-    
-    
 
     /**
      * THis constructor creates the data manager and sets up the
@@ -134,8 +133,8 @@ public class DataManager implements AppDataComponent {
                 //diagram.getBottomLine().setVisible(true);
                 //diagram.getMiddleLine().setVisible(true);
 
-                if (selectedClassDiagram != null) {
-                    restoreSelectedProperties(selectedClassDiagram);
+                if (selectedClassDiagram != null && selectedClassDiagram instanceof ClassDiagramObject) {
+                    restoreSelectedProperties((ClassDiagramObject) selectedClassDiagram);
                 }
 
                 //set the inital position of the mouse event
@@ -146,7 +145,7 @@ public class DataManager implements AppDataComponent {
 
                 selectedClassDiagram = diagram;
                 //reflect the selected changes
-                reflectChangesForSelectedDiagram(workspace, selectedClassDiagram);
+                reflectChangesForSelectedDiagram(workspace, (ClassDiagramObject) selectedClassDiagram);
 
                 workspace.disableButtons(false);
 
@@ -160,9 +159,10 @@ public class DataManager implements AppDataComponent {
                     workspace.drawingActive = false;
                     diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getSceneY() - 50);
                     diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX() - 450);
-                    
-                    if(workspace.gridIsActive())
+
+                    if (workspace.gridIsActive()) {
                         gridEditController.snapToGrid(classesOnCanvas);
+                    }
 
                     double x = diagram.getRootContainer().getLayoutX();
                     double y = diagram.getRootContainer().getLayoutY();
@@ -198,6 +198,63 @@ public class DataManager implements AppDataComponent {
     }
 
     /**
+     * For external boxes, interfaces,packages etc.
+     *
+     * @param diagram
+     */
+    public void attachExternalDiagramHandlers(Diagram diagram) {
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+
+        //if the diagram has been clicked
+        diagram.getRootContainer().setOnMouseClicked((MouseEvent mouseClicked) -> {
+            if (workspace.selectionActive) {
+                if (selectedClassDiagram != null) {
+                    if (selectedClassDiagram instanceof ClassDiagramObject) {
+                        restoreSelectedProperties((ClassDiagramObject) selectedClassDiagram);
+                    }
+                }
+                selectedClassDiagram = diagram;
+                workspace.disableButtons(true);
+
+            }
+        });
+        
+        //FOR MOVING THE diagram
+        diagram.getRootContainer().setOnMouseDragged(rectangleDraggedEvent -> {
+            if (selectedClassDiagram != null) {
+                if (selectedClassDiagram.equals(diagram) && workspace.selectionActive) {
+                    workspace.drawingActive = false;
+                    diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getSceneY() - 50);
+                    diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX() - 450);
+
+
+                    double x = diagram.getRootContainer().getLayoutX();
+                    double y = diagram.getRootContainer().getLayoutY();
+
+                    Pane canvas = getRenderingPane();
+                    ScrollPane scrollPane = getRenderingScrollPane();
+
+                    //dynamic scrolling 
+                    if (x > canvas.getWidth() - 150) {
+                        canvas.setMinWidth(canvas.getWidth() + 500);
+                        canvas.setPrefWidth(canvas.getWidth() + 500);
+                        if (workspace.gridIsActive()) {
+                            gridEditController.renderGridLines(canvas);
+                        }
+                    }
+                    if (y > canvas.getHeight() - 300) {
+                        canvas.setMinHeight(canvas.getHeight() + 500);
+                        canvas.setPrefHeight(canvas.getHeight() + 500);
+                        if (workspace.gridIsActive()) {
+                            gridEditController.renderGridLines(canvas);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
      * Restores the appearance of the selected diagram after it has been
      * deselected
      *
@@ -212,12 +269,14 @@ public class DataManager implements AppDataComponent {
     public void validateNameOfClass(String oldValue, String newValue) {
         classNames.remove(oldValue);
 
-        selectedClassDiagram.getClassNameText().setText(newValue);
-        classPackageCombos.remove(oldValue + ":" + selectedClassDiagram.getPackageNameText().getText());
+        ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
+
+        selectedClassObject.getClassNameText().setText(newValue);
+        classPackageCombos.remove(oldValue + ":" + selectedClassObject.getPackageNameText().getText());
 
         for (ClassDiagramObject diagram : classesOnCanvas) {
-            if (diagram != selectedClassDiagram) {
-                int x = selectedClassDiagram.compareTo(diagram);
+            if (diagram != selectedClassObject) {
+                int x = selectedClassObject.compareTo(diagram);
                 if (x == 0) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Class name error");
@@ -229,18 +288,19 @@ public class DataManager implements AppDataComponent {
         }
 
         classNames.add(newValue);
-        classPackageCombos.add(newValue + ":" + selectedClassDiagram.getPackageNameText().getText());
+        classPackageCombos.add(newValue + ":" + selectedClassObject.getPackageNameText().getText());
     }
 
     public void validateNameOfPackage(String oldValue, String newValue) {
         packageNames.remove(oldValue);
 
-        selectedClassDiagram.getPackageNameText().setText(newValue);
-        classPackageCombos.remove(selectedClassDiagram.getClassNameText().getText() + ":" + oldValue);
+        ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
+        selectedClassObject.getPackageNameText().setText(newValue);
+        classPackageCombos.remove(selectedClassObject.getClassNameText().getText() + ":" + oldValue);
 
         for (ClassDiagramObject diagram : classesOnCanvas) {
-            if (diagram != selectedClassDiagram) {
-                int x = selectedClassDiagram.compareTo(diagram);
+            if (diagram != selectedClassObject) {
+                int x = selectedClassObject.compareTo(diagram);
                 if (x == 0) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Package name error");
@@ -251,7 +311,7 @@ public class DataManager implements AppDataComponent {
             }
         }
         packageNames.add(newValue);
-        classPackageCombos.add(selectedClassDiagram.getClassNameText().getText() + ":" + newValue);
+        classPackageCombos.add(selectedClassObject.getClassNameText().getText() + ":" + newValue);
     }
 
     public void handleExportCode(Window window) {
@@ -318,31 +378,33 @@ public class DataManager implements AppDataComponent {
      * If the user wants to add a variable
      */
     public void handleVariableIncrement() {
-        if (selectedClassDiagram != null) {
+        ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
+        if (selectedClassObject != null) {
 
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
             VariableOptionDialog newDialog = new VariableOptionDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.variablesTable);
+            newDialog.init(app.getGUI().getWindow(), selectedClassObject, workspace.variablesTable);
             newDialog.show();
 
             //diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
         }
     }
-    
+
     /**
      * Adds a method
      */
     public void handleMethodIncrement() {
-        if (selectedClassDiagram != null) {
+        ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
+        if (selectedClassObject != null) {
 
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
             MethodOptionDialog newDialog = new MethodOptionDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.methodsTable,this);
+            newDialog.init(app.getGUI().getWindow(), selectedClassObject, workspace.methodsTable, this);
             newDialog.show();
 
-            diagramController.updateMethodsTable(selectedClassDiagram, workspace.methodsTable);
+            diagramController.updateMethodsTable(selectedClassObject, workspace.methodsTable);
         }
     }
 
@@ -350,33 +412,33 @@ public class DataManager implements AppDataComponent {
      * If the user wants to delete a variable
      */
     public void handleVariableDecrement() {
-        if (selectedClassDiagram != null) {
+        ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
+        if (selectedClassObject != null) {
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
             VariableRemoveDialog newDialog = new VariableRemoveDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.variablesTable, undoStack);
+            newDialog.init(app.getGUI().getWindow(), selectedClassObject, workspace.variablesTable, undoStack);
             newDialog.show();
         }
     }
-    
-    
-    public void handleMethodDecrement(){
-        if (selectedClassDiagram != null) {
+
+    public void handleMethodDecrement() {
+        ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
+        if (selectedClassObject != null) {
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
             MethodRemoveDialog newDialog = new MethodRemoveDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassDiagram, workspace.methodsTable, undoStack);
+            newDialog.init(app.getGUI().getWindow(), selectedClassObject, workspace.methodsTable, undoStack);
             newDialog.show();
         }
     }
 
-    
-
     public void handleUndo() {
-        System.out.print("UNDO STACK : "  + undoStack.size() + "  ");
-        
-        if (selectedClassDiagram != null) {
-            restoreSelectedProperties(selectedClassDiagram);
+        ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
+        System.out.print("UNDO STACK : " + undoStack.size() + "  ");
+
+        if (selectedClassObject != null) {
+            restoreSelectedProperties(selectedClassObject);
             selectedClassDiagram = null;
 
             ((Workspace) app.getWorkspaceComponent()).disableButtons(true);
@@ -395,21 +457,18 @@ public class DataManager implements AppDataComponent {
                 MoveDiagram moveDiagramAction = (MoveDiagram) undoStack.pop();
                 ClassDiagramObject diagram = moveDiagramAction.getDiagram();
                 actionController.handleMoveDiagramUndo(moveDiagramAction.getInitialPositionX(), moveDiagramAction.getInitialPositionY(), diagram);
-            }
-            else if(undoStack.peek().getActionType().equals(RESIZE_LEFT)){
+            } else if (undoStack.peek().getActionType().equals(RESIZE_LEFT)) {
                 ResizeLeft resizeLeftMove = (ResizeLeft) undoStack.pop();
                 ClassDiagramObject diagram = resizeLeftMove.getDiagram();
                 actionController.handleResizeRightUndo(resizeLeftMove.getInitialWidth(), resizeLeftMove.getInitialX(), diagram);
-            }
-            else if(undoStack.peek().getActionType().equals(REMOVE_VARIABLE)){
+            } else if (undoStack.peek().getActionType().equals(REMOVE_VARIABLE)) {
                 RemoveVariable removeVariableMove = (RemoveVariable) undoStack.pop();
                 ClassDiagramObject diagram = removeVariableMove.getDiagram();
-                actionController.handleRemoveVariableUndo(diagram,removeVariableMove.getRemovedVariable());
-            }
-            else if(undoStack.peek().getActionType().equals(REMOVE_METHOD)){
+                actionController.handleRemoveVariableUndo(diagram, removeVariableMove.getRemovedVariable());
+            } else if (undoStack.peek().getActionType().equals(REMOVE_METHOD)) {
                 RemoveMethod removeMethodMove = (RemoveMethod) undoStack.pop();
                 ClassDiagramObject diagram = removeMethodMove.getDiagram();
-                actionController.handleRemoveMethodUndo(diagram,removeMethodMove.getRemovedMethod());
+                actionController.handleRemoveMethodUndo(diagram, removeMethodMove.getRemovedMethod());
             }
         }
     }
@@ -446,16 +505,16 @@ public class DataManager implements AppDataComponent {
     private void attachResizingHandlers(ClassDiagramObject diagram, Workspace workspace) {
         //if the user is resizing to the right, create a new resize right action
         ResizeRight resizeRightMove = new ResizeRight(diagram);
-        
+
         //if the user is reszing to the left
         ResizeLeft resizeLeftMove = new ResizeLeft(diagram);
-        
+
         //when the right line is pressed for the resizing, that's the initial width for resizing
         diagram.getRightLine().setOnMousePressed(mouseClickedEvent -> {
             resizeRightMove.setInitialWidth(diagram.getRootContainer().getWidth());
 
         });
-        
+
         //when the left line is pressed for the resizing, that's the initial width for resizing
         diagram.getLeftLine().setOnMousePressed(mouseClickedEvent -> {
             resizeLeftMove.setInitialWidth(diagram.getRootContainer().getWidth());
@@ -468,7 +527,7 @@ public class DataManager implements AppDataComponent {
                 diagram.getRootContainer().setPrefWidth(mouseDraggedEvent.getX() - diagram.getRootContainer().getLayoutX());
             }
         });
-        
+
         //when the mouse has been released, we set the final width and final xand push the acion on the undo stack
         diagram.getLeftLine().setOnMouseReleased(mouseDragReleased -> {
             resizeLeftMove.setFinalWidth(diagram.getRootContainer().getWidth());
