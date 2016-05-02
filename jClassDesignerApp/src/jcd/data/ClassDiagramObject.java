@@ -143,6 +143,8 @@ public class ClassDiagramObject implements Comparable<ClassDiagramObject> {
     public ClassDiagramObject(double x, double y, String type) {
         counter++;
         rootContainer = new VBox();
+        variablesContainer = new VBox();
+        methodsContainer = new VBox();
         
         diagramType = type;
 
@@ -159,11 +161,11 @@ public class ClassDiagramObject implements Comparable<ClassDiagramObject> {
 
         //The second container which has all the variables and stuff
         variablesNameText = new Text("Variables");
-        variablesContainer = new VBox();
+        
 
         //The third container which has all the methods and stuff
         methodsNameText = new Text("Methods");
-        methodsContainer = new VBox();
+        
 
         //putting it all in
         rootContainer.getChildren().add(packageContainer);

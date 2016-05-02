@@ -377,7 +377,6 @@ public class FileManager implements AppFileComponent {
             arrayBuilder.add(jso);
         }
         JsonArray jA = arrayBuilder.build();
-        System.out.println("METHODS ARRAY " + jA);
         return jA;
     }
 
@@ -478,14 +477,16 @@ public class FileManager implements AppFileComponent {
         int packageContainerWidth = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_WIDTH);
         int packageContainerHeight = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_HEIGHT);
         toAdd.getPackageContainer().setPrefSize(packageContainerWidth, packageContainerHeight);
+        
+         int variablesContainerWidth = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_WIDTH);
+        int variablesContainerHeight = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_HEIGHT);
+       toAdd.getVariablesContainer().setPrefHeight(variablesContainerHeight);
 
         int methodsContainerWidth = dimensionsJsonObject.getInt(METHODS_CONTAINER_WIDTH);
         int methodsContainerHeight = dimensionsJsonObject.getInt(METHODS_CONTAINER_HEIGHT);
-        toAdd.getPackageContainer().setPrefSize(methodsContainerWidth, methodsContainerHeight);
+        toAdd.getMethodsContainer().setPrefHeight(methodsContainerHeight);
 
-        int variablesContainerWidth = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_WIDTH);
-        int variablesContainerHeight = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_HEIGHT);
-        toAdd.getPackageContainer().setPrefSize(variablesContainerWidth, variablesContainerHeight);
+       
 
 //        //ALL THE EXTERNAL INTERFACES OF THE CLASS
         JsonArray externalInterfacesArray = jsonDiagram.getJsonArray(JSON_EXTERNAL_INTERFACES_IMPLEMENTED);
