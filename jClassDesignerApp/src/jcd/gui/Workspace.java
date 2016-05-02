@@ -8,26 +8,19 @@ package jcd.gui;
 import javafx.scene.control.Button;
 import java.io.IOException;
 import java.util.ArrayList;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -68,20 +61,17 @@ import jcd.connector_lines.InheritanceLine;
 import jcd.controller.GridEditController;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
+import jcd.data.Diagram;
 import jcd.data.ExternalParent;
 import jcd.data.MethodObject;
 import jcd.data.VariableObject;
 import maf.AppTemplate;
 import static maf.components.AppStyleArbiter.CHECKBOX;
 import static maf.components.AppStyleArbiter.CLASS_FILE_BUTTON;
-import static maf.components.AppStyleArbiter.CLASS_FILE_BUTTON_CONTAINER;
-import static maf.components.AppStyleArbiter.CLASS_FILE_BUTTON_CONTAINER_HOVERED;
-import static maf.components.AppStyleArbiter.CLASS_FILE_BUTTON_HOVERED;
 import static maf.components.AppStyleArbiter.EDIT_TOOLBAR_ROW;
 import static maf.components.AppStyleArbiter.RENDERING_CANVAS;
 import maf.components.AppWorkspaceComponent;
 import maf.ui.AppGUI;
-import org.controlsfx.control.CheckComboBox;
 
 /**
  *
@@ -457,8 +447,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //when the resize button is clicked
         resizeButton.setOnAction(resizeButtonClicked -> {
-            ExternalParent externalParent = new ExternalParent("Lit");
-            externalParent.putOnCanvas(canvas);
+            InheritanceLine myLine = new InheritanceLine(100, 100, 200, 200,canvas);
         });
 
         codeButton.setOnAction(codeButtonClicked -> {
@@ -568,8 +557,11 @@ public final class Workspace extends AppWorkspaceComponent {
                         
                     if(!isLocal && !alreadyExists){
                         dataManager.externalParents.add(parentNamePicker.getValue());
-                        gridEditController.renderExternalDiagramBox(parentNamePicker.getValue(), "external_parent", canvas);
+                        Diagram externalParent = gridEditController.renderExternalDiagramBox(parentNamePicker.getValue(), "external_parent", canvas);
+                        InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
                     }
+                    
+                    
                 }
             } 
         });

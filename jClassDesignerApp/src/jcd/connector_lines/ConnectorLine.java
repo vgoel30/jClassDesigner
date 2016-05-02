@@ -6,11 +6,13 @@
 package jcd.connector_lines;
 
 import javafx.scene.shape.Line;
+import jcd.data.Diagram;
 
 /**
  * This will be the parent class for the connector lines
  * @author varungoel
  */
 public class ConnectorLine extends Line{
-    
+    Diagram startDiagram;
+    Diagram endDiagram;
 }

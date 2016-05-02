@@ -5,9 +5,11 @@
  */
 package jcd.connector_lines;
 
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import jcd.data.ClassDiagramObject;
+import jcd.data.Diagram;
 
 /**
  *
@@ -20,53 +22,65 @@ public class InheritanceLine extends ConnectorLine {
     public InheritanceLine() {
     }
 
-    public InheritanceLine(ClassDiagramObject diagram) {
-        double x = diagram.getRootContainer().getLayoutX() + diagram.getRootContainer().getMinWidth();
-        double y = diagram.getRootContainer().getLayoutY() + diagram.getRootContainer().getMinHeight() + (diagram.getRootContainer().getMinWidth() / 2);
+    public InheritanceLine(Diagram endDiagram, Diagram startDiagram, Pane canvas) {
+        this.startDiagram = startDiagram;
+        this.endDiagram = endDiagram;
+         
+        this.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
+        this.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
+        
+        this.endXProperty().bind(endDiagram.getRootContainer().layoutXProperty());
+        this.endYProperty().bind(endDiagram.getRootContainer().layoutYProperty());
 
+        double finalX = endDiagram.getRootContainer().getLayoutX();
+        double finalY = endDiagram.getRootContainer().getLayoutY();
+        
         triangleHead = new Polygon();
-//triangleHead.getPoints().addAll(new Double[]{
-//    0.0, 0.0,
-//    20.0, 10.0,
-//    10.0, 20.0 });
-
         triangleHead.getPoints().addAll(new Double[]{
-            x, y,
-            x - 1, y + 1,
-            x + 1, y - 1});
+            finalX, finalY,
+            finalX + 25.0, finalY + 10.0,
+            finalX + 10.0, finalY + 25.0});
 
+        //triangleHead.translateXProperty().bind(finalX);
+        triangleHead.layoutXProperty().bind(this.endXProperty().subtract(15));
+        triangleHead.layoutYProperty().bind(this.endYProperty().subtract(15));
         initStyle();
+        putOnCanvas(canvas);
     }
 
-    public InheritanceLine(double initialX, double initialY, double finalX, double finalY, ClassDiagramObject diagram) {
+    public InheritanceLine(double initialX, double initialY, double finalX, double finalY,Pane canvas) {
         this.setStartX(initialX);
         this.setStartY(initialY);
 
         this.setEndX(finalX);
         this.setEndY(finalY);
 
-        double x = diagram.getRootContainer().getLayoutX() + diagram.getRootContainer().getPrefWidth();
-        double y = diagram.getRootContainer().getLayoutY() + diagram.getRootContainer().getPrefHeight() + (diagram.getRootContainer().getPrefWidth() / 2);
-
         triangleHead = new Polygon();
         triangleHead.getPoints().addAll(new Double[]{
             initialX, initialY,
-            initialX - 5, initialY + 5,
-            initialX - 5, initialY + 5});
+            initialX + 28.0, initialY + 10.0,
+            initialX + 10.0, initialY + 28.0});
 
-        initStyle();
+//        triangleHead.setTranslateX();
+//        triangleHead.setTranslateY();
+        putOnCanvas(canvas);
     }
 
     public Polygon getTriangleHead() {
         return triangleHead;
     }
 
-    public void initStyle() {
-        this.setStroke(Color.web("#BDC3C7", 0.2));
+    private void putOnCanvas(Pane canvas) {
+        canvas.getChildren().add(this);
+        canvas.getChildren().add(triangleHead);
+    }
+
+    private void initStyle() {
+        this.setStroke(Color.BLACK);
         this.setStrokeWidth(2);
 
-        this.triangleHead.setFill(Color.BLACK);
-        this.triangleHead.setStroke(Color.RED);
+        this.triangleHead.setFill(Color.WHITE);
+        this.triangleHead.setStroke(Color.BLACK);
         this.triangleHead.setStrokeWidth(2);
     }
 }

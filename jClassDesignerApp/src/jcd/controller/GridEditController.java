@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 import jcd.connector_lines.InheritanceLine;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
+import jcd.data.Diagram;
 import jcd.data.ExternalParent;
 import jcd.gui.GridLine;
 import jcd.gui.Workspace;
@@ -105,12 +106,13 @@ public class GridEditController {
      * @param type
      * @param canvas 
      */
-    public void renderExternalDiagramBox(String name, String type, Pane canvas){
-        if(type.equals(EXTERNAL_PARENT)){
+    public Diagram renderExternalDiagramBox(String name, String type, Pane canvas){
+       // if(type.equals(EXTERNAL_PARENT)){
             ExternalParent externalParent = new ExternalParent(name);
             externalParent.putOnCanvas(canvas);
             dataManager.attachExternalDiagramHandlers(externalParent);
-        }
+            return externalParent;
+        //}
     }
 
     public void processSnapshot() {
