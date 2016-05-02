@@ -16,6 +16,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javax.imageio.ImageIO;
+import jcd.connector_lines.InheritanceLine;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
 import jcd.gui.GridLine;
@@ -71,9 +72,14 @@ public class GridEditController {
                 ClassDiagramObject objectToPut = new ClassDiagramObject(x, y, type);
                 //render it on the canvas
                 objectToPut.putOnCanvas(canvas);
+                
+             
                 dataManager.attachClassDiagramEventHandlers(objectToPut);
                 workspace.disableButtons(true);
-
+                
+//                InheritanceLine inheritanceLine = new InheritanceLine(132, 132, 264, 264, objectToPut);
+//                canvas.getChildren().add(inheritanceLine.getTriangleHead());
+                
                 dataManager.addClassDiagram(objectToPut);
             }
             

@@ -20,7 +20,7 @@ import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
  *
  * @author varungoel
  */
-public class ClassDiagramObject extends Pane implements Comparable<ClassDiagramObject> {
+public class ClassDiagramObject implements Comparable<ClassDiagramObject> {
     
     public static int counter = 0;
 

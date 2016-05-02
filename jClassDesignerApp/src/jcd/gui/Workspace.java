@@ -64,6 +64,7 @@ import static jcd.PropertyType.ZOOM_IN_ICON;
 import static jcd.PropertyType.ZOOM_IN_TOOLTIP;
 import static jcd.PropertyType.ZOOM_OUT_ICON;
 import static jcd.PropertyType.ZOOM_OUT_TOOLTIP;
+import jcd.connector_lines.InheritanceLine;
 import jcd.controller.GridEditController;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
@@ -455,7 +456,6 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //when the resize button is clicked
         resizeButton.setOnAction(resizeButtonClicked -> {
-
         });
 
         codeButton.setOnAction(codeButtonClicked -> {
