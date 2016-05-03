@@ -16,6 +16,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
 import jcd.actions.Action;
@@ -226,6 +227,8 @@ public class DataManager implements AppDataComponent {
                     }
                 }
                 selectedClassDiagram = diagram;
+                diagram.getRootContainer().getStyleClass().add(SELECTED_DIAGRAM_CONTAINER);
+                System.out.println(diagram.getRootContainer().getStyleClass());
                 workspace.disableButtons(true);
                 workspace.removeButton.setDisable(false);
 
@@ -516,15 +519,24 @@ public class DataManager implements AppDataComponent {
      */
     public void handleRemoval() {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        
+        //if we want to remove an external parent
         if (selectedClassDiagram instanceof ExternalParent) {
-            ExternalParent thisParent = (ExternalParent) selectedClassDiagram;
-            for (int i = 0; i < thisParent.parentalLines.size(); i++) {
-                thisParent.parentalLines.get(i).removeFromCanvas(workspace.getCanvas());
+            ExternalParent parentToRemove = (ExternalParent) selectedClassDiagram;
+            //iterate over all the lines coming to the diagram
+            for (int i = 0; i < parentToRemove.parentalLines.size(); i++) {
+                //remove the line from canvas
+                parentToRemove.parentalLines.get(i).removeFromCanvas(workspace.getCanvas());
+                //remove the line from the child's lines list
+                parentToRemove.children.get(i).inheritanceLinesOut.remove(parentToRemove.parentalLines.get(i));
+                //set the parent to null
+                parentToRemove.children.get(i).setParentName("");
             }
-
-            externalParentsOnCanvas.remove(thisParent);
-            externalParents.remove(thisParent.name);
-            workspace.getCanvas().getChildren().remove(thisParent.getRootContainer());
+            //remove the external parent from the list
+            externalParentsOnCanvas.remove(parentToRemove);
+            externalParents.remove(parentToRemove.name);
+            //remove from canvas
+            workspace.getCanvas().getChildren().remove(parentToRemove.getRootContainer());
 
         }
     }
@@ -609,34 +621,7 @@ public class DataManager implements AppDataComponent {
         //LEFT LINE HANDLERS DONE
 
         //RIGHT LINE EVENT HANDLERS DONE
-        //NOW DOING THE BOTTOM MOST LINE RESIZING STUFF
-        diagram.getBottomLine().setOnMouseDragged(mouseDraggedEvent -> {
-            diagram.getMethodsContainer().setPrefHeight(mouseDraggedEvent.getY() - diagram.getMethodsContainer().getLayoutY() - 100);
-        });
-
-        diagram.getBottomLine().setOnMouseEntered(mouseEnteredEvent -> {
-            workspace.getScene().getRoot().setCursor(Cursor.N_RESIZE);
-        });
-
-        diagram.getBottomLine().setOnMouseExited(mouseEnteredEvent -> {
-            workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
-        });
-
-        //BOTTOM LINE HANDLERS DONE
-        //EVENT HANDLERS FOR THE MIDDLE LINE
-        diagram.getMiddleLine().setOnMouseDragged(mouseDraggedEvent -> {
-            diagram.getVariablesContainer().setPrefHeight(mouseDraggedEvent.getY() - diagram.getMethodsContainer().getLayoutY() - 100);
-            diagram.getMethodsContainer().setLayoutY(diagram.getRootContainer().getHeight() - diagram.getMethodsContainer().getHeight());
-        });
-
-        diagram.getMiddleLine().setOnMouseEntered(mouseEnteredEvent -> {
-            workspace.getScene().getRoot().setCursor(Cursor.N_RESIZE);
-        });
-
-        diagram.getMiddleLine().setOnMouseExited(mouseEnteredEvent -> {
-            workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
-        });
-        //MIDDLE LINE HANDLERS DONE
+       
     }
 
 }

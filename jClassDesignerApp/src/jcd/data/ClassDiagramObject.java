@@ -33,7 +33,10 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     ArrayList<String> localInterfaces = new ArrayList<>();
     ArrayList<String> externalInterfaces = new ArrayList<>();
     ArrayList<ClassDiagramObject> children = new ArrayList<>();
+    //lines that are pointing towards this diagram (this diagram will be a parent)
     public ArrayList<InheritanceLine> linesPointingTowards = new ArrayList<>();
+    //all the inheritance lines pointing out of this.
+    public ArrayList<InheritanceLine> inheritanceLinesOut = new ArrayList<>();
 
     //this will hold the three panes and serve as the skeleton for the diagram
 //    VBox rootContainer;

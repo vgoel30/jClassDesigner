@@ -538,8 +538,6 @@ public final class Workspace extends AppWorkspaceComponent {
         //the event handler for the parent name clicker 
         parentNamePicker.setOnAction(e -> {
             ClassDiagramObject selectedClassObject = (ClassDiagramObject)dataManager.selectedClassDiagram;
-            System.out.println("parentNamePicker value changed");
-            System.out.println(parentNamePicker.getValue());
             if (parentNamePicker.getValue() != null) {
                 if (parentNamePicker.getValue().equals("NONE") || parentNamePicker.getValue().equals("")) {
                     selectedClassObject.setParentName(null);
@@ -568,6 +566,7 @@ public final class Workspace extends AppWorkspaceComponent {
                         InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
                         externalParent.parentalLines.add(myLine);
                         externalParent.children.add(selectedClassObject);
+                        selectedClassObject.inheritanceLinesOut.add(myLine);
                     }
                     //if the external Parent already exists
                     else if(!isLocal){
@@ -576,6 +575,7 @@ public final class Workspace extends AppWorkspaceComponent {
                              InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
                              externalParent.parentalLines.add(myLine);
                              externalParent.children.add(selectedClassObject);
+                             selectedClassObject.inheritanceLinesOut.add(myLine);
                              break;
                             }
                         }
@@ -587,6 +587,7 @@ public final class Workspace extends AppWorkspaceComponent {
                              InheritanceLine myLine = new InheritanceLine(localClass, selectedClassObject, canvas);
                              localClass.linesPointingTowards.add(myLine);
                              localClass.getChildren().add(selectedClassObject);
+                             selectedClassObject.inheritanceLinesOut.add(myLine);
                              break;
                             }
                         }
