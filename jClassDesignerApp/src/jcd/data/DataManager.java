@@ -24,6 +24,7 @@ import jcd.actions.RemoveMethod;
 import jcd.actions.RemoveVariable;
 import jcd.actions.ResizeLeft;
 import jcd.actions.ResizeRight;
+import jcd.connector_lines.InheritanceLine;
 import jcd.controller.ActionController;
 import jcd.controller.DiagramController;
 import jcd.controller.GridEditController;
@@ -59,6 +60,8 @@ public class DataManager implements AppDataComponent {
 
     //this will keep track of all the classes currently on the canvas
     public ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
+    //this will keep track of all the external parents on the canvas
+    public ArrayList<ExternalParent> externalParentsOnCanvas = new ArrayList<>();
 
     public ArrayList<String> packageNames = new ArrayList<>();
 
@@ -185,6 +188,14 @@ public class DataManager implements AppDataComponent {
                             gridEditController.renderGridLines(canvas);
                         }
                     }
+
+                    if (diagram.children.size() > 0) {
+                        for (int i = 0; i < diagram.children.size(); i++) {
+                            InheritanceLine myLine = diagram.linesPointingTowards.get(i);
+                            ClassDiagramObject child = (ClassDiagramObject) myLine.getStartDiagram();
+                            myLine.updateDiamondHead(selectedClassDiagram, child, canvas);
+                        }
+                    }
                 }
             }
 
@@ -202,7 +213,7 @@ public class DataManager implements AppDataComponent {
      *
      * @param diagram
      */
-    public void attachExternalDiagramHandlers(Diagram diagram) {
+    public void attachExternalDiagramHandlers(ExternalParent diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
         //if the diagram has been clicked
@@ -246,6 +257,14 @@ public class DataManager implements AppDataComponent {
                         canvas.setPrefHeight(canvas.getHeight() + 500);
                         if (workspace.gridIsActive()) {
                             gridEditController.renderGridLines(canvas);
+                        }
+                    }
+                    
+                    if (diagram.children.size() > 0) {
+                        for (int i = 0; i < diagram.children.size(); i++) {
+                            InheritanceLine myLine = diagram.parentalLines.get(i);
+                            ClassDiagramObject child = (ClassDiagramObject) myLine.getStartDiagram();
+                            myLine.updateDiamondHead(selectedClassDiagram, child, canvas);
                         }
                     }
                 }
@@ -500,6 +519,7 @@ public class DataManager implements AppDataComponent {
         //remove all the actions from the undo stack
         undoStack.clear();
         ClassDiagramObject.counter = 0;
+        externalParents.clear();
         ((Workspace) app.getWorkspaceComponent()).getCanvas().getChildren().clear();
     }
 

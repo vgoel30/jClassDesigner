@@ -5,6 +5,7 @@
  */
 package jcd.connector_lines;
 
+import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -29,6 +30,7 @@ public class InheritanceLine extends ConnectorLine {
         this.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
         this.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
         
+       
         this.endXProperty().bind(endDiagram.getRootContainer().layoutXProperty());
         this.endYProperty().bind(endDiagram.getRootContainer().layoutYProperty());
 
@@ -37,15 +39,27 @@ public class InheritanceLine extends ConnectorLine {
         
         triangleHead = new Polygon();
         triangleHead.getPoints().addAll(new Double[]{
-            finalX, finalY,
-            finalX + 25.0, finalY + 10.0,
-            finalX + 10.0, finalY + 25.0});
-
-        //triangleHead.translateXProperty().bind(finalX);
-        triangleHead.layoutXProperty().bind(this.endXProperty().subtract(15));
-        triangleHead.layoutYProperty().bind(this.endYProperty().subtract(15));
+            finalX+20.0, finalY+10.0,
+            finalX-10, finalY-10,
+            finalX + 10.0, finalY + 20.0});
+        triangleHead.setRotate(135);
         initStyle();
         putOnCanvas(canvas);
+    }
+    
+    public void updateDiamondHead(Diagram endDiagram, Diagram startDiagram, Pane canvas){
+        triangleHead.getPoints().removeAll(triangleHead.getPoints());
+        
+        this.endXProperty().bind(endDiagram.getRootContainer().layoutXProperty());
+        this.endYProperty().bind(endDiagram.getRootContainer().layoutYProperty());
+
+        double finalX = endDiagram.getRootContainer().getLayoutX();
+        double finalY = endDiagram.getRootContainer().getLayoutY();
+        
+        triangleHead.getPoints().addAll(new Double[]{
+            finalX+20.0, finalY+10.0,
+            finalX-10, finalY-10,
+            finalX + 10.0, finalY + 20.0});
     }
 
     public InheritanceLine(double initialX, double initialY, double finalX, double finalY,Pane canvas) {
@@ -71,8 +85,13 @@ public class InheritanceLine extends ConnectorLine {
     }
 
     private void putOnCanvas(Pane canvas) {
-        canvas.getChildren().add(this);
-        canvas.getChildren().add(triangleHead);
+        canvas.getChildren().add(0,triangleHead);
+        canvas.getChildren().add(0,this);
+    }
+    
+    public void removeFromCanvas(Pane canvas){
+        canvas.getChildren().remove(this);
+        canvas.getChildren().remove(triangleHead);
     }
 
     private void initStyle() {
@@ -80,6 +99,7 @@ public class InheritanceLine extends ConnectorLine {
         this.setStrokeWidth(2);
 
         this.triangleHead.setFill(Color.WHITE);
+        
         this.triangleHead.setStroke(Color.BLACK);
         this.triangleHead.setStrokeWidth(2);
     }

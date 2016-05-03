@@ -554,11 +554,37 @@ public final class Workspace extends AppWorkspaceComponent {
                     if(dataManager.externalParents.contains(parentNamePicker.getValue())){
                         alreadyExists = true;
                     }
-                        
+                      
+                    //if it isn't local and doesn't already exist, make a external parent box for it
                     if(!isLocal && !alreadyExists){
                         dataManager.externalParents.add(parentNamePicker.getValue());
-                        Diagram externalParent = gridEditController.renderExternalDiagramBox(parentNamePicker.getValue(), "external_parent", canvas);
+                        ExternalParent externalParent = gridEditController.renderExternalDiagramBox(parentNamePicker.getValue(), "external_parent", canvas);
+                        dataManager.externalParentsOnCanvas.add(externalParent);
                         InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
+                        externalParent.parentalLines.add(myLine);
+                        externalParent.children.add(selectedClassObject);
+                    }
+                    //if the external Parent already exists
+                    else if(!isLocal){
+                        for(ExternalParent externalParent:dataManager.externalParentsOnCanvas){
+                            if(externalParent.getName().equals(parentNamePicker.getValue())){
+                             InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
+                             externalParent.parentalLines.add(myLine);
+                             externalParent.children.add(selectedClassObject);
+                             break;
+                            }
+                        }
+                    }
+                    //for adding a local parent
+                    else if(isLocal){
+                        for(ClassDiagramObject localClass:dataManager.classesOnCanvas){
+                            if(localClass.toString().equals(parentNamePicker.getValue())){
+                             InheritanceLine myLine = new InheritanceLine(localClass, selectedClassObject, canvas);
+                             localClass.linesPointingTowards.add(myLine);
+                             localClass.getChildren().add(selectedClassObject);
+                             break;
+                            }
+                        }
                     }
                     
                     

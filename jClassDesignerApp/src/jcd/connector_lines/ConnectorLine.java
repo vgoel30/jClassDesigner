@@ -15,4 +15,14 @@ import jcd.data.Diagram;
 public class ConnectorLine extends Line{
     Diagram startDiagram;
     Diagram endDiagram;
+
+    public Diagram getStartDiagram() {
+        return startDiagram;
+    }
+
+    public Diagram getEndDiagram() {
+        return endDiagram;
+    }
+    
+    
 }

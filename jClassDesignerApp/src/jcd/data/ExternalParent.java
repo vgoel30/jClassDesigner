@@ -5,9 +5,11 @@
  */
 package jcd.data;
 
+import java.util.ArrayList;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import jcd.connector_lines.InheritanceLine;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINERS;
 import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
 
@@ -20,6 +22,8 @@ public class ExternalParent extends Diagram{
     String name;
     Text nameText;
     
+    public ArrayList<ClassDiagramObject> children = new ArrayList<>();
+    public ArrayList<InheritanceLine> parentalLines = new ArrayList<>();
    
     public ExternalParent(String nameToSet){
         type = "external_parent";
@@ -36,6 +40,16 @@ public class ExternalParent extends Diagram{
         canvas.getChildren().add(rootContainer);
         
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+    
+    
 
     public VBox getRootContainer() {
         return rootContainer;

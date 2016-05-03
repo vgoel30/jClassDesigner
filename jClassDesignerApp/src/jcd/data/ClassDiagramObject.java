@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import jcd.connector_lines.InheritanceLine;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINER;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINERS;
 import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
@@ -31,6 +32,8 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     ArrayList<String> externalParents = new ArrayList<>();
     ArrayList<String> localInterfaces = new ArrayList<>();
     ArrayList<String> externalInterfaces = new ArrayList<>();
+    ArrayList<ClassDiagramObject> children = new ArrayList<>();
+    public ArrayList<InheritanceLine> linesPointingTowards = new ArrayList<>();
 
     //this will hold the three panes and serve as the skeleton for the diagram
 //    VBox rootContainer;
@@ -66,6 +69,10 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     
     public ArrayList<String> getExternalInterfaces() {
         return externalInterfaces;
+    }
+    
+    public ArrayList<ClassDiagramObject> getChildren() {
+        return children;
     }
     
     public ArrayList<MethodObject> getMethods() {
