@@ -46,7 +46,12 @@ public class InheritanceLine extends ConnectorLine {
         initStyle();
         putOnCanvas(canvas);
     }
-    
+    /**
+     * This method is a custom binding method that will change the position of the diamond head as the diagram is moved
+     * @param endDiagram
+     * @param startDiagram
+     * @param canvas 
+     */
     public void updateDiamondHead(Diagram endDiagram, Diagram startDiagram, Pane canvas){
         triangleHead.getPoints().removeAll(triangleHead.getPoints());
         
@@ -75,8 +80,6 @@ public class InheritanceLine extends ConnectorLine {
             initialX + 28.0, initialY + 10.0,
             initialX + 10.0, initialY + 28.0});
 
-//        triangleHead.setTranslateX();
-//        triangleHead.setTranslateY();
         putOnCanvas(canvas);
     }
 

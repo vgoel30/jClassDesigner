@@ -56,6 +56,7 @@ public class DataManager implements AppDataComponent {
     public Diagram selectedClassDiagram = null;
 
     public ArrayList<String> classNames = new ArrayList<>();
+    //name of all the external parents
     public ArrayList<String> externalParents = new ArrayList<>();
 
     //this will keep track of all the classes currently on the canvas
@@ -226,6 +227,7 @@ public class DataManager implements AppDataComponent {
                 }
                 selectedClassDiagram = diagram;
                 workspace.disableButtons(true);
+                workspace.removeButton.setDisable(false);
 
             }
         });
@@ -259,7 +261,7 @@ public class DataManager implements AppDataComponent {
                             gridEditController.renderGridLines(canvas);
                         }
                     }
-                    
+
                     if (diagram.children.size() > 0) {
                         for (int i = 0; i < diagram.children.size(); i++) {
                             InheritanceLine myLine = diagram.parentalLines.get(i);
@@ -507,6 +509,24 @@ public class DataManager implements AppDataComponent {
         diagramController.updateMethodsTable(selectedClassDiagram, workspace.methodsTable);
         workspace.getParentNamePicker().setValue(selectedClassDiagram.getParentName());
         diagramController.updateParentNamePicker(selectedClassDiagram, workspace.getParentNamePicker(), classesOnCanvas);
+    }
+
+    /**
+     * Handles the removal of  a diagram object
+     */
+    public void handleRemoval() {
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        if (selectedClassDiagram instanceof ExternalParent) {
+            ExternalParent thisParent = (ExternalParent) selectedClassDiagram;
+            for (int i = 0; i < thisParent.parentalLines.size(); i++) {
+                thisParent.parentalLines.get(i).removeFromCanvas(workspace.getCanvas());
+            }
+
+            externalParentsOnCanvas.remove(thisParent);
+            externalParents.remove(thisParent.name);
+            workspace.getCanvas().getChildren().remove(thisParent.getRootContainer());
+
+        }
     }
 
     @Override

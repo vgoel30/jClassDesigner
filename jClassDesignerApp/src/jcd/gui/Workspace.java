@@ -100,7 +100,7 @@ public final class Workspace extends AppWorkspaceComponent {
     Button resizeButton;
     Button addClassButton;
     Button addInterfaceButton;
-    Button removeButton;
+    public Button removeButton;
     Button undoButton;
     Button redoButton;
     Button zoomInButton;
@@ -458,6 +458,11 @@ public final class Workspace extends AppWorkspaceComponent {
             drawingActive = false;
             selectionActive = false;
             dataManager.handleUndo();
+        });
+        
+        removeButton.setOnAction(removeButtonClicked -> {
+            drawingActive = false;
+            dataManager.handleRemoval();
         });
 
         screenshotButton.setOnAction(screenshotButtonClicked -> {

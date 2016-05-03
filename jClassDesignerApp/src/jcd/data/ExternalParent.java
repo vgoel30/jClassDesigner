@@ -55,7 +55,9 @@ public class ExternalParent extends Diagram{
         return rootContainer;
     }
     
-    
+    public String toString(){
+        return "EXTERNAL PARENT : " + name;
+    }
     
     //set the style for the diagram
     private void initStyle() {
