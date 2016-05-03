@@ -113,6 +113,8 @@ public class ExternalInterfaceDialog extends Stage {
         for (String interfaceInList : diagram.getExternalInterfaces()) {
             textField = new TextField(interfaceInList);
             textFields.add(textField);
+            //user should not be allowed to edit the previous ones; only see them
+            textField.setDisable(true);
             buttonBox.getChildren().add(0, textField);
 
         }
@@ -130,13 +132,19 @@ public class ExternalInterfaceDialog extends Stage {
                 }
             }
 
+            //renders the interface box
             for (String externalInterfaceToAdd : externalInterfacesToAdd) {
                 //if the external parent doesn't exist yet
                 if (!dataManager.externalParents.contains(externalInterfaceToAdd)) {
+                    //create the external parent object
                     ExternalParent parentToAdd = new ExternalParent(externalInterfaceToAdd);
+                    //render it on the canvas
                     parentToAdd.putOnCanvas(canvas);
+                    //make the line object
                     InheritanceLine inheritanceLine = new InheritanceLine(parentToAdd, diagram, canvas);
+                    //add the selected diagram to the list of children of the parent box
                     parentToAdd.children.add(diagram);
+                    //add the parental line
                     parentToAdd.parentalLines.add(inheritanceLine);
                     dataManager.attachExternalDiagramHandlers(parentToAdd);
                     dataManager.externalParents.add(externalInterfaceToAdd);
@@ -154,7 +162,9 @@ public class ExternalInterfaceDialog extends Stage {
                     }
                 }
             }
-
+            
+            
+            
             ExternalInterfaceDialog.this.hide();
         };
 

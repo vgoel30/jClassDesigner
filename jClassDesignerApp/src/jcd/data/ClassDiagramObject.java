@@ -29,7 +29,6 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     String diagramType;
     
     String parent = new String();
-    ArrayList<String> externalParents = new ArrayList<>();
     ArrayList<String> localInterfaces = new ArrayList<>();
     ArrayList<String> externalInterfaces = new ArrayList<>();
     ArrayList<ClassDiagramObject> children = new ArrayList<>();
@@ -90,9 +89,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         return parent;
     }
     
-    public ArrayList<String> getExternalParents() {
-        return externalParents;
-    }
+    
     
     public ArrayList<String> getJavaAPI_Packages() {
         return javaAPI_Packages;
