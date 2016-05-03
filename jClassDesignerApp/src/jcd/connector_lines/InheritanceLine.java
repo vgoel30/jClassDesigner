@@ -5,11 +5,9 @@
  */
 package jcd.connector_lines;
 
-import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
-import jcd.data.ClassDiagramObject;
 import jcd.data.Diagram;
 
 /**
@@ -29,13 +27,12 @@ public class InheritanceLine extends ConnectorLine {
          
         this.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
         this.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
-        
-       
-        this.endXProperty().bind(endDiagram.getRootContainer().layoutXProperty());
-        this.endYProperty().bind(endDiagram.getRootContainer().layoutYProperty());
+         
+        this.endXProperty().bind(endDiagram.getRootContainer().layoutXProperty().subtract(7));
+        this.endYProperty().bind(endDiagram.getRootContainer().layoutYProperty().subtract(7));
 
-        double finalX = endDiagram.getRootContainer().getLayoutX();
-        double finalY = endDiagram.getRootContainer().getLayoutY();
+        double finalX = this.getEndX();
+        double finalY = this.getEndY();
         
         triangleHead = new Polygon();
         triangleHead.getPoints().addAll(new Double[]{
@@ -52,14 +49,14 @@ public class InheritanceLine extends ConnectorLine {
      * @param startDiagram
      * @param canvas 
      */
-    public void updateDiamondHead(Diagram endDiagram, Diagram startDiagram, Pane canvas){
+    public void updateTriangleHead(Diagram endDiagram, Diagram startDiagram, Pane canvas){
         triangleHead.getPoints().removeAll(triangleHead.getPoints());
         
-        this.endXProperty().bind(endDiagram.getRootContainer().layoutXProperty());
-        this.endYProperty().bind(endDiagram.getRootContainer().layoutYProperty());
+        this.endXProperty().bind(endDiagram.getRootContainer().layoutXProperty().subtract(7));
+        this.endYProperty().bind(endDiagram.getRootContainer().layoutYProperty().subtract(7));
 
-        double finalX = endDiagram.getRootContainer().getLayoutX();
-        double finalY = endDiagram.getRootContainer().getLayoutY();
+        double finalX = this.getEndX();
+        double finalY = this.getEndY();
         
         triangleHead.getPoints().addAll(new Double[]{
             finalX+20.0, finalY+10.0,

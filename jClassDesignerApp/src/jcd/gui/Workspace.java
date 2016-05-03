@@ -57,6 +57,7 @@ import static jcd.PropertyType.ZOOM_IN_ICON;
 import static jcd.PropertyType.ZOOM_IN_TOOLTIP;
 import static jcd.PropertyType.ZOOM_OUT_ICON;
 import static jcd.PropertyType.ZOOM_OUT_TOOLTIP;
+import jcd.connector_lines.AggregateLine;
 import jcd.connector_lines.InheritanceLine;
 import jcd.controller.GridEditController;
 import jcd.data.ClassDiagramObject;
@@ -447,7 +448,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //when the resize button is clicked
         resizeButton.setOnAction(resizeButtonClicked -> {
-            InheritanceLine myLine = new InheritanceLine(100, 100, 200, 200,canvas);
+            AggregateLine myLine = new AggregateLine(100, 100, 200, 200,canvas);
         });
 
         codeButton.setOnAction(codeButtonClicked -> {

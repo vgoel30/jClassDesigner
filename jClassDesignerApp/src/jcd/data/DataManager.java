@@ -195,7 +195,7 @@ public class DataManager implements AppDataComponent {
                         for (int i = 0; i < diagram.children.size(); i++) {
                             InheritanceLine myLine = diagram.linesPointingTowards.get(i);
                             ClassDiagramObject child = (ClassDiagramObject) myLine.getStartDiagram();
-                            myLine.updateDiamondHead(selectedClassDiagram, child, canvas);
+                            myLine.updateTriangleHead(selectedClassDiagram, child, canvas);
                         }
                     }
                 }
@@ -269,7 +269,7 @@ public class DataManager implements AppDataComponent {
                         for (int i = 0; i < diagram.children.size(); i++) {
                             InheritanceLine myLine = diagram.parentalLines.get(i);
                             ClassDiagramObject child = (ClassDiagramObject) myLine.getStartDiagram();
-                            myLine.updateDiamondHead(selectedClassDiagram, child, canvas);
+                            myLine.updateTriangleHead(selectedClassDiagram, child, canvas);
                         }
                     }
                 }
