@@ -613,9 +613,8 @@ public final class Workspace extends AppWorkspaceComponent {
             ClassDiagramObject selectedClassObject = (ClassDiagramObject)dataManager.selectedClassDiagram;
             selectedClassObject.getExternalInterfaces().remove("");
             ExternalInterfaceDialog newDialog = new ExternalInterfaceDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager.classesOnCanvas);
+            newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager, canvas);
             newDialog.show();
-            //System.out.println("TOTAL INTERFACES : " + dataManager.selectedClassDiagram.getInterfaces());
         });
 
         //the user wants to add a local interface

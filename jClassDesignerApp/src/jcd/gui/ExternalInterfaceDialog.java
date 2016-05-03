@@ -16,8 +16,12 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
+import jcd.connector_lines.InheritanceLine;
 import jcd.data.ClassDiagramObject;
+import jcd.data.DataManager;
+import jcd.data.ExternalParent;
 
 /**
  * Custom Dialog box to allow users to add new external packages
@@ -71,9 +75,10 @@ public class ExternalInterfaceDialog extends Stage {
      *
      * @param primaryStage The window above which this dialog will be centered.
      * @param diagram
-     * @param classesOnCanvas
+     * @param externalParentsOnCanvas
+     * @return
      */
-    public void init(Stage primaryStage, ClassDiagramObject diagram, ArrayList<ClassDiagramObject> classesOnCanvas) {
+    public void init(Stage primaryStage, ClassDiagramObject diagram, DataManager dataManager, Pane canvas) {
         // MAKE THIS DIALOG MODAL, MEANING OTHERS WILL WAIT
         // FOR IT WHEN IT IS DISPLAYED
         initModality(Modality.WINDOW_MODAL);
@@ -90,6 +95,8 @@ public class ExternalInterfaceDialog extends Stage {
         //noButton = new Button(NO);
         doneButton = new Button(CANCEL);
 
+        ArrayList<String> externalInterfacesToAdd = new ArrayList<>();
+
         // NOW ORGANIZE OUR BUTTONS
         VBox buttonBox = new VBox(10);
         buttonBox.getChildren().add(addPackage);
@@ -104,24 +111,50 @@ public class ExternalInterfaceDialog extends Stage {
 
         //this will display all the old interfaces that have been included
         for (String interfaceInList : diagram.getExternalInterfaces()) {
-                    textField = new TextField(interfaceInList);
-                    textFields.add(textField);
-                    buttonBox.getChildren().add(0, textField);
-                
+            textField = new TextField(interfaceInList);
+            textFields.add(textField);
+            buttonBox.getChildren().add(0, textField);
+
         }
 
-       
-
+        //when the done button is clicked
         EventHandler doneHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
-             //clear the old interfaces to add new ones
-        diagram.getExternalInterfaces().clear();
+            //clear the old interfaces to add new ones
+            diagram.getExternalInterfaces().clear();
             for (TextField textField : textFields) {
                 String interfaceName = textField.getText();
                 //add the API 
                 if (!interfaceName.equals("")) {
                     diagram.addExternalInterface(interfaceName);
+                    externalInterfacesToAdd.add(interfaceName);
                 }
             }
+
+            for (String externalInterfaceToAdd : externalInterfacesToAdd) {
+                //if the external parent doesn't exist yet
+                if (!dataManager.externalParents.contains(externalInterfaceToAdd)) {
+                    ExternalParent parentToAdd = new ExternalParent(externalInterfaceToAdd);
+                    parentToAdd.putOnCanvas(canvas);
+                    InheritanceLine inheritanceLine = new InheritanceLine(parentToAdd, diagram, canvas);
+                    parentToAdd.children.add(diagram);
+                    parentToAdd.parentalLines.add(inheritanceLine);
+                    dataManager.attachExternalDiagramHandlers(parentToAdd);
+                    dataManager.externalParents.add(externalInterfaceToAdd);
+                    dataManager.externalParentsOnCanvas.add(parentToAdd);
+                } else {
+                    for (ExternalParent externalParent : dataManager.externalParentsOnCanvas) {
+                        if (externalParent.getName().equals(externalInterfaceToAdd)) {
+                            InheritanceLine inheritanceLine = new InheritanceLine(externalParent, diagram, canvas);
+                            diagram.linesPointingTowards.add(inheritanceLine);
+                            externalParent.children.add(diagram);
+                            externalParent.parentalLines.add(inheritanceLine);
+                            diagram.inheritanceLinesOut.add(inheritanceLine);
+                            break;
+                        }
+                    }
+                }
+            }
+
             ExternalInterfaceDialog.this.hide();
         };
 
