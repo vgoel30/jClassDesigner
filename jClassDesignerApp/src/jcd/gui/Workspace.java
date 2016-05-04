@@ -448,7 +448,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //when the resize button is clicked
         resizeButton.setOnAction(resizeButtonClicked -> {
-            AggregateLine myLine = new AggregateLine(100, 100, 200, 200,canvas);
+            AggregateLine myLine = new AggregateLine(100, 100, 200, 200, canvas);
         });
 
         codeButton.setOnAction(codeButtonClicked -> {
@@ -460,7 +460,7 @@ public final class Workspace extends AppWorkspaceComponent {
             selectionActive = false;
             dataManager.handleUndo();
         });
-        
+
         removeButton.setOnAction(removeButtonClicked -> {
             drawingActive = false;
             dataManager.handleRemoval();
@@ -538,29 +538,63 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //the event handler for the parent name clicker 
         parentNamePicker.setOnAction(e -> {
-            ClassDiagramObject selectedClassObject = (ClassDiagramObject)dataManager.selectedClassDiagram;
+            ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
+
+            //we will need to remove the line connected to the old parent
+            if (selectedClassObject.getParentName() != null) {
+                InheritanceLine lineToRemove = new InheritanceLine();
+                for (InheritanceLine inheritanceLine : selectedClassObject.inheritanceLinesOut) {
+                    if (inheritanceLine.getEndDiagram().toString().equals(selectedClassObject.getParentName())) {
+                        Diagram endDiagram = inheritanceLine.getEndDiagram();
+                        inheritanceLine.removeFromCanvas(canvas);
+                        
+                        lineToRemove = inheritanceLine;
+
+                        if (endDiagram instanceof ExternalParent) {
+                            ExternalParent externalParent = (ExternalParent) endDiagram;
+                            externalParent.children.remove(selectedClassObject);
+                            externalParent.parentalLines.remove(inheritanceLine);
+                            
+                            if(externalParent.children.size() == 0){
+                                canvas.getChildren().remove(externalParent.getRootContainer());
+                                dataManager.externalParentsOnCanvas.remove(externalParent);
+                                dataManager.externalParents.remove(externalParent.getName());
+                            }
+                        } else {
+                            ClassDiagramObject localParent = (ClassDiagramObject) endDiagram;
+                            localParent.getChildren().remove(selectedClassObject);
+                            localParent.inheritanceLinesOut.remove(inheritanceLine);
+                            
+                        }
+
+                    }
+                }
+                selectedClassObject.inheritanceLinesOut.remove(lineToRemove);
+            }
+
             if (parentNamePicker.getValue() != null) {
                 if (parentNamePicker.getValue().equals("NONE") || parentNamePicker.getValue().equals("")) {
                     selectedClassObject.setParentName(null);
                 } else {
                     selectedClassObject.setParentName(parentNamePicker.getValue());
-                    
+
                     boolean isLocal = false;
                     boolean alreadyExists = false;
                     //check if it's a local parent
-                    for(ClassDiagramObject classOnCanvas: dataManager.classesOnCanvas){
-                        if(classOnCanvas.toString().equals(parentNamePicker.getValue())){
+                    for (ClassDiagramObject classOnCanvas : dataManager.classesOnCanvas) {
+                        if (classOnCanvas.toString().equals(parentNamePicker.getValue())) {
                             isLocal = true;
                             break;
                         }
                     }
                     //check if it is already a parent to another class
-                    if(dataManager.externalParents.contains(parentNamePicker.getValue())){
+                    if (dataManager.externalParents.contains(parentNamePicker.getValue())) {
+                        System.out.println("ALREADY EXISTYUGFGVJH");
                         alreadyExists = true;
                     }
-                      
+
                     //if it isn't local and doesn't already exist, make a external parent box for it
-                    if(!isLocal && !alreadyExists){
+                    if (!isLocal && !alreadyExists) {
                         dataManager.externalParents.add(parentNamePicker.getValue());
                         ExternalParent externalParent = gridEditController.renderExternalDiagramBox(parentNamePicker.getValue(), "external_parent", canvas);
                         dataManager.externalParentsOnCanvas.add(externalParent);
@@ -568,41 +602,38 @@ public final class Workspace extends AppWorkspaceComponent {
                         externalParent.parentalLines.add(myLine);
                         externalParent.children.add(selectedClassObject);
                         selectedClassObject.inheritanceLinesOut.add(myLine);
-                    }
-                    //if the external Parent already exists
-                    else if(!isLocal){
-                        for(ExternalParent externalParent:dataManager.externalParentsOnCanvas){
-                            if(externalParent.getName().equals(parentNamePicker.getValue())){
-                             InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
-                             externalParent.parentalLines.add(myLine);
-                             externalParent.children.add(selectedClassObject);
-                             selectedClassObject.inheritanceLinesOut.add(myLine);
-                             break;
+                    } //if the external Parent already exists
+                    else if (!isLocal) {
+                        for (ExternalParent externalParent : dataManager.externalParentsOnCanvas) {
+                            if (externalParent.getName().equals(parentNamePicker.getValue())) {
+                                InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
+                                externalParent.parentalLines.add(myLine);
+                                externalParent.children.add(selectedClassObject);
+                                selectedClassObject.inheritanceLinesOut.add(myLine);
+                                break;
+                            }
+                        }
+                    } //for adding a local parent
+                    else if (isLocal) {
+                        for (ClassDiagramObject localClass : dataManager.classesOnCanvas) {
+                            if (localClass.toString().equals(parentNamePicker.getValue())) {
+                                InheritanceLine myLine = new InheritanceLine(localClass, selectedClassObject, canvas);
+                                localClass.linesPointingTowards.add(myLine);
+                                localClass.getChildren().add(selectedClassObject);
+                                selectedClassObject.inheritanceLinesOut.add(myLine);
+                                break;
                             }
                         }
                     }
-                    //for adding a local parent
-                    else if(isLocal){
-                        for(ClassDiagramObject localClass:dataManager.classesOnCanvas){
-                            if(localClass.toString().equals(parentNamePicker.getValue())){
-                             InheritanceLine myLine = new InheritanceLine(localClass, selectedClassObject, canvas);
-                             localClass.linesPointingTowards.add(myLine);
-                             localClass.getChildren().add(selectedClassObject);
-                             selectedClassObject.inheritanceLinesOut.add(myLine);
-                             break;
-                            }
-                        }
-                    }
-                    
-                    
+
                 }
-            } 
+            }
         });
 //        
 
         //the user wants to add a package to the class
         addPackageButton.setOnAction(e -> {
-            ClassDiagramObject selectedClassObject = (ClassDiagramObject)dataManager.selectedClassDiagram;
+            ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
             selectedClassObject.getJavaAPI_Packages().remove("");
             AppOptionDialog newDialog = new AppOptionDialog();
             newDialog.init(app.getGUI().getWindow(), selectedClassObject);
@@ -611,7 +642,7 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //the user wants to add an external interface to the class
         externalInterfaceButton.setOnAction(e -> {
-            ClassDiagramObject selectedClassObject = (ClassDiagramObject)dataManager.selectedClassDiagram;
+            ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
             selectedClassObject.getExternalInterfaces().remove("");
             ExternalInterfaceDialog newDialog = new ExternalInterfaceDialog();
             newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager, canvas);
@@ -620,10 +651,10 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //the user wants to add a local interface
         localInterfaceButton.setOnAction(e -> {
-            ClassDiagramObject selectedClassObject = (ClassDiagramObject)dataManager.selectedClassDiagram;
+            ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
             selectedClassObject.getLocalInterfaces().remove("");
             LocalInterfaceDialog newDialog = new LocalInterfaceDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager,canvas);
+            newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager, canvas);
             newDialog.show();
         });
 

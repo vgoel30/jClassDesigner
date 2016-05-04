@@ -134,19 +134,20 @@ public class LocalInterfaceDialog extends Stage {
                     }
                 }
             }
+            //this will get rid of any old lines that needn't be there
             ArrayList<InheritanceLine> linesToRemove = new ArrayList<>();
             for (InheritanceLine inheritanceLineOut : diagram.inheritanceLinesOut) {
+                if (inheritanceLineOut.getEndDiagram() instanceof ClassDiagramObject) {
                 ClassDiagramObject endDiagram = (ClassDiagramObject) inheritanceLineOut.getEndDiagram();
-                System.out.println("GOT HERE: " + endDiagram.getDiagramName());
                 if (!diagram.getLocalInterfaces().contains(endDiagram.getDiagramName())) {
-                    //diagram.inheritanceLinesOut.remove(inheritanceLineOut);
                     inheritanceLineOut.removeFromCanvas(canvas);
                     endDiagram.getChildren().remove(diagram);
+                    endDiagram.linesPointingTowards.remove(inheritanceLineOut);
                     linesToRemove.add(inheritanceLineOut);
+                }
                 }
             }
             diagram.inheritanceLinesOut.removeAll(linesToRemove);
-            System.out.println("diagram.getLoalbdj   " + diagram.inheritanceLinesOut.size());
 
             LocalInterfaceDialog.this.hide();
         };

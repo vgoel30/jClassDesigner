@@ -11,12 +11,18 @@ import javafx.scene.layout.VBox;
  *
  * @author varungoel
  */
-public class Diagram {
+public abstract class Diagram {
     VBox rootContainer;
+    String name;
 
     public VBox getRootContainer() {
         return rootContainer;
     }
+    
+    public String getName(){
+        return name;
+    }
+    
     
     
 }

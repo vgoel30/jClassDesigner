@@ -147,6 +147,7 @@ public class ExternalInterfaceDialog extends Stage {
                     parentToAdd.children.add(diagram);
                     //add the parental line
                     parentToAdd.parentalLines.add(inheritanceLine);
+                    diagram.inheritanceLinesOut.add(inheritanceLine);
                     dataManager.attachExternalDiagramHandlers(parentToAdd);
                     dataManager.externalParents.add(externalInterfaceToAdd);
                     dataManager.externalParentsOnCanvas.add(parentToAdd);
@@ -164,6 +165,30 @@ public class ExternalInterfaceDialog extends Stage {
                 }
             }
 
+          
+
+            //this will get rid of any old lines that needn't be there
+//            ArrayList<InheritanceLine> linesToRemove = new ArrayList<>();
+//
+//            for (InheritanceLine inheritanceLineOut : diagram.inheritanceLinesOut) {
+//                System.out.println("LITBC");
+//                if (inheritanceLineOut.getEndDiagram() instanceof ExternalParent) {
+//                    ExternalParent endDiagram = (ExternalParent) inheritanceLineOut.getEndDiagram();
+//                    if (!diagram.getExternalInterfaces().contains(endDiagram.getName())) {
+//                        //diagram.inheritanceLinesOut.remove(inheritanceLineOut);
+//                        inheritanceLineOut.removeFromCanvas(canvas);
+//                        endDiagram.children.remove(diagram);
+//                        linesToRemove.add(inheritanceLineOut);
+//                        if (endDiagram.children.isEmpty()) {
+//                            canvas.getChildren().remove(endDiagram.getRootContainer());
+//                            dataManager.externalParentsOnCanvas.remove(endDiagram);
+//                            dataManager.externalParents.remove(endDiagram.toString());
+//                        }
+//                    }
+//                }
+//            }
+//            //remove all the unnecessary lines
+//            diagram.inheritanceLinesOut.removeAll(linesToRemove);
             ExternalInterfaceDialog.this.hide();
         };
 

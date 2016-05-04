@@ -7,6 +7,7 @@ package jcd.connector_lines;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import jcd.data.Diagram;
 
@@ -15,24 +16,28 @@ import jcd.data.Diagram;
  * @author varungoel
  */
 public class InheritanceLine extends ConnectorLine {
-
+    
+    Line mainLine;
     Polygon triangleHead;
 
+   
     public InheritanceLine() {
     }
 
     public InheritanceLine(Diagram endDiagram, Diagram startDiagram, Pane canvas) {
         this.startDiagram = startDiagram;
         this.endDiagram = endDiagram;
+        
+        mainLine = new Line();
          
-        this.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
-        this.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
+        mainLine.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
+        mainLine.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
          
-        this.endXProperty().bind(endDiagram.getRootContainer().layoutXProperty().subtract(7));
-        this.endYProperty().bind(endDiagram.getRootContainer().layoutYProperty().subtract(7));
+        mainLine.endXProperty().bind(endDiagram.getRootContainer().layoutXProperty().subtract(7));
+        mainLine.endYProperty().bind(endDiagram.getRootContainer().layoutYProperty().subtract(7));
 
-        double finalX = this.getEndX();
-        double finalY = this.getEndY();
+        double finalX = mainLine.getEndX();
+        double finalY = mainLine.getEndY();
         
         triangleHead = new Polygon();
         triangleHead.getPoints().addAll(new Double[]{
@@ -43,6 +48,9 @@ public class InheritanceLine extends ConnectorLine {
         initStyle();
         putOnCanvas(canvas);
     }
+    
+   
+    
     /**
      * This method is a custom binding method that will change the position of the diamond head as the diagram is moved
      * @param endDiagram
@@ -50,26 +58,25 @@ public class InheritanceLine extends ConnectorLine {
      * @param canvas 
      */
     public void updateTriangleHead(Diagram endDiagram, Diagram startDiagram, Pane canvas){
-        triangleHead.getPoints().removeAll(triangleHead.getPoints());
         
-        this.endXProperty().bind(endDiagram.getRootContainer().layoutXProperty().subtract(7));
-        this.endYProperty().bind(endDiagram.getRootContainer().layoutYProperty().subtract(7));
+        //System.out.println("BEING CALLED");
+        this.triangleHead.getPoints().removeAll(this.triangleHead.getPoints());
 
-        double finalX = this.getEndX();
-        double finalY = this.getEndY();
+        double finalX = mainLine.getEndX();
+        double finalY = mainLine.getEndY();
         
-        triangleHead.getPoints().addAll(new Double[]{
+        this.triangleHead.getPoints().addAll(new Double[]{
             finalX+20.0, finalY+10.0,
             finalX-10, finalY-10,
             finalX + 10.0, finalY + 20.0});
     }
 
     public InheritanceLine(double initialX, double initialY, double finalX, double finalY,Pane canvas) {
-        this.setStartX(initialX);
-        this.setStartY(initialY);
+        mainLine.setStartX(initialX);
+        mainLine.setStartY(initialY);
 
-        this.setEndX(finalX);
-        this.setEndY(finalY);
+        mainLine.setEndX(finalX);
+        mainLine.setEndY(finalY);
 
         triangleHead = new Polygon();
         triangleHead.getPoints().addAll(new Double[]{
@@ -86,17 +93,18 @@ public class InheritanceLine extends ConnectorLine {
 
     private void putOnCanvas(Pane canvas) {
         canvas.getChildren().add(0,triangleHead);
-        canvas.getChildren().add(0,this);
+        canvas.getChildren().add(0,mainLine);
     }
     
     public void removeFromCanvas(Pane canvas){
-        canvas.getChildren().remove(this);
-        canvas.getChildren().remove(triangleHead);
+        triangleHead.getPoints().removeAll(triangleHead.getPoints());
+        canvas.getChildren().remove(mainLine);
+        canvas.getChildren().remove(this.triangleHead);
     }
 
     private void initStyle() {
-        this.setStroke(Color.BLACK);
-        this.setStrokeWidth(2);
+        mainLine.setStroke(Color.BLACK);
+        mainLine.setStrokeWidth(2);
 
         this.triangleHead.setFill(Color.WHITE);
         

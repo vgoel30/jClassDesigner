@@ -26,6 +26,8 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
 
     public static int counter = 0;
 
+    String name;
+    
     //class or interface
     String diagramType;
 
@@ -348,6 +350,11 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         return this.classNameText;
     }
 
+    @Override
+    public String getName(){
+       return this.classNameText.getText(); 
+    }
+    
     public String getDiagramName(){
         return this.classNameText.getText();
     }
