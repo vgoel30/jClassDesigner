@@ -156,7 +156,6 @@ public class VariableOptionDialog extends Stage {
             String access = accessChoiceBox.getValue();
 
             VariableObject toAdd = new VariableObject(name, type, isStatic, isFinal, access);
-            System.out.println(toAdd.toStringCode());
 
             boolean alreadyExists = false;
 
@@ -171,15 +170,17 @@ public class VariableOptionDialog extends Stage {
                     alert.showAndWait();
                     break;
                 }
+                VariableOptionDialog.this.hide();
+                
             }
 
             //if the variable doesn't already exist, add it to the list of variables
             if (!alreadyExists) {
                 //adds the variable to the list of variables and renders it on the diagram
                 diagramController.addVariable(diagram,toAdd);
-                
-                //update the list of variables
+                //update the table of variables
                 diagramController.updateVariablesTable(diagram, variablesTable);
+                
                 
             }
 

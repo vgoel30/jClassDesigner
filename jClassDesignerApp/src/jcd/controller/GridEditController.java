@@ -167,6 +167,10 @@ public class GridEditController {
         }
     }
 
+    /**
+     * Removes the grid lines on the canvas
+     * @param canvas 
+     */
     public void removeGridLines(Pane canvas) {
         ArrayList<GridLine> linesToRemove = new ArrayList();
 

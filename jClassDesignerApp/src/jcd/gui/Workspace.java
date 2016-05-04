@@ -623,7 +623,7 @@ public final class Workspace extends AppWorkspaceComponent {
             ClassDiagramObject selectedClassObject = (ClassDiagramObject)dataManager.selectedClassDiagram;
             selectedClassObject.getLocalInterfaces().remove("");
             LocalInterfaceDialog newDialog = new LocalInterfaceDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager.classesOnCanvas);
+            newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager,canvas);
             newDialog.show();
         });
 

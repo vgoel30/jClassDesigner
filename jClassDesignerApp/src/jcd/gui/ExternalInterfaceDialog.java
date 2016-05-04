@@ -75,7 +75,8 @@ public class ExternalInterfaceDialog extends Stage {
      *
      * @param primaryStage The window above which this dialog will be centered.
      * @param diagram
-     * @param externalParentsOnCanvas
+     * @param dataManager
+     * @param canvas
      * @return
      */
     public void init(Stage primaryStage, ClassDiagramObject diagram, DataManager dataManager, Pane canvas) {
@@ -162,9 +163,7 @@ public class ExternalInterfaceDialog extends Stage {
                     }
                 }
             }
-            
-            
-            
+
             ExternalInterfaceDialog.this.hide();
         };
 

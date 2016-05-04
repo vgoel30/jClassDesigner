@@ -19,8 +19,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
+import jcd.connector_lines.InheritanceLine;
 import jcd.data.ClassDiagramObject;
+import jcd.data.DataManager;
 import org.controlsfx.control.CheckComboBox;
 
 /**
@@ -71,9 +74,10 @@ public class LocalInterfaceDialog extends Stage {
      *
      * @param primaryStage The window above which this dialog will be centered.
      * @param diagram
-     * @param classesOnCanvas
+     * @param dataManager
+     * @param canvas
      */
-    public void init(Stage primaryStage, ClassDiagramObject diagram, ArrayList<ClassDiagramObject> classesOnCanvas) {
+    public void init(Stage primaryStage, ClassDiagramObject diagram, DataManager dataManager, Pane canvas) {
         // MAKE THIS DIALOG MODAL, MEANING OTHERS WILL WAIT
         // FOR IT WHEN IT IS DISPLAYED
         initModality(Modality.WINDOW_MODAL);
@@ -89,7 +93,7 @@ public class LocalInterfaceDialog extends Stage {
         ObservableList<String> potentialInterfacesToAdd = FXCollections.observableArrayList();
 
         //builds the check combo box with all the appropriate interfaces
-        for (ClassDiagramObject diagramOnCanvas : classesOnCanvas) {
+        for (ClassDiagramObject diagramOnCanvas : dataManager.classesOnCanvas) {
             if (diagramOnCanvas.getDiagramType().equals("interface") && !diagramOnCanvas.equals(diagram)) {
                 potentialInterfacesToAdd.add(diagramOnCanvas.getClassNameText().getText());
             }
@@ -108,12 +112,42 @@ public class LocalInterfaceDialog extends Stage {
         //the event handler for done is clicked
         EventHandler doneHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
             diagram.getLocalInterfaces().clear();
+
             ObservableList<String> interfacesToAdd = localInterfaces.getCheckModel().getCheckedItems();
 
-            for(String interfaceToAdd: interfacesToAdd){
+            for (String interfaceToAdd : interfacesToAdd) {
                 diagram.addLocalInterface(interfaceToAdd);
+
+                //check the classes on canvas
+                for (ClassDiagramObject classOnCanvas : dataManager.classesOnCanvas) {
+                    //if the particular class is an interface and has the same name
+                    if (classOnCanvas.getDiagramType().equals("interface") && classOnCanvas.getClassNameText().getText().equals(interfaceToAdd)) {
+                        //if the line doesn't already exist
+                        if (!classOnCanvas.getChildren().contains(diagram)) {
+                            InheritanceLine inheritanceLine = new InheritanceLine(classOnCanvas, diagram, canvas);
+                            diagram.linesPointingTowards.add(inheritanceLine);
+                            classOnCanvas.getChildren().add(diagram);
+                            classOnCanvas.linesPointingTowards.add(inheritanceLine);
+                            diagram.inheritanceLinesOut.add(inheritanceLine);
+                        }
+
+                    }
+                }
             }
-            
+            ArrayList<InheritanceLine> linesToRemove = new ArrayList<>();
+            for (InheritanceLine inheritanceLineOut : diagram.inheritanceLinesOut) {
+                ClassDiagramObject endDiagram = (ClassDiagramObject) inheritanceLineOut.getEndDiagram();
+                System.out.println("GOT HERE: " + endDiagram.getDiagramName());
+                if (!diagram.getLocalInterfaces().contains(endDiagram.getDiagramName())) {
+                    //diagram.inheritanceLinesOut.remove(inheritanceLineOut);
+                    inheritanceLineOut.removeFromCanvas(canvas);
+                    endDiagram.getChildren().remove(diagram);
+                    linesToRemove.add(inheritanceLineOut);
+                }
+            }
+            diagram.inheritanceLinesOut.removeAll(linesToRemove);
+            System.out.println("diagram.getLoalbdj   " + diagram.inheritanceLinesOut.size());
+
             LocalInterfaceDialog.this.hide();
         };
 

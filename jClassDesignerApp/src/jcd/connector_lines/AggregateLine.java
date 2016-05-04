@@ -23,6 +23,12 @@ public class AggregateLine extends ConnectorLine {
 
     }
     
+    /**
+     * Default constructor
+     * @param startDiagram 
+     * @param endDiagram is where the diamond head is located
+     * @param canvas 
+     */
     public AggregateLine(Diagram startDiagram, Diagram endDiagram, Pane canvas) {
         this.startDiagram = startDiagram;
         this.endDiagram = endDiagram;

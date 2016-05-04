@@ -64,7 +64,14 @@ public class DataManager implements AppDataComponent {
     public ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
     //this will keep track of all the external parents on the canvas
     public ArrayList<ExternalParent> externalParentsOnCanvas = new ArrayList<>();
+    
+    //all the non-primitive data types that the class will use (for the has-a relationship)
+    public ArrayList<String> aggregateDataTypes = new ArrayList<>();
+    //all the external data type boxes on canvas
+    public ArrayList<ExternalDataType> externalDataTypesOnCanvas = new ArrayList<>();
+    
 
+    //all the packages to be imported
     public ArrayList<String> packageNames = new ArrayList<>();
 
     public ArrayList<String> classPackageCombos = new ArrayList<>();
@@ -410,7 +417,7 @@ public class DataManager implements AppDataComponent {
             newDialog.init(app.getGUI().getWindow(), selectedClassObject, workspace.variablesTable);
             newDialog.show();
 
-            //diagramController.updateVariablesTable(selectedClassDiagram, workspace.variablesTable);
+           System.out.println("VARIABLES : " + selectedClassObject.getVariables());
         }
     }
 
