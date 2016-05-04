@@ -58,9 +58,7 @@ public class InheritanceLine extends ConnectorLine {
      * @param canvas 
      */
     public void updateTriangleHead(Diagram endDiagram, Diagram startDiagram, Pane canvas){
-        
-        //System.out.println("BEING CALLED");
-        this.triangleHead.getPoints().removeAll(this.triangleHead.getPoints());
+        this.triangleHead.getPoints().clear();
 
         double finalX = mainLine.getEndX();
         double finalY = mainLine.getEndY();
@@ -109,6 +107,6 @@ public class InheritanceLine extends ConnectorLine {
         this.triangleHead.setFill(Color.WHITE);
         
         this.triangleHead.setStroke(Color.BLACK);
-        this.triangleHead.setStrokeWidth(2);
+        this.triangleHead.setStrokeWidth(5*Math.random());
     }
 }

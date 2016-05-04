@@ -559,6 +559,7 @@ public class DataManager implements AppDataComponent {
         undoStack.clear();
         ClassDiagramObject.counter = 0;
         externalParents.clear();
+        externalParentsOnCanvas.clear();
         ((Workspace) app.getWorkspaceComponent()).getCanvas().getChildren().clear();
     }
 

@@ -115,7 +115,7 @@ public class ExternalInterfaceDialog extends Stage {
             textField = new TextField(interfaceInList);
             textFields.add(textField);
             //user should not be allowed to edit the previous ones; only see them
-            textField.setDisable(true);
+            //textField.setDisable(true);
             buttonBox.getChildren().add(0, textField);
 
         }
@@ -168,27 +168,28 @@ public class ExternalInterfaceDialog extends Stage {
           
 
             //this will get rid of any old lines that needn't be there
-//            ArrayList<InheritanceLine> linesToRemove = new ArrayList<>();
-//
-//            for (InheritanceLine inheritanceLineOut : diagram.inheritanceLinesOut) {
-//                System.out.println("LITBC");
-//                if (inheritanceLineOut.getEndDiagram() instanceof ExternalParent) {
-//                    ExternalParent endDiagram = (ExternalParent) inheritanceLineOut.getEndDiagram();
-//                    if (!diagram.getExternalInterfaces().contains(endDiagram.getName())) {
-//                        //diagram.inheritanceLinesOut.remove(inheritanceLineOut);
-//                        inheritanceLineOut.removeFromCanvas(canvas);
-//                        endDiagram.children.remove(diagram);
-//                        linesToRemove.add(inheritanceLineOut);
-//                        if (endDiagram.children.isEmpty()) {
-//                            canvas.getChildren().remove(endDiagram.getRootContainer());
-//                            dataManager.externalParentsOnCanvas.remove(endDiagram);
-//                            dataManager.externalParents.remove(endDiagram.toString());
-//                        }
-//                    }
-//                }
-//            }
-//            //remove all the unnecessary lines
-//            diagram.inheritanceLinesOut.removeAll(linesToRemove);
+            ArrayList<InheritanceLine> linesToRemove = new ArrayList<>();
+
+            for (InheritanceLine inheritanceLineOut : diagram.inheritanceLinesOut) {
+                System.out.println("LITBC");
+                if (inheritanceLineOut.getEndDiagram() instanceof ExternalParent) {
+                    ExternalParent endDiagram = (ExternalParent) inheritanceLineOut.getEndDiagram();
+                    if (!diagram.getExternalInterfaces().contains(endDiagram.getName())) {
+                        //diagram.inheritanceLinesOut.remove(inheritanceLineOut);
+                        inheritanceLineOut.removeFromCanvas(canvas);
+                        endDiagram.children.remove(diagram);
+                        endDiagram.parentalLines.remove(inheritanceLineOut);
+                        linesToRemove.add(inheritanceLineOut);
+                        if (endDiagram.children.isEmpty()) {
+                            canvas.getChildren().remove(endDiagram.getRootContainer());
+                            dataManager.externalParentsOnCanvas.remove(endDiagram);
+                            dataManager.externalParents.remove(endDiagram.toString());
+                        }
+                    }
+                }
+            }
+            //remove all the unnecessary lines
+            diagram.inheritanceLinesOut.removeAll(linesToRemove);
             ExternalInterfaceDialog.this.hide();
         };
 

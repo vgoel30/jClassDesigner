@@ -563,8 +563,7 @@ public final class Workspace extends AppWorkspaceComponent {
                         } else {
                             ClassDiagramObject localParent = (ClassDiagramObject) endDiagram;
                             localParent.getChildren().remove(selectedClassObject);
-                            localParent.inheritanceLinesOut.remove(inheritanceLine);
-                            
+                            localParent.linesPointingTowards.remove(inheritanceLine);
                         }
 
                     }
