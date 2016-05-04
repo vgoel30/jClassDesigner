@@ -27,13 +27,15 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     public static int counter = 0;
 
     String name;
-    
+
     //class or interface
     String diagramType;
 
     String parent = new String();
+
     ArrayList<String> localInterfaces = new ArrayList<>();
     ArrayList<String> externalInterfaces = new ArrayList<>();
+
     ArrayList<ClassDiagramObject> children = new ArrayList<>();
     //lines that are pointing towards this diagram (this diagram will be a parent)
     public ArrayList<InheritanceLine> linesPointingTowards = new ArrayList<>();
@@ -351,14 +353,14 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     }
 
     @Override
-    public String getName(){
-       return this.classNameText.getText(); 
-    }
-    
-    public String getDiagramName(){
+    public String getName() {
         return this.classNameText.getText();
     }
-    
+
+    public String getDiagramName() {
+        return this.classNameText.getText();
+    }
+
     public void setClassNameText(String className) {
         this.classNameText.setText(className);
     }
@@ -428,7 +430,34 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
             }
         }
 
-        toReturn += "\npublic " + getDiagramType() + " " + this.getClassNameText().getText() + "{\n\n ";
+        toReturn += "\npublic " + getDiagramType() + " " + this.getClassNameText().getText();// + "{\n\n ";
+
+        //adding parent stuff
+        if (getParentName() != null && !getParentName().equals("")) {
+            String potentialName = getParentName();
+            if (potentialName.contains(":")) {
+                potentialName = potentialName.split(":")[0];
+            }
+            toReturn += " extends " + potentialName;
+        }
+
+        ArrayList<String> interfacesToAdd = new ArrayList<>();
+        if (localInterfaces.size() > 0 || externalInterfaces.size() > 0) {
+            interfacesToAdd.addAll(localInterfaces);
+            interfacesToAdd.addAll(externalInterfaces);
+        }
+
+        if (interfacesToAdd.size() == 1) {
+            toReturn += ", implements " + interfacesToAdd.get(0) + " {\n\n ";
+        } else if (interfacesToAdd.size() > 1) {
+            toReturn += ", implements ";
+            for (int i = 0; i < interfacesToAdd.size() - 1; i++) {
+                toReturn += interfacesToAdd.get(i) + ", ";
+            }
+            toReturn += interfacesToAdd.get(interfacesToAdd.size() - 1) + " {\n\n ";
+        } else {
+            toReturn += " {\n\n ";
+        }
 
         for (VariableObject variable : variables) {
             toReturn += "\t" + variable.toStringCode() + "\n";
@@ -443,12 +472,9 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         return toReturn;
     }
 
-    //x = this.pkgname.compareto(compare.pkgname)
-    //if x != 0 -> return x
-    //else y = this.classname.compareto(compare.classname)
-    //return y
     @Override
-    public int compareTo(ClassDiagramObject o) {
+    public int compareTo(ClassDiagramObject o
+    ) {
         int x = this.getPackageNameText().getText().compareTo(o.getPackageNameText().getText());
         if (x != 0) {
             return x;

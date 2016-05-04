@@ -107,6 +107,6 @@ public class InheritanceLine extends ConnectorLine {
         this.triangleHead.setFill(Color.WHITE);
         
         this.triangleHead.setStroke(Color.BLACK);
-        this.triangleHead.setStrokeWidth(5*Math.random());
+        this.triangleHead.setStrokeWidth(2);
     }
 }

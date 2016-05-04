@@ -555,7 +555,7 @@ public final class Workspace extends AppWorkspaceComponent {
                             externalParent.children.remove(selectedClassObject);
                             externalParent.parentalLines.remove(inheritanceLine);
                             
-                            if(externalParent.children.size() == 0){
+                            if(externalParent.children.isEmpty()){
                                 canvas.getChildren().remove(externalParent.getRootContainer());
                                 dataManager.externalParentsOnCanvas.remove(externalParent);
                                 dataManager.externalParents.remove(externalParent.getName());
