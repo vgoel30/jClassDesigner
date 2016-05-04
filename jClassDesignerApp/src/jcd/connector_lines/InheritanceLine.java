@@ -17,7 +17,7 @@ import jcd.data.Diagram;
  */
 public class InheritanceLine extends ConnectorLine {
     
-    Line mainLine;
+  
     Polygon triangleHead;
 
    
@@ -28,16 +28,16 @@ public class InheritanceLine extends ConnectorLine {
         this.startDiagram = startDiagram;
         this.endDiagram = endDiagram;
         
-        mainLine = new Line();
+        
          
-        mainLine.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
-        mainLine.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
+        this.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
+        this.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
          
-        mainLine.endXProperty().bind(endDiagram.getRootContainer().layoutXProperty().subtract(7));
-        mainLine.endYProperty().bind(endDiagram.getRootContainer().layoutYProperty().subtract(7));
+        this.endXProperty().bind(endDiagram.getRootContainer().layoutXProperty().subtract(7));
+        this.endYProperty().bind(endDiagram.getRootContainer().layoutYProperty().subtract(7));
 
-        double finalX = mainLine.getEndX();
-        double finalY = mainLine.getEndY();
+        double finalX = this.getEndX();
+        double finalY = this.getEndY();
         
         triangleHead = new Polygon();
         triangleHead.getPoints().addAll(new Double[]{
@@ -60,8 +60,8 @@ public class InheritanceLine extends ConnectorLine {
     public void updateTriangleHead(Diagram endDiagram, Diagram startDiagram, Pane canvas){
         this.triangleHead.getPoints().clear();
 
-        double finalX = mainLine.getEndX();
-        double finalY = mainLine.getEndY();
+        double finalX = this.getEndX();
+        double finalY = this.getEndY();
         
         this.triangleHead.getPoints().addAll(new Double[]{
             finalX+20.0, finalY+10.0,
@@ -70,11 +70,11 @@ public class InheritanceLine extends ConnectorLine {
     }
 
     public InheritanceLine(double initialX, double initialY, double finalX, double finalY,Pane canvas) {
-        mainLine.setStartX(initialX);
-        mainLine.setStartY(initialY);
+        this.setStartX(initialX);
+        this.setStartY(initialY);
 
-        mainLine.setEndX(finalX);
-        mainLine.setEndY(finalY);
+        this.setEndX(finalX);
+        this.setEndY(finalY);
 
         triangleHead = new Polygon();
         triangleHead.getPoints().addAll(new Double[]{
@@ -91,18 +91,18 @@ public class InheritanceLine extends ConnectorLine {
 
     private void putOnCanvas(Pane canvas) {
         canvas.getChildren().add(0,triangleHead);
-        canvas.getChildren().add(0,mainLine);
+        canvas.getChildren().add(0,this);
     }
     
     public void removeFromCanvas(Pane canvas){
         triangleHead.getPoints().removeAll(triangleHead.getPoints());
-        canvas.getChildren().remove(mainLine);
+        canvas.getChildren().remove(this);
         canvas.getChildren().remove(this.triangleHead);
     }
 
     private void initStyle() {
-        mainLine.setStroke(Color.BLACK);
-        mainLine.setStrokeWidth(2);
+        this.setStroke(Color.BLACK);
+        this.setStrokeWidth(3.5);
 
         this.triangleHead.setFill(Color.WHITE);
         

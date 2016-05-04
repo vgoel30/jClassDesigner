@@ -601,6 +601,8 @@ public final class Workspace extends AppWorkspaceComponent {
                         externalParent.parentalLines.add(myLine);
                         externalParent.children.add(selectedClassObject);
                         selectedClassObject.inheritanceLinesOut.add(myLine);
+                        
+                        dataManager.attachConnectorLineHandlers(myLine);
                     } //if the external Parent already exists
                     else if (!isLocal) {
                         for (ExternalParent externalParent : dataManager.externalParentsOnCanvas) {
@@ -609,6 +611,7 @@ public final class Workspace extends AppWorkspaceComponent {
                                 externalParent.parentalLines.add(myLine);
                                 externalParent.children.add(selectedClassObject);
                                 selectedClassObject.inheritanceLinesOut.add(myLine);
+                                dataManager.attachConnectorLineHandlers(myLine);
                                 break;
                             }
                         }
@@ -620,6 +623,7 @@ public final class Workspace extends AppWorkspaceComponent {
                                 localClass.linesPointingTowards.add(myLine);
                                 localClass.getChildren().add(selectedClassObject);
                                 selectedClassObject.inheritanceLinesOut.add(myLine);
+                                dataManager.attachConnectorLineHandlers(myLine);
                                 break;
                             }
                         }

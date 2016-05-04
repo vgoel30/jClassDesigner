@@ -25,6 +25,7 @@ import jcd.actions.RemoveMethod;
 import jcd.actions.RemoveVariable;
 import jcd.actions.ResizeLeft;
 import jcd.actions.ResizeRight;
+import jcd.connector_lines.ConnectorLine;
 import jcd.connector_lines.InheritanceLine;
 import jcd.controller.ActionController;
 import jcd.controller.DiagramController;
@@ -64,12 +65,11 @@ public class DataManager implements AppDataComponent {
     public ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
     //this will keep track of all the external parents on the canvas
     public ArrayList<ExternalParent> externalParentsOnCanvas = new ArrayList<>();
-    
+
     //all the non-primitive data types that the class will use (for the has-a relationship)
     public ArrayList<String> aggregateDataTypes = new ArrayList<>();
     //all the external data type boxes on canvas
     public ArrayList<ExternalDataType> externalDataTypesOnCanvas = new ArrayList<>();
-    
 
     //all the packages to be imported
     public ArrayList<String> packageNames = new ArrayList<>();
@@ -297,28 +297,29 @@ public class DataManager implements AppDataComponent {
     }
 
     public void validateNameOfClass(String oldValue, String newValue) {
-        classNames.remove(oldValue);
+        if (selectedClassDiagram instanceof ClassDiagramObject) {
+            classNames.remove(oldValue);
+            ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
 
-        ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
+            selectedClassObject.getClassNameText().setText(newValue);
+            classPackageCombos.remove(oldValue + ":" + selectedClassObject.getPackageNameText().getText());
 
-        selectedClassObject.getClassNameText().setText(newValue);
-        classPackageCombos.remove(oldValue + ":" + selectedClassObject.getPackageNameText().getText());
-
-        for (ClassDiagramObject diagram : classesOnCanvas) {
-            if (diagram != selectedClassObject) {
-                int x = selectedClassObject.compareTo(diagram);
-                if (x == 0) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Class name error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Class already exists in this package!");
-                    alert.showAndWait();
+            for (ClassDiagramObject diagram : classesOnCanvas) {
+                if (diagram != selectedClassObject) {
+                    int x = selectedClassObject.compareTo(diagram);
+                    if (x == 0) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Class name error");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Class already exists in this package!");
+                        alert.showAndWait();
+                    }
                 }
             }
-        }
 
-        classNames.add(newValue);
-        classPackageCombos.add(newValue + ":" + selectedClassObject.getPackageNameText().getText());
+            classNames.add(newValue);
+            classPackageCombos.add(newValue + ":" + selectedClassObject.getPackageNameText().getText());
+        }
     }
 
     public void validateNameOfPackage(String oldValue, String newValue) {
@@ -417,7 +418,7 @@ public class DataManager implements AppDataComponent {
             newDialog.init(app.getGUI().getWindow(), selectedClassObject, workspace.variablesTable);
             newDialog.show();
 
-           System.out.println("VARIABLES : " + selectedClassObject.getVariables());
+            System.out.println("VARIABLES : " + selectedClassObject.getVariables());
         }
     }
 
@@ -522,11 +523,11 @@ public class DataManager implements AppDataComponent {
     }
 
     /**
-     * Handles the removal of  a diagram object
+     * Handles the removal of a diagram object
      */
     public void handleRemoval() {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        
+
         //if we want to remove an external parent
         if (selectedClassDiagram instanceof ExternalParent) {
             ExternalParent parentToRemove = (ExternalParent) selectedClassDiagram;
@@ -550,6 +551,7 @@ public class DataManager implements AppDataComponent {
 
     @Override
     public void reset() {
+        selectedClassDiagram = null;
         //remove all the children
         classesOnCanvas.clear();
         classNames.clear();
@@ -563,6 +565,25 @@ public class DataManager implements AppDataComponent {
         ((Workspace) app.getWorkspaceComponent()).getCanvas().getChildren().clear();
     }
 
+    public void attachConnectorLineHandlers(ConnectorLine connectorLine) {
+        if (connectorLine instanceof InheritanceLine) {
+            InheritanceLine theLine = (InheritanceLine) connectorLine;
+            connectorLine.setOnMouseClicked(e -> {
+                theLine.setStroke(Color.BLUE);
+
+            });
+            connectorLine.setOnMouseReleased(e -> {
+                theLine.setStroke(Color.RED);
+            });
+        }
+    }
+
+    /**
+     * Resizing handlers on the lines for resizing the class diagrams
+     *
+     * @param diagram
+     * @param workspace
+     */
     private void attachResizingHandlers(ClassDiagramObject diagram, Workspace workspace) {
         //if the user is resizing to the right, create a new resize right action
         ResizeRight resizeRightMove = new ResizeRight(diagram);
@@ -629,7 +650,6 @@ public class DataManager implements AppDataComponent {
         //LEFT LINE HANDLERS DONE
 
         //RIGHT LINE EVENT HANDLERS DONE
-       
     }
 
 }
