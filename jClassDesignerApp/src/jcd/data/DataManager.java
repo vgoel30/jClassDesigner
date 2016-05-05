@@ -589,7 +589,7 @@ public class DataManager implements AppDataComponent {
 
         if (connectorLine instanceof InheritanceLine) {
             InheritanceLine inheritanceLine = (InheritanceLine) connectorLine;
-            inheritanceLine.getTriangleHead().setOnMouseClicked(e -> {
+            inheritanceLine.setOnMouseClicked(e -> {
                 ((Workspace) app.getWorkspaceComponent()).disableButtons(true);
                 ((Workspace) app.getWorkspaceComponent()).removeButton.setDisable(false);
                 if (selectedClassDiagram != null && selectedClassDiagram instanceof ClassDiagramObject) {

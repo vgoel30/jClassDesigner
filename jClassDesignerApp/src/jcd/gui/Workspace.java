@@ -541,7 +541,7 @@ public final class Workspace extends AppWorkspaceComponent {
             ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
 
             //we will need to remove the line connected to the old parent
-            if (selectedClassObject.getParentName() != null) {
+            if (selectedClassObject.getParentName() != null && !selectedClassObject.getParentName().equals(parentNamePicker.getValue())) {
                 InheritanceLine lineToRemove = new InheritanceLine();
                 for (InheritanceLine inheritanceLine : selectedClassObject.inheritanceLinesOut) {
                     if (inheritanceLine.getEndDiagram().toString().equals(selectedClassObject.getParentName())) {
@@ -549,6 +549,14 @@ public final class Workspace extends AppWorkspaceComponent {
                         inheritanceLine.removeFromCanvas(canvas);
                         
                         lineToRemove = inheritanceLine;
+                        
+                        if(inheritanceLine.standardChildLine != null){
+                            inheritanceLine.standardChildLine.removeFromCanvas(canvas);
+                        }
+                        
+                        if(inheritanceLine.inheritanceChildLine != null){
+                            inheritanceLine.inheritanceChildLine.removeFromCanvas(canvas);
+                        }
 
                         if (endDiagram instanceof ExternalParent) {
                             ExternalParent externalParent = (ExternalParent) endDiagram;
@@ -588,7 +596,6 @@ public final class Workspace extends AppWorkspaceComponent {
                     }
                     //check if it is already a parent to another class
                     if (dataManager.externalParents.contains(parentNamePicker.getValue())) {
-                        System.out.println("ALREADY EXISTYUGFGVJH");
                         alreadyExists = true;
                     }
 

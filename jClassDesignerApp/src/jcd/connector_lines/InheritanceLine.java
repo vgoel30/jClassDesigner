@@ -18,8 +18,8 @@ import jcd.data.Diagram;
 public class InheritanceLine extends ConnectorLine {
 
     Polygon triangleHead;
-    StandardLine standardChildLine;
-    InheritanceLine inheritanceChildLine;
+   public StandardLine standardChildLine;
+   public InheritanceLine inheritanceChildLine;
 
     public InheritanceLine() {
     }
@@ -59,7 +59,8 @@ public class InheritanceLine extends ConnectorLine {
         this.endXProperty().bind(parentLine.endXProperty());
         this.endYProperty().bind(parentLine.endYProperty());
 
-        initStyle();
+        this.setStroke(Color.GREEN);
+        this.setStrokeWidth(7);
 
         putOnCanvas(canvas);
     }
@@ -124,7 +125,8 @@ public class InheritanceLine extends ConnectorLine {
     }
 
     public void handleDoubleClick(Pane canvas) {
-        if (standardChildLine == null) {
+        if (this.standardChildLine == null) {
+            System.out.println("OPTION1 " + this.hashCode());
             StandardLine standardLineToAdd = new StandardLine(this.getStartDiagram(), this, canvas);
             this.standardChildLine = standardLineToAdd;
             standardLineToAdd.toBack();
@@ -133,6 +135,7 @@ public class InheritanceLine extends ConnectorLine {
             this.inheritanceChildLine = childInheritanceLine;
 
         } else {
+            System.out.println("OPTION2");
             this.standardChildLine.removeFromCanvas(canvas);
           this.inheritanceChildLine.removeFromCanvas(canvas);
             this.standardChildLine = null;
