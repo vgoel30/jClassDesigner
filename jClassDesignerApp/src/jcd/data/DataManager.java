@@ -313,7 +313,9 @@ public class DataManager implements AppDataComponent {
                 }
                 selectedClassDiagram = diagram;
                 workspace.disableButtons(true);
-                workspace.removeButton.setDisable(true);
+                boolean isUsed = diagram.emittedLines.size() > 0;
+                //disable the delete button if it is being used
+                workspace.removeButton.setDisable(isUsed);
 
             }
         });
@@ -611,6 +613,14 @@ public class DataManager implements AppDataComponent {
             for (int i = 0; i < parentToRemove.parentalLines.size(); i++) {
                 //remove the line from canvas
                 parentToRemove.parentalLines.get(i).removeFromCanvas(workspace.getCanvas());
+
+                if (parentToRemove.parentalLines.get(i).inheritanceChildLine != null) {
+                    parentToRemove.parentalLines.get(i).inheritanceChildLine.removeFromCanvas(workspace.getCanvas());
+                }
+                if (parentToRemove.parentalLines.get(i).standardChildLine != null) {
+                    parentToRemove.parentalLines.get(i).standardChildLine.removeFromCanvas(workspace.getCanvas());
+                }
+
                 //remove the line from the child's lines list
                 parentToRemove.children.get(i).inheritanceLinesOut.remove(parentToRemove.parentalLines.get(i));
                 //set the parent to null
@@ -621,7 +631,7 @@ public class DataManager implements AppDataComponent {
             externalParents.remove(parentToRemove.name);
             //remove from canvas
             workspace.getCanvas().getChildren().remove(parentToRemove.getRootContainer());
-        } 
+        }
     }
 
     @Override
@@ -665,10 +675,9 @@ public class DataManager implements AppDataComponent {
                 }
 
             });
-        }
-        else if(connectorLine instanceof AggregateLine){
+        } else if (connectorLine instanceof AggregateLine) {
             AggregateLine aggregateLine = (AggregateLine) connectorLine;
-            
+
             aggregateLine.setOnMouseClicked(e -> {
                 ((Workspace) app.getWorkspaceComponent()).disableButtons(true);
                 ((Workspace) app.getWorkspaceComponent()).removeButton.setDisable(false);
@@ -686,7 +695,7 @@ public class DataManager implements AppDataComponent {
                 if (e.getClickCount() == 2) {
                     aggregateLine.handleDoubleClick(((Workspace) app.getWorkspaceComponent()).getCanvas());
                 }
-        });
+            });
         }
     }
 

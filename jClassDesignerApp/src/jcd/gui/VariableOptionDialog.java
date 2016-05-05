@@ -191,61 +191,9 @@ public class VariableOptionDialog extends Stage {
             //if the variable doesn't already exist, add it to the list of variables
             if (!alreadyExists) {
                 //adds the variable to the list of variables and renders it on the diagram
-                diagramController.addVariable(diagram, toAdd);
+                diagramController.addVariable(diagram, toAdd,dataManager);
                 //update the table of variables
                 diagramController.updateVariablesTable(diagram, variablesTable);
-
-                //render the box for the external data type; if needed.
-                String variableDataType = toAdd.getType();
-
-                boolean isPrimitive = variableDataType.equals("byte") || variableDataType.equals("short")
-                        || variableDataType.equals("int") || variableDataType.equals("long")
-                        || variableDataType.equals("float") || variableDataType.equals("double")
-                        || variableDataType.equals("boolean") || variableDataType.equals("char");
-
-                //if the data type is non primitive and isn't already there in the data manager
-                if (!isPrimitive && !dataManager.externalDataTypes.contains(variableDataType)) {
-                    //make a new box
-                    ExternalDataType dataTypeToAdd = new ExternalDataType(variableDataType);
-                    //render it on the canvas
-                    dataTypeToAdd.putOnCanvas(canvas);
-                    //add the external data type to list of external data types
-                    dataManager.externalDataTypes.add(variableDataType);
-                    //add the diagram box to the list of external data type diargams on canvas
-                    dataManager.externalDataTypesOnCanvas.add(dataTypeToAdd);
-                    //attach the event handlers for the box
-                    dataManager.attachExternalDataTypeBoxHandlers(dataTypeToAdd);
-                    //make the aggregate line object
-                    AggregateLine aggregateLineToAdd = new AggregateLine(diagram, dataTypeToAdd, canvas);
-                    
-                    //attach the event handlers for the line
-                    dataManager.attachConnectorLineHandlers(aggregateLineToAdd);
-
-                    //lines emitted by the the external data type box
-                    dataTypeToAdd.emittedLines.add(aggregateLineToAdd);
-                    //the data type is used by the current selected diagram
-                    dataTypeToAdd.usedBy.add(diagram);
-                } 
-                //non-primitive data type but already there on canvas
-                else if (!isPrimitive && dataManager.externalDataTypes.contains(variableDataType)) {
-                    //iterate over all the external data type
-                    for (ExternalDataType externalDataType : dataManager.externalDataTypesOnCanvas) {
-                        //if the box's name matches the name that is to be added
-                        if (externalDataType.getName().equals(variableDataType)) {
-                            //make a new line
-                            AggregateLine aggregateLineToAdd = new AggregateLine(diagram, externalDataType, canvas);
-
-                            //attach event handlers for the line (splitting and stuff)
-                            dataManager.attachConnectorLineHandlers(aggregateLineToAdd);
-                            
-                            //lines emitted by the the external data type box
-                            externalDataType.emittedLines.add(aggregateLineToAdd);
-                            //the data type is used by the current selected diagram
-                            externalDataType.usedBy.add(diagram);
-                            break;
-                        }
-                    }
-                }
             }
 
             VariableOptionDialog.this.hide();

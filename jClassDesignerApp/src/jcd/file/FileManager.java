@@ -402,29 +402,7 @@ public class FileManager implements AppFileComponent {
         return jA;
     }
 
-    /**
-     * Testing load data
-     *
-     * @param filePath
-     * @return a list of diagrams
-     * @throws IOException
-     */
-    public ArrayList<ClassDiagramObject> testLoadData(String filePath) throws IOException {
-        System.out.println("TEST LOAD DATA CALLED");
-        JsonObject json = loadJSONFile(filePath);
-
-        ArrayList<ClassDiagramObject> diagrams = new ArrayList<>();
-
-        // AND NOW LOAD ALL THE SHAPES
-        JsonArray jsonDiagramsArray = json.getJsonArray(JSON_DIAGRAMS_LIST);
-        for (int i = 0; i < jsonDiagramsArray.size(); i++) {
-            JsonObject jsonDiagram = jsonDiagramsArray.getJsonObject(i);
-            ClassDiagramObject classDiagram = loadClassDiagram(jsonDiagram);
-            diagrams.add(classDiagram);
-            System.out.println(classDiagram.toStringPlusPlus());
-        }
-        return diagrams;
-    }
+   
 
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
@@ -437,7 +415,7 @@ public class FileManager implements AppFileComponent {
         JsonArray jsonDiagramsArray = json.getJsonArray(JSON_DIAGRAMS_LIST);
         for (int i = 0; i < jsonDiagramsArray.size(); i++) {
             JsonObject jsonDiagram = jsonDiagramsArray.getJsonObject(i);
-            ClassDiagramObject classDiagram = loadClassDiagram(jsonDiagram);
+            ClassDiagramObject classDiagram = loadClassDiagram(jsonDiagram, data);
             dataManager.attachClassDiagramEventHandlers(classDiagram);
             dataManager.classesOnCanvas.add(classDiagram);
             classDiagram.putOnCanvas(dataManager.getRenderingPane());
@@ -448,8 +426,9 @@ public class FileManager implements AppFileComponent {
         dataManager.getRenderingPane().minHeight(canvasHeight);
     }
 
-    public ClassDiagramObject loadClassDiagram(JsonObject jsonDiagram) {
+    public ClassDiagramObject loadClassDiagram(JsonObject jsonDiagram, AppDataComponent data) {
         DiagramController diagramController = new DiagramController();
+        DataManager dataManager = (DataManager) data;
 
         JsonArray dimensionsArray = jsonDiagram.getJsonArray(JSON_DIAGRAM_DIMENSIONS);
         JsonObject dimensionsJsonObject = dimensionsArray.getJsonObject(0);
@@ -529,7 +508,7 @@ public class FileManager implements AppFileComponent {
 
             VariableObject varToAdd = new VariableObject(name, variableType, isStatic, isFinal, access);
             //add the variable and render the thing
-            diagramController.addVariable(toAdd, varToAdd);
+            diagramController.addVariable(toAdd, varToAdd, dataManager);
         }
 
         //ALL THE METHODS OF THE CLASS
