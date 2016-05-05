@@ -16,61 +16,80 @@ import jcd.data.Diagram;
  *
  * @author varungoel
  */
-public class StandardLine extends ConnectorLine{
-    
-    Ellipse connectionPoint ;
-    
-    public StandardLine(){
+public class StandardLine extends ConnectorLine {
+
+    Ellipse connectionPoint;
+
+    public StandardLine() {
     }
-    
-    public StandardLine(Diagram startDiagram, double endX, double endY, Pane canvas){
+
+    public StandardLine(Diagram startDiagram, double endX, double endY, Pane canvas) {
         this.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
         this.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
-        
+
         this.setEndX(endX);
         this.setEndY(endY);
-        
+
         putOnCanvas(canvas);
         initStyle();
     }
-    
-    public StandardLine(Diagram startDiagram, ConnectorLine parentLine , Pane canvas){
-        
-       
+
+    public StandardLine(Diagram startDiagram, ConnectorLine parentLine, Pane canvas) {
+
         this.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
         this.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
-       
+
         this.endXProperty().bind((parentLine.startXProperty().add(parentLine.endXProperty())).divide(2));
         this.endYProperty().bind((parentLine.startYProperty().add(parentLine.endYProperty())).divide(2));
         //(parentLine.startXProperty().add(parentLine.endXProperty())).divide(2)
-        
+
         connectionPoint = new Ellipse();
-        
+
         connectionPoint.centerXProperty().bind(this.endXProperty());
         connectionPoint.centerYProperty().bind(this.endYProperty());
-        
+
         connectionPoint.setRadiusX(5);
         connectionPoint.setRadiusY(5);
-        
+
+        connectionPoint.setOnMouseClicked(e -> {
+
+            //if the connection point is clicked twice, we want to remove that point
+            if (e.getClickCount() == 2) {
+                //if it's an inheritance line
+                if(parentLine instanceof InheritanceLine){
+                    System.out.println("PARENT LINE IS INHERITANCE LINE");
+                    InheritanceLine inheritanceParentLine = (InheritanceLine) parentLine;
+                    inheritanceParentLine.standardChildLine.removeFromCanvas(canvas);
+                    inheritanceParentLine.inheritanceChildLine.removeFromCanvas(canvas);
+                    inheritanceParentLine.standardChildLine = null;
+                    inheritanceParentLine.inheritanceChildLine = null;
+                    //restore the original parent line
+                    inheritanceParentLine.setVisible(true);
+                }
+            }
+
+        });
+
         putOnCanvas(canvas);
         initStyle();
     }
-    
-    private void initStyle(){
+
+    private void initStyle() {
         this.setStroke(Color.BLACK);
-        this.setStrokeWidth(2);
+        this.setStrokeWidth(3.5);
         connectionPoint.setFill(Color.WHITE);
         connectionPoint.setStroke(Color.BLACK);
-       
+
     }
-    
-    public void removeFromCanvas(Pane canvas){
-       canvas.getChildren().remove(this);
-       if(connectionPoint != null)
-       canvas.getChildren().remove(connectionPoint);
+
+    public void removeFromCanvas(Pane canvas) {
+        canvas.getChildren().remove(this);
+        if (connectionPoint != null) {
+            canvas.getChildren().remove(connectionPoint);
+        }
     }
-    
-    private void putOnCanvas(Pane canvas){
+
+    private void putOnCanvas(Pane canvas) {
         canvas.getChildren().add(this);
         canvas.getChildren().add(connectionPoint);
         connectionPoint.toBack();

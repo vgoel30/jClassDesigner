@@ -59,8 +59,7 @@ public class InheritanceLine extends ConnectorLine {
         this.endXProperty().bind(parentLine.endXProperty());
         this.endYProperty().bind(parentLine.endYProperty());
 
-        this.setStroke(Color.GREEN);
-        this.setStrokeWidth(7);
+        initStyle();
 
         putOnCanvas(canvas);
     }
@@ -126,13 +125,13 @@ public class InheritanceLine extends ConnectorLine {
 
     public void handleDoubleClick(Pane canvas) {
         if (this.standardChildLine == null) {
-            System.out.println("OPTION1 " + this.hashCode());
             StandardLine standardLineToAdd = new StandardLine(this.getStartDiagram(), this, canvas);
             this.standardChildLine = standardLineToAdd;
             standardLineToAdd.toBack();
 
             InheritanceLine childInheritanceLine = new InheritanceLine(endDiagram, this, canvas);
             this.inheritanceChildLine = childInheritanceLine;
+            this.setVisible(false);
 
         } else {
             System.out.println("OPTION2");

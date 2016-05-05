@@ -8,6 +8,8 @@ package jcd.gui;
 import javafx.scene.control.Button;
 import java.io.IOException;
 import java.util.ArrayList;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -535,51 +537,24 @@ public final class Workspace extends AppWorkspaceComponent {
                 dataManager.validateNameOfPackage(oldValue, newValue);
             }
         });
+        
+        parentNamePicker.valueProperty().addListener(new ChangeListener<String>() {
+        @Override public void changed(ObservableValue ov, String t, String t1) {
+            System.out.println("t :  " + t);
+            System.out.println("t1    " + t1);
+        }    
+    });
 
         //the event handler for the parent name clicker 
         parentNamePicker.setOnAction(e -> {
+            
+            
+            System.out.println(" parentNamePicker.setOnAction");
+            
             ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
 
-            //we will need to remove the line connected to the old parent
-            if (selectedClassObject.getParentName() != null && !selectedClassObject.getParentName().equals(parentNamePicker.getValue())) {
-                InheritanceLine lineToRemove = new InheritanceLine();
-                for (InheritanceLine inheritanceLine : selectedClassObject.inheritanceLinesOut) {
-                    if (inheritanceLine.getEndDiagram().toString().equals(selectedClassObject.getParentName())) {
-                        Diagram endDiagram = inheritanceLine.getEndDiagram();
-                        inheritanceLine.removeFromCanvas(canvas);
-                        
-                        lineToRemove = inheritanceLine;
-                        
-                        if(inheritanceLine.standardChildLine != null){
-                            inheritanceLine.standardChildLine.removeFromCanvas(canvas);
-                        }
-                        
-                        if(inheritanceLine.inheritanceChildLine != null){
-                            inheritanceLine.inheritanceChildLine.removeFromCanvas(canvas);
-                        }
-
-                        if (endDiagram instanceof ExternalParent) {
-                            ExternalParent externalParent = (ExternalParent) endDiagram;
-                            externalParent.children.remove(selectedClassObject);
-                            externalParent.parentalLines.remove(inheritanceLine);
-                            
-                            if(externalParent.children.isEmpty()){
-                                canvas.getChildren().remove(externalParent.getRootContainer());
-                                dataManager.externalParentsOnCanvas.remove(externalParent);
-                                dataManager.externalParents.remove(externalParent.getName());
-                            }
-                        } else {
-                            ClassDiagramObject localParent = (ClassDiagramObject) endDiagram;
-                            localParent.getChildren().remove(selectedClassObject);
-                            localParent.linesPointingTowards.remove(inheritanceLine);
-                        }
-
-                    }
-                }
-                selectedClassObject.inheritanceLinesOut.remove(lineToRemove);
-            }
-
-            if (parentNamePicker.getValue() != null) {
+             if (parentNamePicker.getValue() != null && !selectedClassObject.getParentName().equals(parentNamePicker.getValue())) {
+                System.out.println(" THSI S WEIRD PLACE @ 1");
                 if (parentNamePicker.getValue().equals("NONE") || parentNamePicker.getValue().equals("")) {
                     selectedClassObject.setParentName(null);
                 } else {
@@ -608,7 +583,7 @@ public final class Workspace extends AppWorkspaceComponent {
                         externalParent.parentalLines.add(myLine);
                         externalParent.children.add(selectedClassObject);
                         selectedClassObject.inheritanceLinesOut.add(myLine);
-                        
+
                         dataManager.attachConnectorLineHandlers(myLine);
                     } //if the external Parent already exists
                     else if (!isLocal) {
@@ -637,6 +612,50 @@ public final class Workspace extends AppWorkspaceComponent {
                     }
 
                 }
+            }
+             
+             //else //we will need to remove the line connected to the old parent if the parnet name has changed
+             else if (selectedClassObject.getParentName() != null && !selectedClassObject.getParentName().equals(parentNamePicker.getValue())) {
+                System.out.println("THIS WEIRD PLACE 2");
+                
+                System.out.print("IMPORTANT DEBUGGING STATEMENTS:  " + selectedClassObject.getParentName());
+                System.out.println("        " + parentNamePicker.getValue());
+                
+                InheritanceLine lineToRemove = new InheritanceLine();
+                for (InheritanceLine inheritanceLine : selectedClassObject.inheritanceLinesOut) {
+                    if (inheritanceLine.getEndDiagram().toString().equals(selectedClassObject.getParentName())) {
+                        Diagram endDiagram = inheritanceLine.getEndDiagram();
+                        inheritanceLine.removeFromCanvas(canvas);
+
+                        lineToRemove = inheritanceLine;
+
+//                        if (inheritanceLine.standardChildLine != null) {
+//                            inheritanceLine.standardChildLine.removeFromCanvas(canvas);
+//                        }
+//
+//                        if (inheritanceLine.inheritanceChildLine != null) {
+//                            inheritanceLine.inheritanceChildLine.removeFromCanvas(canvas);
+//                        }
+
+                        if (endDiagram instanceof ExternalParent) {
+                            ExternalParent externalParent = (ExternalParent) endDiagram;
+                            externalParent.children.remove(selectedClassObject);
+                            externalParent.parentalLines.remove(inheritanceLine);
+
+                            if (externalParent.children.isEmpty()) {
+                                canvas.getChildren().remove(externalParent.getRootContainer());
+                                dataManager.externalParentsOnCanvas.remove(externalParent);
+                                dataManager.externalParents.remove(externalParent.getName());
+                            }
+                        } else {
+                            ClassDiagramObject localParent = (ClassDiagramObject) endDiagram;
+                            localParent.getChildren().remove(selectedClassObject);
+                            localParent.linesPointingTowards.remove(inheritanceLine);
+                        }
+
+                    }
+                }
+                selectedClassObject.inheritanceLinesOut.remove(lineToRemove);
             }
         });
 //        
