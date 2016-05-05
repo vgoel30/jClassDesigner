@@ -48,8 +48,8 @@ public class StandardLine extends ConnectorLine {
         connectionPoint.centerXProperty().bind(this.endXProperty());
         connectionPoint.centerYProperty().bind(this.endYProperty());
 
-        connectionPoint.setRadiusX(5);
-        connectionPoint.setRadiusY(5);
+        connectionPoint.setRadiusX(7);
+        connectionPoint.setRadiusY(7);
 
         connectionPoint.setOnMouseClicked(e -> {
 
@@ -57,10 +57,11 @@ public class StandardLine extends ConnectorLine {
             if (e.getClickCount() == 2) {
                 //if it's an inheritance line
                 if(parentLine instanceof InheritanceLine){
-                    System.out.println("PARENT LINE IS INHERITANCE LINE");
                     InheritanceLine inheritanceParentLine = (InheritanceLine) parentLine;
+                    
                     inheritanceParentLine.standardChildLine.removeFromCanvas(canvas);
                     inheritanceParentLine.inheritanceChildLine.removeFromCanvas(canvas);
+                    
                     inheritanceParentLine.standardChildLine = null;
                     inheritanceParentLine.inheritanceChildLine = null;
                     //restore the original parent line
@@ -68,6 +69,24 @@ public class StandardLine extends ConnectorLine {
                 }
             }
 
+        });
+        
+        connectionPoint.setOnMouseDragged(e -> {
+            if(parentLine instanceof InheritanceLine){
+                InheritanceLine inheritanceParentLine = (InheritanceLine) parentLine;
+                
+                inheritanceParentLine.standardChildLine.endXProperty().unbind();
+                inheritanceParentLine.standardChildLine.endYProperty().unbind();
+                
+                inheritanceParentLine.standardChildLine.setEndX(e.getX());
+                inheritanceParentLine.standardChildLine.setEndY(e.getY());
+                
+                inheritanceParentLine.inheritanceChildLine.startXProperty().unbind();
+                inheritanceParentLine.inheritanceChildLine.startYProperty().unbind();
+                
+                inheritanceParentLine.inheritanceChildLine.setStartX(e.getX());
+                inheritanceParentLine.inheritanceChildLine.setStartY(e.getY());
+            }
         });
 
         putOnCanvas(canvas);

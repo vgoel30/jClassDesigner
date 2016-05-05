@@ -542,13 +542,9 @@ public final class Workspace extends AppWorkspaceComponent {
         parentNamePicker.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue ov, String t, String t1) {
-            System.out.println("t :  " + t);
-            System.out.println("t1    " + t1);
-
                 ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
 
                 if (t1 != null && !selectedClassObject.getParentName().equals(t1)) {
-                    System.out.println("AMDARCGHGYUGVVGHV");
                     if (t1.equals("NONE") || t1.equals("")) {
                         selectedClassObject.setParentName("");
                     } else {
@@ -607,14 +603,8 @@ public final class Workspace extends AppWorkspaceComponent {
 
                     }
                 }//we will need to remove the line connected to the old parent if the parnet name has changed
-                 if (selectedClassObject.getParentName() != null && !selectedClassObject.getParentName().equals(t)) {
-                     System.out.println("LIT LIT LIT : { " + t + "}");
+                if (selectedClassObject.getParentName() != null && !selectedClassObject.getParentName().equals(t)) {
                     if (t != null && !t.equals("")) {
-                        System.out.println("THIS WEIRD PLACE 2");
-
-                        System.out.print("IMPORTANT DEBUGGING STATEMENTS:  " + selectedClassObject.getParentName());
-                        System.out.println("        " + t);
-
                         InheritanceLine lineToRemove = new InheritanceLine();
                         for (InheritanceLine inheritanceLine : selectedClassObject.inheritanceLinesOut) {
                             if (inheritanceLine.getEndDiagram().toString().equals(t)) {
@@ -623,13 +613,13 @@ public final class Workspace extends AppWorkspaceComponent {
 
                                 lineToRemove = inheritanceLine;
 
-                        if (inheritanceLine.standardChildLine != null) {
-                            inheritanceLine.standardChildLine.removeFromCanvas(canvas);
-                        }
+                                if (inheritanceLine.standardChildLine != null) {
+                                    inheritanceLine.standardChildLine.removeFromCanvas(canvas);
+                                }
 
-                        if (inheritanceLine.inheritanceChildLine != null) {
-                            inheritanceLine.inheritanceChildLine.removeFromCanvas(canvas);
-                        }
+                                if (inheritanceLine.inheritanceChildLine != null) {
+                                    inheritanceLine.inheritanceChildLine.removeFromCanvas(canvas);
+                                }
                                 if (endDiagram instanceof ExternalParent) {
                                     ExternalParent externalParent = (ExternalParent) endDiagram;
                                     externalParent.children.remove(selectedClassObject);
@@ -698,6 +688,7 @@ public final class Workspace extends AppWorkspaceComponent {
         snapCheckBox.setSelected(false);
         disableButtons(true);
         variablesTable.getItems().clear();
+        methodsTable.getItems().clear();
         if (selected != null) {
             selected.getStyleClass().remove(BUTTON_PRESSED);
             selected = null;
