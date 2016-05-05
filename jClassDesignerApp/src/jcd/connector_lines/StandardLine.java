@@ -9,6 +9,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Line;
 import jcd.data.Diagram;
 
 /**
@@ -35,7 +36,7 @@ public class StandardLine extends ConnectorLine{
     
     public StandardLine(Diagram startDiagram, ConnectorLine parentLine , Pane canvas){
         
-        
+       
         this.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
         this.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
        
@@ -66,7 +67,7 @@ public class StandardLine extends ConnectorLine{
     public void removeFromCanvas(Pane canvas){
        canvas.getChildren().remove(this);
        if(connectionPoint != null)
-           canvas.getChildren().remove(connectionPoint);
+       canvas.getChildren().remove(connectionPoint);
     }
     
     private void putOnCanvas(Pane canvas){

@@ -260,28 +260,28 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         rightLine.setVisible(false);
 
         //setting up the bottom line
-        bottomLine.startXProperty().bind(rootContainer.layoutXProperty());
-        bottomLine.startYProperty().bind(rootContainer.layoutYProperty().add(rootContainer.heightProperty()));
-
-        bottomLine.endXProperty().bind(bottomLine.startXProperty().add(rootContainer.widthProperty()));
-        bottomLine.endYProperty().bind(bottomLine.startYProperty());
-
-        bottomLine.setStroke(Color.WHITE);
-        bottomLine.setStrokeWidth(5);
-        bottomLine.setVisible(false);
-
-        //bottom line set up done
-        //setting up the middle line (in between the methods and variables container)
-        middleLine.startXProperty().bind(rootContainer.layoutXProperty().add(10));
-        middleLine.startYProperty().bind(rootContainer.layoutYProperty().add(packageContainer.heightProperty()).add(methodsContainer.heightProperty()).add(variablesContainer.heightProperty()));
-
-        middleLine.endXProperty().bind(middleLine.startXProperty().add(rootContainer.widthProperty()).subtract(30));
-        middleLine.endYProperty().bind(middleLine.startYProperty());
-
-        middleLine.setStroke(Color.WHITE);
-        middleLine.setOpacity(0);
-        middleLine.setStrokeWidth(1);
-        middleLine.setVisible(false);
+//        bottomLine.startXProperty().bind(rootContainer.layoutXProperty());
+//        bottomLine.startYProperty().bind(rootContainer.layoutYProperty().add(rootContainer.heightProperty()));
+//
+//        bottomLine.endXProperty().bind(bottomLine.startXProperty().add(rootContainer.widthProperty()));
+//        bottomLine.endYProperty().bind(bottomLine.startYProperty());
+//
+//        bottomLine.setStroke(Color.WHITE);
+//        bottomLine.setStrokeWidth(5);
+//        bottomLine.setVisible(false);
+//
+//        //bottom line set up done
+//        //setting up the middle line (in between the methods and variables container)
+//        middleLine.startXProperty().bind(rootContainer.layoutXProperty().add(10));
+//        middleLine.startYProperty().bind(rootContainer.layoutYProperty().add(packageContainer.heightProperty()).add(methodsContainer.heightProperty()).add(variablesContainer.heightProperty()));
+//
+//        middleLine.endXProperty().bind(middleLine.startXProperty().add(rootContainer.widthProperty()).subtract(30));
+//        middleLine.endYProperty().bind(middleLine.startYProperty());
+//
+//        middleLine.setStroke(Color.WHITE);
+//        middleLine.setOpacity(0);
+//        middleLine.setStrokeWidth(1);
+//        middleLine.setVisible(false);
         //middle line set up done
         packageContainer.setMinHeight(10);
         packageContainer.setMinWidth(100);

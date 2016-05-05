@@ -30,7 +30,7 @@ public class InheritanceLine extends ConnectorLine {
 
         standardChildLine = null;
         inheritanceChildLine = null;
-
+        
         this.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
         this.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
 
@@ -52,10 +52,10 @@ public class InheritanceLine extends ConnectorLine {
 
     public InheritanceLine(Diagram endDiagram, InheritanceLine parentLine, Pane canvas) {
         triangleHead = null;
-
+        
         this.startXProperty().bind((parentLine.startXProperty().add(parentLine.endXProperty())).divide(2));
         this.startYProperty().bind((parentLine.startYProperty().add(parentLine.endYProperty())).divide(2));
-
+        
         this.endXProperty().bind(parentLine.endXProperty());
         this.endYProperty().bind(parentLine.endYProperty());
 
@@ -134,7 +134,7 @@ public class InheritanceLine extends ConnectorLine {
 
         } else {
             this.standardChildLine.removeFromCanvas(canvas);
-            this.inheritanceChildLine.removeFromCanvas(canvas);
+          this.inheritanceChildLine.removeFromCanvas(canvas);
             this.standardChildLine = null;
             this.inheritanceChildLine = null;
         }
