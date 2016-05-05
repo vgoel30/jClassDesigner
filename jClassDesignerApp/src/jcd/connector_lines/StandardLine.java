@@ -5,11 +5,9 @@
  */
 package jcd.connector_lines;
 
-import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Line;
 import jcd.data.Diagram;
 
 /**
@@ -56,38 +54,65 @@ public class StandardLine extends ConnectorLine {
             //if the connection point is clicked twice, we want to remove that point
             if (e.getClickCount() == 2) {
                 //if it's an inheritance line
-                if(parentLine instanceof InheritanceLine){
+                if (parentLine instanceof InheritanceLine) {
                     InheritanceLine inheritanceParentLine = (InheritanceLine) parentLine;
-                    
+
                     inheritanceParentLine.standardChildLine.removeFromCanvas(canvas);
                     inheritanceParentLine.inheritanceChildLine.removeFromCanvas(canvas);
-                    
+
                     inheritanceParentLine.standardChildLine = null;
                     inheritanceParentLine.inheritanceChildLine = null;
                     //restore the original parent line
                     inheritanceParentLine.setVisible(true);
+                } else if (parentLine instanceof AggregateLine) {
+                    AggregateLine aggregateLine = (AggregateLine) parentLine;
+
+                    aggregateLine.standardChildLine.removeFromCanvas(canvas);
+                    aggregateLine.aggregateChildLine.removeFromCanvas(canvas);
+
+                    aggregateLine.standardChildLine = null;
+                    aggregateLine.aggregateChildLine = null;
+                    //restore the original parent line
+                    aggregateLine.setVisible(true);
                 }
             }
 
         });
-        
+
+        //when being dragged, change the pivoting
         connectionPoint.setOnMouseDragged(e -> {
-            if(parentLine instanceof InheritanceLine){
+            if (parentLine instanceof InheritanceLine) {
                 InheritanceLine inheritanceParentLine = (InheritanceLine) parentLine;
-                
+
                 inheritanceParentLine.standardChildLine.endXProperty().unbind();
                 inheritanceParentLine.standardChildLine.endYProperty().unbind();
-                
+
                 inheritanceParentLine.standardChildLine.setEndX(e.getX());
                 inheritanceParentLine.standardChildLine.setEndY(e.getY());
-                
+
                 inheritanceParentLine.inheritanceChildLine.startXProperty().unbind();
                 inheritanceParentLine.inheritanceChildLine.startYProperty().unbind();
-                
+
                 inheritanceParentLine.inheritanceChildLine.setStartX(e.getX());
                 inheritanceParentLine.inheritanceChildLine.setStartY(e.getY());
+                
+            } else if (parentLine instanceof AggregateLine) {
+                AggregateLine aggregateLine = (AggregateLine) parentLine;
+
+                aggregateLine.standardChildLine.endXProperty().unbind();
+                aggregateLine.standardChildLine.endYProperty().unbind();
+
+                aggregateLine.standardChildLine.setEndX(e.getX());
+                aggregateLine.standardChildLine.setEndY(e.getY());
+
+                aggregateLine.aggregateChildLine.startXProperty().unbind();
+                aggregateLine.aggregateChildLine.startYProperty().unbind();
+
+                aggregateLine.aggregateChildLine.setStartX(e.getX());
+                aggregateLine.aggregateChildLine.setStartY(e.getY());
             }
         });
+        
 
         putOnCanvas(canvas);
         initStyle();
@@ -95,7 +120,7 @@ public class StandardLine extends ConnectorLine {
 
     private void initStyle() {
         this.setStroke(Color.BLACK);
-        this.setStrokeWidth(3.5);
+        this.setStrokeWidth(4);
         connectionPoint.setFill(Color.WHITE);
         connectionPoint.setStroke(Color.BLACK);
 

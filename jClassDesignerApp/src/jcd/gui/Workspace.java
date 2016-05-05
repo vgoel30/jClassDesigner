@@ -65,6 +65,7 @@ import jcd.controller.GridEditController;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
 import jcd.data.Diagram;
+import jcd.data.ExternalDataType;
 import jcd.data.ExternalParent;
 import jcd.data.MethodObject;
 import jcd.data.VariableObject;
@@ -451,7 +452,6 @@ public final class Workspace extends AppWorkspaceComponent {
 
         //when the resize button is clicked
         resizeButton.setOnAction(resizeButtonClicked -> {
-            AggregateLine myLine = new AggregateLine(100, 100, 200, 200, canvas);
         });
 
         codeButton.setOnAction(codeButtonClicked -> {

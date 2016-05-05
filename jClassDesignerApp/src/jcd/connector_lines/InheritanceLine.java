@@ -64,6 +64,10 @@ public class InheritanceLine extends ConnectorLine {
         putOnCanvas(canvas);
     }
 
+    InheritanceLine(Diagram endDiagram, AggregateLine aThis, Pane canvas) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public StandardLine getStandardChildLine() {
         return standardChildLine;
     }
@@ -114,7 +118,7 @@ public class InheritanceLine extends ConnectorLine {
 
     private void initStyle() {
         this.setStroke(Color.BLACK);
-        this.setStrokeWidth(3.5);
+        this.setStrokeWidth(4);
 
         if (triangleHead != null) {
             this.triangleHead.setFill(Color.WHITE);

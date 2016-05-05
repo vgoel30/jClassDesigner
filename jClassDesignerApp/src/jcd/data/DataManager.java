@@ -25,6 +25,7 @@ import jcd.actions.RemoveMethod;
 import jcd.actions.RemoveVariable;
 import jcd.actions.ResizeLeft;
 import jcd.actions.ResizeRight;
+import jcd.connector_lines.AggregateLine;
 import jcd.connector_lines.ConnectorLine;
 import jcd.connector_lines.InheritanceLine;
 import jcd.connector_lines.StandardLine;
@@ -62,16 +63,16 @@ public class DataManager implements AppDataComponent {
     public ConnectorLine selectedConnectorLine = null;
 
     public ArrayList<String> classNames = new ArrayList<>();
-    //name of all the external parents
-    public ArrayList<String> externalParents = new ArrayList<>();
-
     //this will keep track of all the classes currently on the canvas
     public ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
+
+    //name of all the external parents
+    public ArrayList<String> externalParents = new ArrayList<>();
     //this will keep track of all the external parents on the canvas
     public ArrayList<ExternalParent> externalParentsOnCanvas = new ArrayList<>();
 
     //all the non-primitive data types that the class will use (for the has-a relationship)
-    public ArrayList<String> aggregateDataTypes = new ArrayList<>();
+    public ArrayList<String> externalDataTypes = new ArrayList<>();
     //all the external data type boxes on canvas
     public ArrayList<ExternalDataType> externalDataTypesOnCanvas = new ArrayList<>();
 
@@ -295,6 +296,62 @@ public class DataManager implements AppDataComponent {
         });
     }
 
+    public void attachExternalDataTypeBoxHandlers(ExternalDataType diagram) {
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+
+        //if the diagram has been clicked
+        diagram.getRootContainer().setOnMouseClicked((MouseEvent mouseClicked) -> {
+            if (workspace.selectionActive) {
+                if (selectedClassDiagram != null) {
+                    if (selectedClassDiagram instanceof ClassDiagramObject) {
+                        restoreSelectedProperties((ClassDiagramObject) selectedClassDiagram);
+                    }
+                }
+                if (selectedConnectorLine != null) {
+                    selectedConnectorLine.setStroke(Color.BLACK);
+                    selectedConnectorLine = null;
+                }
+                selectedClassDiagram = diagram;
+                workspace.disableButtons(true);
+                workspace.removeButton.setDisable(true);
+
+            }
+        });
+
+        //FOR MOVING THE diagram
+        diagram.getRootContainer().setOnMouseDragged(rectangleDraggedEvent -> {
+            if (selectedClassDiagram != null) {
+                if (selectedClassDiagram.equals(diagram) && workspace.selectionActive) {
+                    workspace.drawingActive = false;
+                    diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getSceneY() - 50);
+                    diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX() - 450);
+
+                    double x = diagram.getRootContainer().getLayoutX();
+                    double y = diagram.getRootContainer().getLayoutY();
+
+                    Pane canvas = getRenderingPane();
+                    ScrollPane scrollPane = getRenderingScrollPane();
+
+                    //dynamic scrolling 
+                    if (x > canvas.getWidth() - 150) {
+                        canvas.setMinWidth(canvas.getWidth() + 500);
+                        canvas.setPrefWidth(canvas.getWidth() + 500);
+                        if (workspace.gridIsActive()) {
+                            gridEditController.renderGridLines(canvas);
+                        }
+                    }
+                    if (y > canvas.getHeight() - 300) {
+                        canvas.setMinHeight(canvas.getHeight() + 500);
+                        canvas.setPrefHeight(canvas.getHeight() + 500);
+                        if (workspace.gridIsActive()) {
+                            gridEditController.renderGridLines(canvas);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     /**
      * Restores the appearance of the selected diagram after it has been
      * deselected
@@ -434,7 +491,7 @@ public class DataManager implements AppDataComponent {
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
             VariableOptionDialog newDialog = new VariableOptionDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassObject, workspace.variablesTable);
+            newDialog.init(app.getGUI().getWindow(), selectedClassObject, workspace.variablesTable, this, workspace.getCanvas());
             newDialog.show();
 
             System.out.println("VARIABLES : " + selectedClassObject.getVariables());
@@ -564,8 +621,7 @@ public class DataManager implements AppDataComponent {
             externalParents.remove(parentToRemove.name);
             //remove from canvas
             workspace.getCanvas().getChildren().remove(parentToRemove.getRootContainer());
-
-        }
+        } 
     }
 
     @Override
@@ -587,6 +643,7 @@ public class DataManager implements AppDataComponent {
 
     public void attachConnectorLineHandlers(ConnectorLine connectorLine) {
 
+        //if it is an inheritance line
         if (connectorLine instanceof InheritanceLine) {
             InheritanceLine inheritanceLine = (InheritanceLine) connectorLine;
             inheritanceLine.setOnMouseClicked(e -> {
@@ -604,13 +661,32 @@ public class DataManager implements AppDataComponent {
                 inheritanceLine.setStroke(Color.web("#22A7F0"));
 
                 if (e.getClickCount() == 2) {
-                    System.out.println("CLICKED TWICE");
                     inheritanceLine.handleDoubleClick(((Workspace) app.getWorkspaceComponent()).getCanvas());
-                    //StandardLine standardLine = new StandardLine(selectedConnectorLine.getStartDiagram(), selectedConnectorLine, ((Workspace) app.getWorkspaceComponent()).getCanvas());
                 }
 
             });
+        }
+        else if(connectorLine instanceof AggregateLine){
+            AggregateLine aggregateLine = (AggregateLine) connectorLine;
+            
+            aggregateLine.setOnMouseClicked(e -> {
+                ((Workspace) app.getWorkspaceComponent()).disableButtons(true);
+                ((Workspace) app.getWorkspaceComponent()).removeButton.setDisable(false);
+                if (selectedClassDiagram != null && selectedClassDiagram instanceof ClassDiagramObject) {
+                    restoreSelectedProperties((ClassDiagramObject) selectedClassDiagram);
+                }
+                if (selectedConnectorLine != null) {
+                    selectedConnectorLine.setStroke(Color.BLACK);
+                }
+                selectedClassDiagram = null;
+                selectedConnectorLine = aggregateLine;
 
+                aggregateLine.setStroke(Color.web("#22A7F0"));
+
+                if (e.getClickCount() == 2) {
+                    aggregateLine.handleDoubleClick(((Workspace) app.getWorkspaceComponent()).getCanvas());
+                }
+        });
         }
     }
 

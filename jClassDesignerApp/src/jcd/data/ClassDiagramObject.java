@@ -43,9 +43,9 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     public ArrayList<InheritanceLine> inheritanceLinesOut = new ArrayList<>();
 
     //list of all the data types this class has variables of
-    public ArrayList<String> aggregates = new ArrayList<>();
+    public ArrayList<String> externalDataTypesUsed = new ArrayList<>();
     //list of all the aggregate lines originating out of this diagram
-    public ArrayList<AggregateLine> aggregateLines = new ArrayList<>();
+    public ArrayList<AggregateLine> aggregateLinesOut = new ArrayList<>();
 
     VBox packageContainer;
 
@@ -433,7 +433,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         }
 
         toReturn += "\npublic " + getDiagramType() + " " + this.getClassNameText().getText();// + "{\n\n ";
-
+        
         //adding parent stuff
         if (getParentName() != null && !getParentName().equals("")) {
             String potentialName = getParentName();

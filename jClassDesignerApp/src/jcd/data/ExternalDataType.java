@@ -19,7 +19,6 @@ import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
  */
 public class ExternalDataType extends Diagram{
     String type;
-    String name;
     Text nameText;
     
     //all the classes which use this data type
@@ -47,6 +46,7 @@ public class ExternalDataType extends Diagram{
         return type;
     }
 
+    @Override
     public String getName() {
         return name;
     }
