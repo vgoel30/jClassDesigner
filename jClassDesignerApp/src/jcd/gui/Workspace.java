@@ -284,6 +284,7 @@ public final class Workspace extends AppWorkspaceComponent {
         parentNamePicker = new ComboBox<>();
         parentNamePicker.setMaxWidth(210);
         parentNamePicker.setEditable(true);
+        parentNamePicker.setValue("");
         parentSelectionContainer.getChildren().add(parentNameLabel);
         parentSelectionContainer.getChildren().add(parentNamePicker);
         containers.add(parentSelectionContainer);
@@ -537,126 +538,125 @@ public final class Workspace extends AppWorkspaceComponent {
                 dataManager.validateNameOfPackage(oldValue, newValue);
             }
         });
-        
+
         parentNamePicker.valueProperty().addListener(new ChangeListener<String>() {
-        @Override public void changed(ObservableValue ov, String t, String t1) {
+            @Override
+            public void changed(ObservableValue ov, String t, String t1) {
             System.out.println("t :  " + t);
             System.out.println("t1    " + t1);
-        }    
-    });
+
+                ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
+
+                if (t1 != null && !selectedClassObject.getParentName().equals(t1)) {
+                    System.out.println("AMDARCGHGYUGVVGHV");
+                    if (t1.equals("NONE") || t1.equals("")) {
+                        selectedClassObject.setParentName("");
+                    } else {
+                        selectedClassObject.setParentName(t1);
+
+                        boolean isLocal = false;
+                        boolean alreadyExists = false;
+                        //check if it's a local parent
+                        for (ClassDiagramObject classOnCanvas : dataManager.classesOnCanvas) {
+                            if (classOnCanvas.toString().equals(t1)) {
+                                isLocal = true;
+                                break;
+                            }
+                        }
+                        //check if it is already a parent to another class
+                        if (dataManager.externalParents.contains(t1)) {
+                            alreadyExists = true;
+                        }
+
+                        //if it isn't local and doesn't already exist, make a external parent box for it
+                        if (!isLocal && !alreadyExists) {
+                            dataManager.externalParents.add(t1);
+                            ExternalParent externalParent = gridEditController.renderExternalDiagramBox(t1, "external_parent", canvas);
+                            dataManager.externalParentsOnCanvas.add(externalParent);
+                            InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
+                            externalParent.parentalLines.add(myLine);
+                            externalParent.children.add(selectedClassObject);
+                            selectedClassObject.inheritanceLinesOut.add(myLine);
+
+                            dataManager.attachConnectorLineHandlers(myLine);
+                        } //if the external Parent already exists
+                        else if (!isLocal) {
+                            for (ExternalParent externalParent : dataManager.externalParentsOnCanvas) {
+                                if (externalParent.getName().equals(t1)) {
+                                    InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
+                                    externalParent.parentalLines.add(myLine);
+                                    externalParent.children.add(selectedClassObject);
+                                    selectedClassObject.inheritanceLinesOut.add(myLine);
+                                    dataManager.attachConnectorLineHandlers(myLine);
+                                    break;
+                                }
+                            }
+                        } //for adding a local parent
+                        else if (isLocal) {
+                            for (ClassDiagramObject localClass : dataManager.classesOnCanvas) {
+                                if (localClass.toString().equals(t1)) {
+                                    InheritanceLine myLine = new InheritanceLine(localClass, selectedClassObject, canvas);
+                                    localClass.linesPointingTowards.add(myLine);
+                                    localClass.getChildren().add(selectedClassObject);
+                                    selectedClassObject.inheritanceLinesOut.add(myLine);
+                                    dataManager.attachConnectorLineHandlers(myLine);
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+                }//we will need to remove the line connected to the old parent if the parnet name has changed
+                 if (selectedClassObject.getParentName() != null && !selectedClassObject.getParentName().equals(t)) {
+                     System.out.println("LIT LIT LIT : { " + t + "}");
+                    if (t != null && !t.equals("")) {
+                        System.out.println("THIS WEIRD PLACE 2");
+
+                        System.out.print("IMPORTANT DEBUGGING STATEMENTS:  " + selectedClassObject.getParentName());
+                        System.out.println("        " + t);
+
+                        InheritanceLine lineToRemove = new InheritanceLine();
+                        for (InheritanceLine inheritanceLine : selectedClassObject.inheritanceLinesOut) {
+                            if (inheritanceLine.getEndDiagram().toString().equals(t)) {
+                                Diagram endDiagram = inheritanceLine.getEndDiagram();
+                                inheritanceLine.removeFromCanvas(canvas);
+
+                                lineToRemove = inheritanceLine;
+
+                        if (inheritanceLine.standardChildLine != null) {
+                            inheritanceLine.standardChildLine.removeFromCanvas(canvas);
+                        }
+
+                        if (inheritanceLine.inheritanceChildLine != null) {
+                            inheritanceLine.inheritanceChildLine.removeFromCanvas(canvas);
+                        }
+                                if (endDiagram instanceof ExternalParent) {
+                                    ExternalParent externalParent = (ExternalParent) endDiagram;
+                                    externalParent.children.remove(selectedClassObject);
+                                    externalParent.parentalLines.remove(inheritanceLine);
+
+                                    if (externalParent.children.isEmpty()) {
+                                        canvas.getChildren().remove(externalParent.getRootContainer());
+                                        dataManager.externalParentsOnCanvas.remove(externalParent);
+                                        dataManager.externalParents.remove(externalParent.getName());
+                                    }
+                                } else {
+                                    ClassDiagramObject localParent = (ClassDiagramObject) endDiagram;
+                                    localParent.getChildren().remove(selectedClassObject);
+                                    localParent.linesPointingTowards.remove(inheritanceLine);
+                                }
+
+                            }
+                        }
+                        selectedClassObject.inheritanceLinesOut.remove(lineToRemove);
+                    }
+                }
+            }
+        });
 
         //the event handler for the parent name clicker 
         parentNamePicker.setOnAction(e -> {
-            
-            
-            System.out.println(" parentNamePicker.setOnAction");
-            
-            ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
 
-             if (parentNamePicker.getValue() != null && !selectedClassObject.getParentName().equals(parentNamePicker.getValue())) {
-                System.out.println(" THSI S WEIRD PLACE @ 1");
-                if (parentNamePicker.getValue().equals("NONE") || parentNamePicker.getValue().equals("")) {
-                    selectedClassObject.setParentName(null);
-                } else {
-                    selectedClassObject.setParentName(parentNamePicker.getValue());
-
-                    boolean isLocal = false;
-                    boolean alreadyExists = false;
-                    //check if it's a local parent
-                    for (ClassDiagramObject classOnCanvas : dataManager.classesOnCanvas) {
-                        if (classOnCanvas.toString().equals(parentNamePicker.getValue())) {
-                            isLocal = true;
-                            break;
-                        }
-                    }
-                    //check if it is already a parent to another class
-                    if (dataManager.externalParents.contains(parentNamePicker.getValue())) {
-                        alreadyExists = true;
-                    }
-
-                    //if it isn't local and doesn't already exist, make a external parent box for it
-                    if (!isLocal && !alreadyExists) {
-                        dataManager.externalParents.add(parentNamePicker.getValue());
-                        ExternalParent externalParent = gridEditController.renderExternalDiagramBox(parentNamePicker.getValue(), "external_parent", canvas);
-                        dataManager.externalParentsOnCanvas.add(externalParent);
-                        InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
-                        externalParent.parentalLines.add(myLine);
-                        externalParent.children.add(selectedClassObject);
-                        selectedClassObject.inheritanceLinesOut.add(myLine);
-
-                        dataManager.attachConnectorLineHandlers(myLine);
-                    } //if the external Parent already exists
-                    else if (!isLocal) {
-                        for (ExternalParent externalParent : dataManager.externalParentsOnCanvas) {
-                            if (externalParent.getName().equals(parentNamePicker.getValue())) {
-                                InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
-                                externalParent.parentalLines.add(myLine);
-                                externalParent.children.add(selectedClassObject);
-                                selectedClassObject.inheritanceLinesOut.add(myLine);
-                                dataManager.attachConnectorLineHandlers(myLine);
-                                break;
-                            }
-                        }
-                    } //for adding a local parent
-                    else if (isLocal) {
-                        for (ClassDiagramObject localClass : dataManager.classesOnCanvas) {
-                            if (localClass.toString().equals(parentNamePicker.getValue())) {
-                                InheritanceLine myLine = new InheritanceLine(localClass, selectedClassObject, canvas);
-                                localClass.linesPointingTowards.add(myLine);
-                                localClass.getChildren().add(selectedClassObject);
-                                selectedClassObject.inheritanceLinesOut.add(myLine);
-                                dataManager.attachConnectorLineHandlers(myLine);
-                                break;
-                            }
-                        }
-                    }
-
-                }
-            }
-             
-             //else //we will need to remove the line connected to the old parent if the parnet name has changed
-             else if (selectedClassObject.getParentName() != null && !selectedClassObject.getParentName().equals(parentNamePicker.getValue())) {
-                System.out.println("THIS WEIRD PLACE 2");
-                
-                System.out.print("IMPORTANT DEBUGGING STATEMENTS:  " + selectedClassObject.getParentName());
-                System.out.println("        " + parentNamePicker.getValue());
-                
-                InheritanceLine lineToRemove = new InheritanceLine();
-                for (InheritanceLine inheritanceLine : selectedClassObject.inheritanceLinesOut) {
-                    if (inheritanceLine.getEndDiagram().toString().equals(selectedClassObject.getParentName())) {
-                        Diagram endDiagram = inheritanceLine.getEndDiagram();
-                        inheritanceLine.removeFromCanvas(canvas);
-
-                        lineToRemove = inheritanceLine;
-
-//                        if (inheritanceLine.standardChildLine != null) {
-//                            inheritanceLine.standardChildLine.removeFromCanvas(canvas);
-//                        }
-//
-//                        if (inheritanceLine.inheritanceChildLine != null) {
-//                            inheritanceLine.inheritanceChildLine.removeFromCanvas(canvas);
-//                        }
-
-                        if (endDiagram instanceof ExternalParent) {
-                            ExternalParent externalParent = (ExternalParent) endDiagram;
-                            externalParent.children.remove(selectedClassObject);
-                            externalParent.parentalLines.remove(inheritanceLine);
-
-                            if (externalParent.children.isEmpty()) {
-                                canvas.getChildren().remove(externalParent.getRootContainer());
-                                dataManager.externalParentsOnCanvas.remove(externalParent);
-                                dataManager.externalParents.remove(externalParent.getName());
-                            }
-                        } else {
-                            ClassDiagramObject localParent = (ClassDiagramObject) endDiagram;
-                            localParent.getChildren().remove(selectedClassObject);
-                            localParent.linesPointingTowards.remove(inheritanceLine);
-                        }
-
-                    }
-                }
-                selectedClassObject.inheritanceLinesOut.remove(lineToRemove);
-            }
         });
 //        
 

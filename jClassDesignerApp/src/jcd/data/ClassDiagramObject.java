@@ -31,7 +31,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     //class or interface
     String diagramType;
 
-    String parent = new String();
+    String parent;
 
     ArrayList<String> localInterfaces = new ArrayList<>();
     ArrayList<String> externalInterfaces = new ArrayList<>();
@@ -159,6 +159,8 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         methodsContainer = new VBox();
 
         diagramType = type;
+        
+        parent = "";
 
         //set the desired x and y coordinates
         rootContainer.setLayoutX(x);
