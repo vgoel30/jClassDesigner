@@ -27,6 +27,7 @@ import jcd.actions.ResizeLeft;
 import jcd.actions.ResizeRight;
 import jcd.connector_lines.ConnectorLine;
 import jcd.connector_lines.InheritanceLine;
+import jcd.connector_lines.StandardLine;
 import jcd.controller.ActionController;
 import jcd.controller.DiagramController;
 import jcd.controller.GridEditController;
@@ -56,6 +57,9 @@ public class DataManager implements AppDataComponent {
 
     //THE CURRENT SELECTED CLASS DIAGRAM
     public Diagram selectedClassDiagram = null;
+
+    //THE CURRENT SELECTED LINE OBJECT
+    public ConnectorLine selectedConnectorLine = null;
 
     public ArrayList<String> classNames = new ArrayList<>();
     //name of all the external parents
@@ -149,6 +153,11 @@ public class DataManager implements AppDataComponent {
                     restoreSelectedProperties((ClassDiagramObject) selectedClassDiagram);
                 }
 
+                if (selectedConnectorLine != null) {
+                    selectedConnectorLine.setStroke(Color.BLACK);
+                    selectedConnectorLine = null;
+                }
+
                 //set the inital position of the mouse event
                 moveDiagramEvent.setInitialPosition(diagram.getRootContainer().getLayoutX(), diagram.getRootContainer().getLayoutY());
 
@@ -233,9 +242,11 @@ public class DataManager implements AppDataComponent {
                         restoreSelectedProperties((ClassDiagramObject) selectedClassDiagram);
                     }
                 }
+                if (selectedConnectorLine != null) {
+                    selectedConnectorLine.setStroke(Color.BLACK);
+                    selectedConnectorLine = null;
+                }
                 selectedClassDiagram = diagram;
-                diagram.getRootContainer().getStyleClass().add(SELECTED_DIAGRAM_CONTAINER);
-                System.out.println(diagram.getRootContainer().getStyleClass());
                 workspace.disableButtons(true);
                 workspace.removeButton.setDisable(false);
 
@@ -322,27 +333,35 @@ public class DataManager implements AppDataComponent {
         }
     }
 
+    /**
+     * Validates the name of the package for a class diagram object
+     *
+     * @param oldValue
+     * @param newValue
+     */
     public void validateNameOfPackage(String oldValue, String newValue) {
         packageNames.remove(oldValue);
 
         ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
-        selectedClassObject.getPackageNameText().setText(newValue);
-        classPackageCombos.remove(selectedClassObject.getClassNameText().getText() + ":" + oldValue);
+        if (selectedClassObject != null) {
+            selectedClassObject.getPackageNameText().setText(newValue);
+            classPackageCombos.remove(selectedClassObject.getClassNameText().getText() + ":" + oldValue);
 
-        for (ClassDiagramObject diagram : classesOnCanvas) {
-            if (diagram != selectedClassObject) {
-                int x = selectedClassObject.compareTo(diagram);
-                if (x == 0) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Package name error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Package already exists in this package!");
-                    alert.showAndWait();
+            for (ClassDiagramObject diagram : classesOnCanvas) {
+                if (diagram != selectedClassObject) {
+                    int x = selectedClassObject.compareTo(diagram);
+                    if (x == 0) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Package name error");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Package already exists in this package!");
+                        alert.showAndWait();
+                    }
                 }
             }
+            packageNames.add(newValue);
+            classPackageCombos.add(selectedClassObject.getClassNameText().getText() + ":" + newValue);
         }
-        packageNames.add(newValue);
-        classPackageCombos.add(selectedClassObject.getClassNameText().getText() + ":" + newValue);
     }
 
     public void handleExportCode(Window window) {
@@ -552,6 +571,7 @@ public class DataManager implements AppDataComponent {
     @Override
     public void reset() {
         selectedClassDiagram = null;
+        selectedConnectorLine = null;
         //remove all the children
         classesOnCanvas.clear();
         classNames.clear();
@@ -566,15 +586,31 @@ public class DataManager implements AppDataComponent {
     }
 
     public void attachConnectorLineHandlers(ConnectorLine connectorLine) {
+
         if (connectorLine instanceof InheritanceLine) {
-            InheritanceLine theLine = (InheritanceLine) connectorLine;
-            connectorLine.setOnMouseClicked(e -> {
-                theLine.setStroke(Color.BLUE);
+            InheritanceLine inheritanceLine = (InheritanceLine) connectorLine;
+            inheritanceLine.getTriangleHead().setOnMouseClicked(e -> {
+                ((Workspace) app.getWorkspaceComponent()).disableButtons(true);
+                ((Workspace) app.getWorkspaceComponent()).removeButton.setDisable(false);
+                if (selectedClassDiagram != null && selectedClassDiagram instanceof ClassDiagramObject) {
+                    restoreSelectedProperties((ClassDiagramObject) selectedClassDiagram);
+                }
+                if (selectedConnectorLine != null) {
+                    selectedConnectorLine.setStroke(Color.BLACK);
+                }
+                selectedClassDiagram = null;
+                selectedConnectorLine = inheritanceLine;
+
+                inheritanceLine.setStroke(Color.web("#22A7F0"));
+
+                if (e.getClickCount() == 2) {
+                    System.out.println("CLICKED TWICE");
+                    inheritanceLine.handleDoubleClick(((Workspace) app.getWorkspaceComponent()).getCanvas());
+                    //StandardLine standardLine = new StandardLine(selectedConnectorLine.getStartDiagram(), selectedConnectorLine, ((Workspace) app.getWorkspaceComponent()).getCanvas());
+                }
 
             });
-            connectorLine.setOnMouseReleased(e -> {
-                theLine.setStroke(Color.RED);
-            });
+
         }
     }
 

@@ -148,7 +148,10 @@ public class ExternalInterfaceDialog extends Stage {
                     //add the parental line
                     parentToAdd.parentalLines.add(inheritanceLine);
                     diagram.inheritanceLinesOut.add(inheritanceLine);
+                    //attach the event handlers
                     dataManager.attachExternalDiagramHandlers(parentToAdd);
+                    dataManager.attachConnectorLineHandlers(inheritanceLine);
+                    
                     dataManager.externalParents.add(externalInterfaceToAdd);
                     dataManager.externalParentsOnCanvas.add(parentToAdd);
                 } else {

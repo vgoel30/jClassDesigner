@@ -124,6 +124,8 @@ public class AppFileController {
      */
     public void handleLoadRequest() {
         
+            
+        
         try {
             // WE MAY HAVE TO SAVE CURRENT WORK
             boolean continueToOpen = true;
@@ -341,10 +343,12 @@ public class AppFileController {
                 app.getWorkspaceComponent().activateWorkspace(app.getGUI().getAppPane());
                 saved = true;
                 app.getGUI().updateToolbarControls(saved);
-            } catch (Exception e) {
+            } catch (IOException e) {
+                System.out.println("SOMETHING WENT WRONG");
                 AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
                 dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
             }
+            
         }
     }
 

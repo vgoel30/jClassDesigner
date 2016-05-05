@@ -39,6 +39,9 @@ public interface AppStyleArbiter {
     public static final String SELECTED_DIAGRAM_CONTAINER = "selected_diagram_container";
     public static final String DIAGRAM_CONTAINERS = "diagram_containers";
     public static final String DIAGRAM_TEXT_FIELD = "diagram_text_field";
+    
+    public static final String CONNECTOR_LINE = "connector_line";
+    public static final String SELECTED_CONNECTOR_LINE = "selected_connector_line";
             
     
     public void initStyle();

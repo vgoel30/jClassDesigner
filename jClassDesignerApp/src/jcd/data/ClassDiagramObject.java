@@ -198,10 +198,10 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
      *
      * @param root
      */
-    public void putOnCanvas(Pane root) {
-        root.getChildren().add(rootContainer);
-        root.getChildren().add(rightLine);
-        root.getChildren().add(leftLine);
+    public void putOnCanvas(Pane canvas) {
+        canvas.getChildren().add(rootContainer);
+        canvas.getChildren().add(rightLine);
+        canvas.getChildren().add(leftLine);
     }
 
     public double getEndPoint() {
