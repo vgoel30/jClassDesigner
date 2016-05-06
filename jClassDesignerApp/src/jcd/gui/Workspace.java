@@ -608,6 +608,7 @@ public final class Workspace extends AppWorkspaceComponent {
         methodsDecrementButton.setDisable(disable);
         removeButton.setDisable(disable);
         variablesTable.setDisable(disable);
+        methodsTable.setDisable(disable);
         localInterfaceButton.setDisable(disable);
         externalInterfaceButton.setDisable(disable);
         addPackageButton.setDisable(disable);

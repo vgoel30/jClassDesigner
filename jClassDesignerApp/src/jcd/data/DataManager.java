@@ -62,7 +62,6 @@ public class DataManager implements AppDataComponent {
     //THE CURRENT SELECTED LINE OBJECT
     public ConnectorLine selectedConnectorLine = null;
 
-    
     //this will keep track of all the classes currently on the canvas
     public ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
 
@@ -253,6 +252,7 @@ public class DataManager implements AppDataComponent {
                 }
                 selectedClassDiagram = diagram;
                 workspace.disableButtons(true);
+                reflectChangesForExternalBoxDiagrams(workspace, selectedClassDiagram);
 
             }
         });
@@ -321,9 +321,7 @@ public class DataManager implements AppDataComponent {
                 }
                 selectedClassDiagram = diagram;
                 workspace.disableButtons(true);
-                boolean isUsed = diagram.emittedLines.size() > 0;
-                //disable the delete button if it is being used
-                workspace.removeButton.setDisable(isUsed);
+                reflectChangesForExternalBoxDiagrams(workspace, selectedClassDiagram);
 
             }
         });
@@ -364,6 +362,7 @@ public class DataManager implements AppDataComponent {
 
     /**
      * External use type box's handlers (uses-a relationship)
+     *
      * @param diagram
      */
     public void attachExternalUseTypeBoxHandlers(ExternalUseType diagram) {
@@ -383,9 +382,8 @@ public class DataManager implements AppDataComponent {
                 }
                 selectedClassDiagram = diagram;
                 workspace.disableButtons(true);
-                boolean isUsed = diagram.emittedLines.size() > 0;
-                //disable the delete button if it is being used
-                workspace.removeButton.setDisable(isUsed);
+                workspace.removeButton.setDisable(false);
+                reflectChangesForExternalBoxDiagrams(workspace, selectedClassDiagram);
 
             }
         });
@@ -467,26 +465,27 @@ public class DataManager implements AppDataComponent {
      */
     public void validateNameOfPackage(String oldValue, String newValue) {
         packageNames.remove(oldValue);
+        if (selectedClassDiagram instanceof ClassDiagramObject) {
+            ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
+            if (selectedClassObject != null) {
+                selectedClassObject.getPackageNameText().setText(newValue);
+                classPackageCombos.remove(selectedClassObject.getClassNameText().getText() + ":" + oldValue);
 
-        ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
-        if (selectedClassObject != null) {
-            selectedClassObject.getPackageNameText().setText(newValue);
-            classPackageCombos.remove(selectedClassObject.getClassNameText().getText() + ":" + oldValue);
-
-            for (ClassDiagramObject diagram : classesOnCanvas) {
-                if (diagram != selectedClassObject) {
-                    int x = selectedClassObject.compareTo(diagram);
-                    if (x == 0) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Package name error");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Package already exists in this package!");
-                        alert.showAndWait();
+                for (ClassDiagramObject diagram : classesOnCanvas) {
+                    if (diagram != selectedClassObject) {
+                        int x = selectedClassObject.compareTo(diagram);
+                        if (x == 0) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Package name error");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Package already exists in this package!");
+                            alert.showAndWait();
+                        }
                     }
                 }
+                packageNames.add(newValue);
+                classPackageCombos.add(selectedClassObject.getClassNameText().getText() + ":" + newValue);
             }
-            packageNames.add(newValue);
-            classPackageCombos.add(selectedClassObject.getClassNameText().getText() + ":" + newValue);
         }
     }
 
@@ -640,8 +639,7 @@ public class DataManager implements AppDataComponent {
                     ResizeLeft resizeLeftMove = (ResizeLeft) undoStack.pop();
                     ClassDiagramObject diagram = resizeLeftMove.getDiagram();
                     actionController.handleResizeRightUndo(resizeLeftMove.getInitialWidth(), resizeLeftMove.getInitialX(), diagram);
-                } 
-                //if the user wants to undo the removal of a variable
+                } //if the user wants to undo the removal of a variable
                 else if (undoStack.peek().getActionType().equals(REMOVE_VARIABLE)) {
                     RemoveVariable removeVariableMove = (RemoveVariable) undoStack.pop();
                     ClassDiagramObject diagram = removeVariableMove.getDiagram();
@@ -676,6 +674,12 @@ public class DataManager implements AppDataComponent {
         diagramController.updateParentNamePicker(selectedClassDiagram, workspace.getParentNamePicker(), classesOnCanvas);
     }
 
+    private void reflectChangesForExternalBoxDiagrams(Workspace workspace, Diagram externalBox) {
+        workspace.classNameField.setText(selectedClassDiagram.getName());
+        workspace.packageNameField.setText("");
+        workspace.getParentNamePicker().setValue("");
+    }
+
     /**
      * Handles the removal of a diagram object
      */
@@ -707,15 +711,16 @@ public class DataManager implements AppDataComponent {
             externalParents.remove(parentToRemove.name);
             //remove from canvas
             workspace.getCanvas().getChildren().remove(parentToRemove.getRootContainer());
-        }
-        
-        else if(selectedClassDiagram instanceof ExternalDataType){
+        } else if (selectedClassDiagram instanceof ExternalDataType) {
             ExternalDataType dataTypeToRemove = (ExternalDataType) selectedClassDiagram;
             dataTypeToRemove.removeFromCanvas(workspace.getCanvas());
-        }
-        
-        else if(selectedClassDiagram instanceof ExternalUseType){
+        } else if (selectedClassDiagram instanceof ExternalUseType) {
             ExternalUseType useTypeToRemove = (ExternalUseType) selectedClassDiagram;
+
+            for (DependencyLine dependencyLine : useTypeToRemove.emittedLines) {
+                dependencyLine.removeFromCanvas(workspace.getCanvas());
+            }
+
             useTypeToRemove.removeFromCanvas(workspace.getCanvas());
         }
     }
@@ -748,7 +753,6 @@ public class DataManager implements AppDataComponent {
             InheritanceLine inheritanceLine = (InheritanceLine) connectorLine;
             inheritanceLine.setOnMouseClicked(e -> {
                 ((Workspace) app.getWorkspaceComponent()).disableButtons(true);
-                ((Workspace) app.getWorkspaceComponent()).removeButton.setDisable(false);
                 if (selectedClassDiagram != null && selectedClassDiagram instanceof ClassDiagramObject) {
                     restoreSelectedProperties((ClassDiagramObject) selectedClassDiagram);
                 }

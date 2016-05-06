@@ -79,6 +79,12 @@ public class DependencyLine extends ConnectorLine{
         if (rectangleHead != null) {
             canvas.getChildren().remove(this.rectangleHead);
         }
+        if(standardChildLine != null){
+            standardChildLine.removeFromCanvas(canvas);
+        }
+        if(dependencyChildLine != null){
+            canvas.getChildren().remove(this.dependencyChildLine);
+        }
         canvas.getChildren().remove(this);
 
     }

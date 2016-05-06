@@ -334,7 +334,6 @@ public class DiagramController {
             //add the argument to the list of arguments
             if (!argumentTypes.contains(argumentType)) {
                 argumentTypes.add(argumentType);
-                //renders the diagram for the box
                 addExternalUseType(diagram, argumentType, dataManager, dataManager.getRenderingPane());
             }
         }
