@@ -125,6 +125,8 @@ public class DiagramController {
      *
      * @param diagram
      * @param toAdd
+     * @param dataManager
+     * @param canvas
      */
     public void addVariable(ClassDiagramObject diagram, VariableObject toAdd, DataManager dataManager, Pane canvas) {
         //add to the list of variables for the class

@@ -76,7 +76,7 @@ public class DataManager implements AppDataComponent {
     public ArrayList<String> externalDataTypes = new ArrayList<>();
     //all the external data type boxes on canvas
     public ArrayList<ExternalDataType> externalDataTypesOnCanvas = new ArrayList<>();
-    
+
     //all the non-primitive data types that the class will use (for the uses relationship)
     public ArrayList<String> externalUseTypes = new ArrayList<>();
     //all the external use type boxes on canvas
@@ -304,7 +304,8 @@ public class DataManager implements AppDataComponent {
 
     /**
      * Event handlers for the external data type box (has-a relationship)
-     * @param diagram 
+     *
+     * @param diagram
      */
     public void attachExternalDataTypeBoxHandlers(ExternalDataType diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
@@ -363,12 +364,12 @@ public class DataManager implements AppDataComponent {
             }
         });
     }
-    
+
     /**
-     * External use type box's handlers (uses-a relationship) 
+     * External use type box's handlers (uses-a relationship)
      */
     public void attachExternalUseTypeBoxHandlers(ExternalUseType diagram) {
-       Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
         //if the diagram has been clicked
         diagram.getRootContainer().setOnMouseClicked((MouseEvent mouseClicked) -> {
@@ -614,6 +615,8 @@ public class DataManager implements AppDataComponent {
     }
 
     public void handleUndo() {
+        Workspace workspace = (Workspace) app.getWorkspaceComponent();
+
         if (selectedClassDiagram instanceof ClassDiagramObject) {
             ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
             System.out.print("UNDO STACK : " + undoStack.size() + "  ");
@@ -642,10 +645,17 @@ public class DataManager implements AppDataComponent {
                     ResizeLeft resizeLeftMove = (ResizeLeft) undoStack.pop();
                     ClassDiagramObject diagram = resizeLeftMove.getDiagram();
                     actionController.handleResizeRightUndo(resizeLeftMove.getInitialWidth(), resizeLeftMove.getInitialX(), diagram);
-                } else if (undoStack.peek().getActionType().equals(REMOVE_VARIABLE)) {
+                } 
+                //if the user wants to undo the removal of a variable
+                else if (undoStack.peek().getActionType().equals(REMOVE_VARIABLE)) {
                     RemoveVariable removeVariableMove = (RemoveVariable) undoStack.pop();
                     ClassDiagramObject diagram = removeVariableMove.getDiagram();
-                    actionController.handleRemoveVariableUndo(diagram, removeVariableMove.getRemovedVariable());
+
+                    //adds the variable to the list of variables and renders it on the diagram
+                    diagramController.addVariable(diagram, removeVariableMove.getRemovedVariable(), this, getRenderingPane());
+                    //updates the variables table
+                    diagramController.updateVariablesTable(diagram, workspace.variablesTable);
+
                 } else if (undoStack.peek().getActionType().equals(REMOVE_METHOD)) {
                     RemoveMethod removeMethodMove = (RemoveMethod) undoStack.pop();
                     ClassDiagramObject diagram = removeMethodMove.getDiagram();
@@ -717,13 +727,13 @@ public class DataManager implements AppDataComponent {
         //remove all the actions from the undo stack
         undoStack.clear();
         ClassDiagramObject.counter = 0;
-        
+
         externalParents.clear();
         externalParentsOnCanvas.clear();
-        
+
         externalDataTypes.clear();
         externalDataTypesOnCanvas.clear();
-        
+
         ((Workspace) app.getWorkspaceComponent()).getCanvas().getChildren().clear();
     }
 
@@ -772,8 +782,7 @@ public class DataManager implements AppDataComponent {
                     aggregateLine.handleDoubleClick(((Workspace) app.getWorkspaceComponent()).getCanvas());
                 }
             });
-        }
-        else if(connectorLine instanceof DependencyLine){
+        } else if (connectorLine instanceof DependencyLine) {
             DependencyLine dependencyLine = (DependencyLine) connectorLine;
 
             dependencyLine.setOnMouseClicked(e -> {
@@ -870,7 +879,5 @@ public class DataManager implements AppDataComponent {
 
         //RIGHT LINE EVENT HANDLERS DONE
     }
-
-    
 
 }
