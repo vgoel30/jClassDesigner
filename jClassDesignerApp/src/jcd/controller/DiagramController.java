@@ -199,11 +199,11 @@ public class DiagramController {
      */
     public void removeVariable(ClassDiagramObject diagram, VariableObject toRemove, DataManager dataManager) {
         VariableObject toRemoveTemp = new VariableObject();
-        
+
         String variableType = toRemove.getType();
 
         boolean needToRemoveLine = true;
-        
+
         int counter = 0;
 
         for (int i = 0; i < diagram.getVariables().size(); i++) {
@@ -211,32 +211,47 @@ public class DiagramController {
                 counter++;
             }
         }
-        
-        //if more than one integer has this type, no need to remove this line
-        if(counter > 1)
+
+        //if more than one variable in the class has this type, no need to remove this line
+        if (counter > 1) {
             needToRemoveLine = false;
-        
+        }
+
         if (needToRemoveLine) {
             for (int i = 0; i < dataManager.externalDataTypesOnCanvas.size(); i++) {
                 if (dataManager.externalDataTypesOnCanvas.get(i).nameText.getText().trim().equals(variableType)) {
                     ExternalDataType concernedDataType = dataManager.externalDataTypesOnCanvas.get(i);
-                    
-                    for(int j = 0; j < concernedDataType.emittedLines.size(); j++){
-                        if(concernedDataType.emittedLines.get(j).getEndDiagram().equals(diagram)){
-                            System.out.println();
-                            concernedDataType.emittedLines.get(j).removeFromCanvas(dataManager.getRenderingPane());
-                            concernedDataType.emittedLines.remove(concernedDataType.emittedLines.get(j));
+
+                    for (int j = 0; j < concernedDataType.emittedLines.size(); j++) {
+                        if (concernedDataType.emittedLines.get(j).getEndDiagram().equals(diagram)) {
+                            AggregateLine lineToRemove = concernedDataType.emittedLines.get(j);
+                            lineToRemove.removeFromCanvas(dataManager.getRenderingPane());
+                            
+                            //rmeove the child standard and aggregate lines
+                            if(lineToRemove.standardChildLine != null){
+                                lineToRemove.standardChildLine.removeFromCanvas(dataManager.getRenderingPane());
+                            }
+                            if(lineToRemove.aggregateChildLine != null){
+                                lineToRemove.aggregateChildLine.removeFromCanvas(dataManager.getRenderingPane());
+                            }
+                            
+                            concernedDataType.emittedLines.remove(lineToRemove);
                             concernedDataType.usedBy.remove(diagram);
                             break;
                         }
                     }
-                    if(concernedDataType.emittedLines.isEmpty()){
+                    //if the data type isn't being used at all, delete it's box
+                    if (concernedDataType.emittedLines.isEmpty()) {
                         concernedDataType.removeFromCanvas(dataManager.getRenderingPane());
+                        //remove from data manager
+                        dataManager.externalDataTypes.remove(variableType);
+                        dataManager.externalDataTypesOnCanvas.remove(concernedDataType);
                     }
                 }
             }
         }
 
+        //find the variable to be removed
         for (VariableObject variable : diagram.getVariables()) {
             if (variable.equals(toRemove)) {
                 toRemoveTemp = variable;
@@ -502,17 +517,21 @@ public class DiagramController {
             for (ExternalUseType externalUseType : dataManager.externalUseTypesOnCanvas) {
                 //if the box's name matches the name that is to be added
                 if (externalUseType.getName().equals(variableDataType)) {
-                    //make a new line
-                    DependencyLine dependencyLineToAdd = new DependencyLine(diagram, externalUseType, canvas);
 
-                    //attach event handlers for the line (splitting and stuff)
-                    dataManager.attachConnectorLineHandlers(dependencyLineToAdd);
+                    // make a new line if the diagram isn't already being used
+                    if (!externalUseType.usedBy.contains(diagram)) {
+                        //make a new line
+                        DependencyLine dependencyLineToAdd = new DependencyLine(diagram, externalUseType, canvas);
 
-                    //lines emitted by the the external data type box
-                    externalUseType.emittedLines.add(dependencyLineToAdd);
-                    //the data type is used by the current selected diagram
-                    externalUseType.usedBy.add(diagram);
-                    break;
+                        //attach event handlers for the line (splitting and stuff)
+                        dataManager.attachConnectorLineHandlers(dependencyLineToAdd);
+
+                        //lines emitted by the the external data type box
+                        externalUseType.emittedLines.add(dependencyLineToAdd);
+                        //the data type is used by the current selected diagram
+                        externalUseType.usedBy.add(diagram);
+                        break;
+                    }
                 }
             }
         }
