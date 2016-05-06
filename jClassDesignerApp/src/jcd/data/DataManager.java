@@ -648,6 +648,10 @@ public class DataManager implements AppDataComponent {
         ClassDiagramObject.counter = 0;
         externalParents.clear();
         externalParentsOnCanvas.clear();
+        
+        externalDataTypes.clear();
+        externalDataTypesOnCanvas.clear();
+        
         ((Workspace) app.getWorkspaceComponent()).getCanvas().getChildren().clear();
     }
 
