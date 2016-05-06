@@ -23,6 +23,7 @@ public class ExternalParent extends Diagram{
     Text nameText;
     
     public ArrayList<ClassDiagramObject> children = new ArrayList<>();
+    //all the parental lines coming out
     public ArrayList<InheritanceLine> parentalLines = new ArrayList<>();
    
     public ExternalParent(String nameToSet){

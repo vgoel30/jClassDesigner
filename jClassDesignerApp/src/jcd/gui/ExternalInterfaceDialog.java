@@ -117,6 +117,7 @@ public class ExternalInterfaceDialog extends Stage {
         for (String interfaceInList : diagram.getExternalInterfaces()) {
             textField = new TextField(interfaceInList);
             textFields.add(textField);
+            textField.setDisable(true);
             buttonBox.getChildren().add(0, textField);
 
         }

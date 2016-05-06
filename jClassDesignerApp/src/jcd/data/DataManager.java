@@ -252,6 +252,7 @@ public class DataManager implements AppDataComponent {
                 }
                 selectedClassDiagram = diagram;
                 workspace.disableButtons(true);
+                workspace.removeButton.setDisable(false);
                 reflectChangesForExternalBoxDiagrams(workspace, selectedClassDiagram);
 
             }

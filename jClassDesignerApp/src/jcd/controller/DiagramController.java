@@ -494,11 +494,15 @@ public class DiagramController {
         } else {
             for (ExternalParent externalParent : dataManager.externalParentsOnCanvas) {
                 if (externalParent.getName().equals(externalInterfaceToAdd)) {
+                    //we don't want to add another line if the line already exists
+                    if(!externalParent.children.contains(diagram)){
+                    
                     InheritanceLine inheritanceLine = new InheritanceLine(externalParent, diagram, canvas);
                     diagram.linesPointingTowards.add(inheritanceLine);
                     externalParent.children.add(diagram);
                     externalParent.parentalLines.add(inheritanceLine);
                     diagram.inheritanceLinesOut.add(inheritanceLine);
+                    }
                     break;
                 }
             }
