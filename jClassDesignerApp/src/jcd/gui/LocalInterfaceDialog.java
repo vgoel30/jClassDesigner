@@ -22,6 +22,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import jcd.connector_lines.InheritanceLine;
+import jcd.controller.DiagramController;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
 import org.controlsfx.control.CheckComboBox;
@@ -83,6 +84,8 @@ public class LocalInterfaceDialog extends Stage {
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
 
+        DiagramController diagramController = new DiagramController();
+
         mainPane = new VBox(20);
 
         interfaceNameBox = new HBox(10);
@@ -116,35 +119,32 @@ public class LocalInterfaceDialog extends Stage {
             ObservableList<String> interfacesToAdd = localInterfaces.getCheckModel().getCheckedItems();
 
             for (String interfaceToAdd : interfacesToAdd) {
+                //add to the list of local interfaces
                 diagram.addLocalInterface(interfaceToAdd);
+                //manage the local interface line stuff
+                diagramController.manageLocalInterfaceAddition(diagram, interfaceToAdd, dataManager, dataManager.getRenderingPane());
 
-                //check the classes on canvas
-                for (ClassDiagramObject classOnCanvas : dataManager.classesOnCanvas) {
-                    //if the particular class is an interface and has the same name
-                    if (classOnCanvas.getDiagramType().equals("interface") && classOnCanvas.getClassNameText().getText().equals(interfaceToAdd)) {
-                        //if the line doesn't already exist
-                        if (!classOnCanvas.getChildren().contains(diagram)) {
-                            InheritanceLine inheritanceLine = new InheritanceLine(classOnCanvas, diagram, canvas);
-                            diagram.linesPointingTowards.add(inheritanceLine);
-                            classOnCanvas.getChildren().add(diagram);
-                            classOnCanvas.linesPointingTowards.add(inheritanceLine);
-                            diagram.inheritanceLinesOut.add(inheritanceLine);
-                        }
-
-                    }
-                }
             }
             //this will get rid of any old lines that needn't be there
             ArrayList<InheritanceLine> linesToRemove = new ArrayList<>();
             for (InheritanceLine inheritanceLineOut : diagram.inheritanceLinesOut) {
                 if (inheritanceLineOut.getEndDiagram() instanceof ClassDiagramObject) {
-                ClassDiagramObject endDiagram = (ClassDiagramObject) inheritanceLineOut.getEndDiagram();
-                if (!diagram.getLocalInterfaces().contains(endDiagram.getDiagramName())) {
-                    inheritanceLineOut.removeFromCanvas(canvas);
-                    endDiagram.getChildren().remove(diagram);
-                    endDiagram.linesPointingTowards.remove(inheritanceLineOut);
-                    linesToRemove.add(inheritanceLineOut);
-                }
+                    ClassDiagramObject endDiagram = (ClassDiagramObject) inheritanceLineOut.getEndDiagram();
+                    if (!diagram.getLocalInterfaces().contains(endDiagram.getDiagramName())) {
+
+                        if (inheritanceLineOut.standardChildLine != null) {
+                            inheritanceLineOut.standardChildLine.removeFromCanvas(dataManager.getRenderingPane());
+                        }
+
+                        if (inheritanceLineOut.inheritanceChildLine != null) {
+                            inheritanceLineOut.inheritanceChildLine.removeFromCanvas(dataManager.getRenderingPane());
+                        }
+
+                        inheritanceLineOut.removeFromCanvas(canvas);
+                        endDiagram.getChildren().remove(diagram);
+                        endDiagram.linesPointingTowards.remove(inheritanceLineOut);
+                        linesToRemove.add(inheritanceLineOut);
+                    }
                 }
             }
             diagram.inheritanceLinesOut.removeAll(linesToRemove);

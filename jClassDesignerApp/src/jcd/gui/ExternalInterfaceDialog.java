@@ -85,7 +85,7 @@ public class ExternalInterfaceDialog extends Stage {
         // FOR IT WHEN IT IS DISPLAYED
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
-        
+
         DiagramController diagramController = new DiagramController();
 
         // LABEL TO DISPLAY THE CUSTOM MESSAGE
@@ -130,6 +130,7 @@ public class ExternalInterfaceDialog extends Stage {
                 String interfaceName = textField.getText();
                 //add the API 
                 if (!interfaceName.equals("")) {
+                    //add to the list of external interfaces
                     diagram.addExternalInterface(interfaceName);
                     externalInterfacesToAdd.add(interfaceName);
                 }
@@ -139,31 +140,31 @@ public class ExternalInterfaceDialog extends Stage {
             for (String externalInterfaceToAdd : externalInterfacesToAdd) {
                 //calls the method to render the external box
                 diagramController.addExternalInterfaceBox(diagram, externalInterfaceToAdd, dataManager, dataManager.getRenderingPane());
-                
-            }
-            
-            //this will get rid of any old lines that needn't be there
-        ArrayList<InheritanceLine> linesToRemove = new ArrayList<>();
 
-        for (InheritanceLine inheritanceLineOut : diagram.inheritanceLinesOut) {
-            if (inheritanceLineOut.getEndDiagram() instanceof ExternalParent) {
-                ExternalParent endDiagram = (ExternalParent) inheritanceLineOut.getEndDiagram();
-                if (!diagram.getExternalInterfaces().contains(endDiagram.getName())) {
-                    inheritanceLineOut.removeFromCanvas(canvas);
-                    endDiagram.children.remove(diagram);
-                    endDiagram.parentalLines.remove(inheritanceLineOut);
-                    linesToRemove.add(inheritanceLineOut);
-                    if (endDiagram.children.isEmpty()) {
-                        canvas.getChildren().remove(endDiagram.getRootContainer());
-                        dataManager.externalParentsOnCanvas.remove(endDiagram);
-                        dataManager.externalParents.remove(endDiagram.toString());
+            }
+
+            //this will get rid of any old lines that needn't be there
+            ArrayList<InheritanceLine> linesToRemove = new ArrayList<>();
+
+            for (InheritanceLine inheritanceLineOut : diagram.inheritanceLinesOut) {
+                if (inheritanceLineOut.getEndDiagram() instanceof ExternalParent) {
+                    ExternalParent endDiagram = (ExternalParent) inheritanceLineOut.getEndDiagram();
+                    if (!diagram.getExternalInterfaces().contains(endDiagram.getName())) {
+                        inheritanceLineOut.removeFromCanvas(canvas);
+                        endDiagram.children.remove(diagram);
+                        endDiagram.parentalLines.remove(inheritanceLineOut);
+                        linesToRemove.add(inheritanceLineOut);
+                        if (endDiagram.children.isEmpty()) {
+                            canvas.getChildren().remove(endDiagram.getRootContainer());
+                            dataManager.externalParentsOnCanvas.remove(endDiagram);
+                            dataManager.externalParents.remove(endDiagram.toString());
+                        }
                     }
                 }
             }
-        }
-        //remove all the unnecessary lines
-        diagram.inheritanceLinesOut.removeAll(linesToRemove);
-            
+            //remove all the unnecessary lines
+            diagram.inheritanceLinesOut.removeAll(linesToRemove);
+
             ExternalInterfaceDialog.this.hide();
         };
 

@@ -640,7 +640,9 @@ public class DataManager implements AppDataComponent {
                     ResizeLeft resizeLeftMove = (ResizeLeft) undoStack.pop();
                     ClassDiagramObject diagram = resizeLeftMove.getDiagram();
                     actionController.handleResizeRightUndo(resizeLeftMove.getInitialWidth(), resizeLeftMove.getInitialX(), diagram);
-                } //if the user wants to undo the removal of a variable
+                } 
+
+                //if the user wants to undo the removal of a variable
                 else if (undoStack.peek().getActionType().equals(REMOVE_VARIABLE)) {
                     RemoveVariable removeVariableMove = (RemoveVariable) undoStack.pop();
                     ClassDiagramObject diagram = removeVariableMove.getDiagram();
@@ -650,10 +652,16 @@ public class DataManager implements AppDataComponent {
                     //updates the variables table
                     diagramController.updateVariablesTable(diagram, workspace.variablesTable);
 
-                } else if (undoStack.peek().getActionType().equals(REMOVE_METHOD)) {
+                } 
+                
+                //if the user wants to undo the removal of a method
+                else if (undoStack.peek().getActionType().equals(REMOVE_METHOD)) {
                     RemoveMethod removeMethodMove = (RemoveMethod) undoStack.pop();
                     ClassDiagramObject diagram = removeMethodMove.getDiagram();
-                    actionController.handleRemoveMethodUndo(diagram, removeMethodMove.getRemovedMethod());
+                    //adds the method
+                    diagramController.addMethod(diagram, removeMethodMove.getRemovedMethod(), this);
+                    //updates the method table
+                    diagramController.updateMethodsTable(diagram, workspace.methodsTable);
                 }
             }
         }
@@ -886,9 +894,6 @@ public class DataManager implements AppDataComponent {
         diagram.getLeftLine().setOnMouseExited(mouseEnteredEvent -> {
             workspace.getScene().getRoot().setCursor(Cursor.DEFAULT);
         });
-        //LEFT LINE HANDLERS DONE
-
-        //RIGHT LINE EVENT HANDLERS DONE
     }
 
 }

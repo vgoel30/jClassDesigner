@@ -140,11 +140,11 @@ public class DiagramController {
         variableText.toFront();
 
         String variableDataType = toAdd.getType();
-        
+
         boolean isLocal = false;
-        
-        for(ClassDiagramObject classOnCanvas: dataManager.classesOnCanvas){
-            if(classOnCanvas.getName().equals(variableDataType)){
+
+        for (ClassDiagramObject classOnCanvas : dataManager.classesOnCanvas) {
+            if (classOnCanvas.getName().equals(variableDataType)) {
                 isLocal = true;
                 break;
             }
@@ -173,7 +173,7 @@ public class DiagramController {
 
             //attach the event handlers for the line
             dataManager.attachConnectorLineHandlers(aggregateLineToAdd);
-            
+
             diagram.aggregateLinesOut.add(aggregateLineToAdd);
             diagram.externalDataTypesUsed.add(variableDataType);
 
@@ -495,16 +495,43 @@ public class DiagramController {
             for (ExternalParent externalParent : dataManager.externalParentsOnCanvas) {
                 if (externalParent.getName().equals(externalInterfaceToAdd)) {
                     //we don't want to add another line if the line already exists
-                    if(!externalParent.children.contains(diagram)){
-                    
-                    InheritanceLine inheritanceLine = new InheritanceLine(externalParent, diagram, canvas);
-                    diagram.linesPointingTowards.add(inheritanceLine);
-                    externalParent.children.add(diagram);
-                    externalParent.parentalLines.add(inheritanceLine);
-                    diagram.inheritanceLinesOut.add(inheritanceLine);
+                    if (!externalParent.children.contains(diagram)) {
+
+                        InheritanceLine inheritanceLine = new InheritanceLine(externalParent, diagram, canvas);
+                        diagram.linesPointingTowards.add(inheritanceLine);
+                        externalParent.children.add(diagram);
+                        externalParent.parentalLines.add(inheritanceLine);
+                        diagram.inheritanceLinesOut.add(inheritanceLine);
                     }
                     break;
                 }
+            }
+        }
+    }
+
+    /**
+     * Manages the addition of lines for local interface boxes
+     *
+     * @param diagram
+     * @param interfaceToAdd
+     * @param dataManager
+     * @param canvas
+     */
+    public void manageLocalInterfaceAddition(ClassDiagramObject diagram, String interfaceToAdd, DataManager dataManager, Pane canvas) {
+        //check the classes on canvas
+        for (ClassDiagramObject classOnCanvas : dataManager.classesOnCanvas) {
+            //if the particular class is an interface and has the same name
+            if (classOnCanvas.getDiagramType().equals("interface") && classOnCanvas.getClassNameText().getText().equals(interfaceToAdd)) {
+                //if the line doesn't already exist
+                if (!classOnCanvas.getChildren().contains(diagram)) {
+                    InheritanceLine inheritanceLine = new InheritanceLine(classOnCanvas, diagram, canvas);
+                    diagram.linesPointingTowards.add(inheritanceLine);
+                    classOnCanvas.getChildren().add(diagram);
+                    classOnCanvas.linesPointingTowards.add(inheritanceLine);
+                    diagram.inheritanceLinesOut.add(inheritanceLine);
+                    dataManager.attachConnectorLineHandlers(inheritanceLine);
+                }
+
             }
         }
     }
@@ -544,7 +571,7 @@ public class DiagramController {
 
             //attach the event handlers for the line
             dataManager.attachConnectorLineHandlers(dependencyLineToAdd);
-            
+
             diagram.dependencyLinesOut.add(dependencyLineToAdd);
             diagram.externalUseTypesUsed.add(variableDataType);
 
