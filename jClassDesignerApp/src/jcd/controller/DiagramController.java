@@ -198,6 +198,7 @@ public class DiagramController {
      *
      * @param diagram
      * @param toRemove
+     * @param dataManager
      */
     public void removeVariable(ClassDiagramObject diagram, VariableObject toRemove, DataManager dataManager) {
         VariableObject toRemoveTemp = new VariableObject();
@@ -228,15 +229,15 @@ public class DiagramController {
                         if (concernedDataType.emittedLines.get(j).getEndDiagram().equals(diagram)) {
                             AggregateLine lineToRemove = concernedDataType.emittedLines.get(j);
                             lineToRemove.removeFromCanvas(dataManager.getRenderingPane());
-                            
+
                             //rmeove the child standard and aggregate lines
-                            if(lineToRemove.standardChildLine != null){
+                            if (lineToRemove.standardChildLine != null) {
                                 lineToRemove.standardChildLine.removeFromCanvas(dataManager.getRenderingPane());
                             }
-                            if(lineToRemove.aggregateChildLine != null){
+                            if (lineToRemove.aggregateChildLine != null) {
                                 lineToRemove.aggregateChildLine.removeFromCanvas(dataManager.getRenderingPane());
                             }
-                            
+
                             concernedDataType.emittedLines.remove(lineToRemove);
                             concernedDataType.usedBy.remove(diagram);
                             break;
@@ -306,10 +307,27 @@ public class DiagramController {
      *
      * @param diagram
      * @param toAdd
+     * @param dataManager
      */
-    public void addMethod(ClassDiagramObject diagram, MethodObject toAdd) {
+    public void addMethod(ClassDiagramObject diagram, MethodObject toAdd, DataManager dataManager) {
         //add to the list of methods for the class
         diagram.getMethods().add(toAdd);
+
+        //all the argument object
+        ArrayList<ArgumentObject> methodArguments = toAdd.getArguments();
+        //all the arg types
+        ArrayList<String> argumentTypes = new ArrayList<>();
+
+        for (ArgumentObject methodArgument : methodArguments) {
+            String argumentName = methodArgument.getName();
+            String argumentType = methodArgument.getType();
+
+            //add the argument to the list of arguments
+            if (!argumentTypes.contains(argumentType)) {
+                argumentTypes.add(argumentType);
+               addExternalUseType(diagram, argumentType, dataManager, dataManager.getRenderingPane());
+            }
+        }
 
         Label variableText = new Label(toAdd.toString());
         variableText.getStyleClass().add("diagram_text_field");
@@ -324,7 +342,7 @@ public class DiagramController {
      * @param t is the old value
      * @param t1 is the new value
      * @param dataManager
-     * @param gridEditController
+     * @param selectedClassDiagram
      */
     public void manageParentNameChange(String t, String t1, DataManager dataManager, ClassDiagramObject selectedClassDiagram) {
         ClassDiagramObject selectedClassObject = selectedClassDiagram;
@@ -437,6 +455,7 @@ public class DiagramController {
      * @param diagram
      * @param externalInterfaceToAdd
      * @param dataManager
+     * @param canvas
      */
     public void addExternalInterfaceBox(ClassDiagramObject diagram, String externalInterfaceToAdd, DataManager dataManager, Pane canvas) {
 

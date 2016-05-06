@@ -213,26 +213,15 @@ public class MethodOptionDialog extends Stage {
                     ArgumentObject argumentToAdd = new ArgumentObject(argumentNameToAdd, argumentTypeToAdd);
                     arguments.add(argumentToAdd);
                     
-                    //add the argument to the list of arguments
-                    if(!argumentTypes.contains(argumentTypeToAdd)){
-                        argumentTypes.add(argumentTypeToAdd);
-                        //adds the external use type
-                        diagramController.addExternalUseType(diagram, argumentTypeToAdd, dataManager, dataManager.getRenderingPane());
-                    }
                 }
             }
             
-//            //go over all the argument types
-//            for(int i = 0; i < argumentTypes.size(); i++){
-//                
-//            }
-
             //create the method object to add
             if (!name.equals("")) {
                 MethodObject toAdd = new MethodObject(name, isStatic, isAbstract, arguments, type, access);
                 System.out.println("METHOD TO ADD : " + toAdd.toStringCode());
                 //this will add the method to the class's list of methods and render it
-                diagramController.addMethod(diagram, toAdd);
+                diagramController.addMethod(diagram, toAdd, dataManager);
                 //this will update the method table
                 diagramController.updateMethodsTable(diagram, methodsTable);
                 MethodOptionDialog.this.hide();

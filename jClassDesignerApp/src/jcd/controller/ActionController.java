@@ -48,7 +48,7 @@ public class ActionController {
 
     public void handleRemoveMethodUndo(ClassDiagramObject diagram, MethodObject removedMethod) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
-        diagramController.addMethod(diagram, removedMethod);
+       // diagramController.addMethod(diagram, removedMethod);
         diagramController.updateMethodsTable(diagram, workspace.methodsTable);
     }
 
