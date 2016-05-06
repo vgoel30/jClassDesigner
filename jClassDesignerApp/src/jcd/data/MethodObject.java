@@ -25,13 +25,7 @@ public class MethodObject{
     String returnType;
     String access;
 
-    public static void main(String[] args){
-        ArrayList<ArgumentObject> arguments = new ArrayList<>();
-        ArgumentObject sample = new ArgumentObject("args", "String[]");
-        arguments.add(sample);
-        MethodObject sampleMethod = new MethodObject("main", true, false, arguments, "boolean", "private");
-        System.out.println(sampleMethod.toStringCode());
-    }
+    
     
     public MethodObject(){
         

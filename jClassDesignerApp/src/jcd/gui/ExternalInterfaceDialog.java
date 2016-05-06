@@ -19,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import jcd.connector_lines.InheritanceLine;
+import jcd.controller.DiagramController;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
 import jcd.data.ExternalParent;
@@ -84,6 +85,8 @@ public class ExternalInterfaceDialog extends Stage {
         // FOR IT WHEN IT IS DISPLAYED
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
+        
+        DiagramController diagramController = new DiagramController();
 
         // LABEL TO DISPLAY THE CUSTOM MESSAGE
         messageLabel = new Label();
@@ -135,64 +138,10 @@ public class ExternalInterfaceDialog extends Stage {
 
             //renders the interface box
             for (String externalInterfaceToAdd : externalInterfacesToAdd) {
-                //if the external parent doesn't exist yet
-                if (!dataManager.externalParents.contains(externalInterfaceToAdd)) {
-                    //create the external parent object
-                    ExternalParent parentToAdd = new ExternalParent(externalInterfaceToAdd);
-                    //render it on the canvas
-                    parentToAdd.putOnCanvas(canvas);
-                    //make the line object
-                    InheritanceLine inheritanceLine = new InheritanceLine(parentToAdd, diagram, canvas);
-                    //add the selected diagram to the list of children of the parent box
-                    parentToAdd.children.add(diagram);
-                    //add the parental line
-                    parentToAdd.parentalLines.add(inheritanceLine);
-                    diagram.inheritanceLinesOut.add(inheritanceLine);
-                    //attach the event handlers
-                    dataManager.attachExternalDiagramHandlers(parentToAdd);
-                    dataManager.attachConnectorLineHandlers(inheritanceLine);
-                    
-                    dataManager.externalParents.add(externalInterfaceToAdd);
-                    dataManager.externalParentsOnCanvas.add(parentToAdd);
-                } else {
-                    for (ExternalParent externalParent : dataManager.externalParentsOnCanvas) {
-                        if (externalParent.getName().equals(externalInterfaceToAdd)) {
-                            InheritanceLine inheritanceLine = new InheritanceLine(externalParent, diagram, canvas);
-                            diagram.linesPointingTowards.add(inheritanceLine);
-                            externalParent.children.add(diagram);
-                            externalParent.parentalLines.add(inheritanceLine);
-                            diagram.inheritanceLinesOut.add(inheritanceLine);
-                            break;
-                        }
-                    }
-                }
+                //calls the method to render the external box
+                diagramController.addExternalInterfaceBox(diagram, externalInterfaceToAdd, dataManager, dataManager.getRenderingPane());
+                
             }
-
-          
-
-            //this will get rid of any old lines that needn't be there
-            ArrayList<InheritanceLine> linesToRemove = new ArrayList<>();
-
-            for (InheritanceLine inheritanceLineOut : diagram.inheritanceLinesOut) {
-                System.out.println("LITBC");
-                if (inheritanceLineOut.getEndDiagram() instanceof ExternalParent) {
-                    ExternalParent endDiagram = (ExternalParent) inheritanceLineOut.getEndDiagram();
-                    if (!diagram.getExternalInterfaces().contains(endDiagram.getName())) {
-                        //diagram.inheritanceLinesOut.remove(inheritanceLineOut);
-                        inheritanceLineOut.removeFromCanvas(canvas);
-                        endDiagram.children.remove(diagram);
-                        endDiagram.parentalLines.remove(inheritanceLineOut);
-                        linesToRemove.add(inheritanceLineOut);
-                        if (endDiagram.children.isEmpty()) {
-                            canvas.getChildren().remove(endDiagram.getRootContainer());
-                            dataManager.externalParentsOnCanvas.remove(endDiagram);
-                            dataManager.externalParents.remove(endDiagram.toString());
-                        }
-                    }
-                }
-            }
-            //remove all the unnecessary lines
-            diagram.inheritanceLinesOut.removeAll(linesToRemove);
             ExternalInterfaceDialog.this.hide();
         };
 

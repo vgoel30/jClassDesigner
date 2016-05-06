@@ -47,7 +47,7 @@ public class ActionController {
     public void handleRemoveVariableUndo(ClassDiagramObject diagram, VariableObject removedVariable) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         //adds the variable to the list of variables and renders it on the diagram
-        diagramController.addVariable(diagram, removedVariable, dataManager);
+        diagramController.addVariable(diagram, removedVariable, dataManager, dataManager.getRenderingPane());
         //updates the variables table
         diagramController.updateVariablesTable(diagram, workspace.variablesTable);
     }

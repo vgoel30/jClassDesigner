@@ -124,7 +124,7 @@ public class DiagramController {
      * @param diagram
      * @param toAdd
      */
-    public void addVariable(ClassDiagramObject diagram, VariableObject toAdd, DataManager dataManager) {
+    public void addVariable(ClassDiagramObject diagram, VariableObject toAdd, DataManager dataManager, Pane canvas) {
         //add to the list of variables for the class
         diagram.getVariables().add(toAdd);
 
@@ -147,7 +147,7 @@ public class DiagramController {
             //make a new box
             ExternalDataType dataTypeToAdd = new ExternalDataType(variableDataType);
             //render it on the canvas
-            dataTypeToAdd.putOnCanvas(dataManager.getRenderingPane());
+            dataTypeToAdd.putOnCanvas(canvas);
             //add the external data type to list of external data types
             dataManager.externalDataTypes.add(variableDataType);
             //add the diagram box to the list of external data type diargams on canvas
@@ -155,7 +155,7 @@ public class DiagramController {
             //attach the event handlers for the box
             dataManager.attachExternalDataTypeBoxHandlers(dataTypeToAdd);
             //make the aggregate line object
-            AggregateLine aggregateLineToAdd = new AggregateLine(diagram, dataTypeToAdd, dataManager.getRenderingPane());
+            AggregateLine aggregateLineToAdd = new AggregateLine(diagram, dataTypeToAdd, canvas);
 
             //attach the event handlers for the line
             dataManager.attachConnectorLineHandlers(aggregateLineToAdd);
@@ -171,7 +171,7 @@ public class DiagramController {
                 //if the box's name matches the name that is to be added
                 if (externalDataType.getName().equals(variableDataType)) {
                     //make a new line
-                    AggregateLine aggregateLineToAdd = new AggregateLine(diagram, externalDataType, dataManager.getRenderingPane());
+                    AggregateLine aggregateLineToAdd = new AggregateLine(diagram, externalDataType, canvas);
 
                     //attach event handlers for the line (splitting and stuff)
                     dataManager.attachConnectorLineHandlers(aggregateLineToAdd);
@@ -259,14 +259,16 @@ public class DiagramController {
     }
 
     /**
-     * Maneages the change of parent names and renders the required boxes and stuff
+     * Maneages the change of parent names and renders the required boxes and
+     * stuff
+     *
      * @param t is the old value
      * @param t1 is the new value
      * @param dataManager
-     * @param gridEditController 
+     * @param gridEditController
      */
-    public void manageParentNameChange(String t, String t1, DataManager dataManager, GridEditController gridEditController) {
-        ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
+    public void manageParentNameChange(String t, String t1, DataManager dataManager, ClassDiagramObject selectedClassDiagram) {
+        ClassDiagramObject selectedClassObject = selectedClassDiagram;
         Pane canvas = dataManager.getRenderingPane();
 
         if (t1 != null && !selectedClassObject.getParentName().equals(t1)) {
@@ -292,7 +294,9 @@ public class DiagramController {
                 //if it isn't local and doesn't already exist, make a external parent box for it
                 if (!isLocal && !alreadyExists) {
                     dataManager.externalParents.add(t1);
-                    ExternalParent externalParent = gridEditController.renderExternalDiagramBox(t1, "external_parent", canvas);
+                    ExternalParent externalParent = new ExternalParent(t1);
+                    externalParent.putOnCanvas(canvas);
+                    dataManager.attachExternalDiagramHandlers(externalParent);
                     dataManager.externalParentsOnCanvas.add(externalParent);
                     InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
                     externalParent.parentalLines.add(myLine);
@@ -366,6 +370,70 @@ public class DiagramController {
                 selectedClassObject.inheritanceLinesOut.remove(lineToRemove);
             }
         }
+    }
+
+    /**
+     * Renders the external interface dialog box
+     *
+     * @param diagram
+     * @param externalInterfaceToAdd
+     * @param dataManager
+     */
+    public void addExternalInterfaceBox(ClassDiagramObject diagram, String externalInterfaceToAdd, DataManager dataManager, Pane canvas) {
+        
+        //if the external parent doesn't exist yet
+        if (!dataManager.externalParents.contains(externalInterfaceToAdd)) {
+            //create the external parent object
+            ExternalParent parentToAdd = new ExternalParent(externalInterfaceToAdd);
+            //render it on the canvas
+            parentToAdd.putOnCanvas(canvas);
+            //make the line object
+            InheritanceLine inheritanceLine = new InheritanceLine(parentToAdd, diagram, canvas);
+            //add the selected diagram to the list of children of the parent box
+            parentToAdd.children.add(diagram);
+            //add the parental line
+            parentToAdd.parentalLines.add(inheritanceLine);
+            diagram.inheritanceLinesOut.add(inheritanceLine);
+            //attach the event handlers
+            dataManager.attachExternalDiagramHandlers(parentToAdd);
+            dataManager.attachConnectorLineHandlers(inheritanceLine);
+
+            dataManager.externalParents.add(externalInterfaceToAdd);
+            dataManager.externalParentsOnCanvas.add(parentToAdd);
+        } else {
+            for (ExternalParent externalParent : dataManager.externalParentsOnCanvas) {
+                if (externalParent.getName().equals(externalInterfaceToAdd)) {
+                    InheritanceLine inheritanceLine = new InheritanceLine(externalParent, diagram, canvas);
+                    diagram.linesPointingTowards.add(inheritanceLine);
+                    externalParent.children.add(diagram);
+                    externalParent.parentalLines.add(inheritanceLine);
+                    diagram.inheritanceLinesOut.add(inheritanceLine);
+                    break;
+                }
+            }
+        }
+
+        //this will get rid of any old lines that needn't be there
+        ArrayList<InheritanceLine> linesToRemove = new ArrayList<>();
+
+        for (InheritanceLine inheritanceLineOut : diagram.inheritanceLinesOut) {
+            if (inheritanceLineOut.getEndDiagram() instanceof ExternalParent) {
+                ExternalParent endDiagram = (ExternalParent) inheritanceLineOut.getEndDiagram();
+                if (!diagram.getExternalInterfaces().contains(endDiagram.getName())) {
+                    inheritanceLineOut.removeFromCanvas(canvas);
+                    endDiagram.children.remove(diagram);
+                    endDiagram.parentalLines.remove(inheritanceLineOut);
+                    linesToRemove.add(inheritanceLineOut);
+                    if (endDiagram.children.isEmpty()) {
+                        canvas.getChildren().remove(endDiagram.getRootContainer());
+                        dataManager.externalParentsOnCanvas.remove(endDiagram);
+                        dataManager.externalParents.remove(endDiagram.toString());
+                    }
+                }
+            }
+        }
+        //remove all the unnecessary lines
+        diagram.inheritanceLinesOut.removeAll(linesToRemove);
     }
 
 }

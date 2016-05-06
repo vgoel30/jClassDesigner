@@ -543,9 +543,7 @@ public final class Workspace extends AppWorkspaceComponent {
         parentNamePicker.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue ov, String t, String t1) {
-                ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
-                //call the method for parent name change stuff
-                diagramController.manageParentNameChange(t, t1, dataManager, gridEditController);
+                diagramController.manageParentNameChange(t, t1, dataManager,(ClassDiagramObject) dataManager.selectedClassDiagram);
             }
         });
         

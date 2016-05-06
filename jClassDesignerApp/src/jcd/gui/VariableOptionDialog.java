@@ -191,7 +191,7 @@ public class VariableOptionDialog extends Stage {
             //if the variable doesn't already exist, add it to the list of variables
             if (!alreadyExists) {
                 //adds the variable to the list of variables and renders it on the diagram
-                diagramController.addVariable(diagram, toAdd,dataManager);
+                diagramController.addVariable(diagram, toAdd,dataManager, dataManager.getRenderingPane());
                 //update the table of variables
                 diagramController.updateVariablesTable(diagram, variablesTable);
             }

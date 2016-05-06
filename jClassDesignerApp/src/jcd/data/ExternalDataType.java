@@ -39,6 +39,7 @@ public class ExternalDataType extends Diagram{
         rootContainer.setLayoutX(5);
         rootContainer.setLayoutY(5);
         canvas.getChildren().add(rootContainer);
+        System.out.println("EDT: " + canvas.hashCode());
         
     }
 

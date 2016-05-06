@@ -16,6 +16,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -152,7 +153,6 @@ public class FileManager implements AppFileComponent {
         int canvasWidth = (int) dataManager.getRenderingPane().getWidth();
         int canvasHeight = (int) dataManager.getRenderingPane().getHeight();
 
-        //System.out.println(diagramsArray);
         // THEN PUT IT ALL TOGETHER IN A JsonObject
         JsonObject dataManagerJSO = Json.createObjectBuilder()
                 .add(JSON_DIAGRAMS_LIST, diagramsArray)
@@ -186,7 +186,6 @@ public class FileManager implements AppFileComponent {
      * @param arrayBuilder
      */
     private void fillArrayWithDiagrams(ArrayList<ClassDiagramObject> classesOnCanvas, JsonArrayBuilder arrayBuilder) {
-        System.out.println("Total classes on canvas: " + classesOnCanvas.size());
         int totalClasses = classesOnCanvas.size();
 
         for (int i = 0; i < totalClasses; i++) {
@@ -350,7 +349,6 @@ public class FileManager implements AppFileComponent {
             arrayBuilder.add(jso);
         }
         JsonArray jA = arrayBuilder.build();
-        //System.out.println("VARIABLES ARRAY " + jA);
         return jA;
     }
 
@@ -398,7 +396,6 @@ public class FileManager implements AppFileComponent {
             arrayBuilder.add(jso);
         }
         JsonArray jA = arrayBuilder.build();
-        //System.out.println("ARGUMENTS ARRAY: " + jA);
         return jA;
     }
 
@@ -429,6 +426,8 @@ public class FileManager implements AppFileComponent {
     public ClassDiagramObject loadClassDiagram(JsonObject jsonDiagram, AppDataComponent data) {
         DiagramController diagramController = new DiagramController();
         DataManager dataManager = (DataManager) data;
+        
+        Pane canvas = dataManager.getRenderingPane();
 
         JsonArray dimensionsArray = jsonDiagram.getJsonArray(JSON_DIAGRAM_DIMENSIONS);
         JsonObject dimensionsJsonObject = dimensionsArray.getJsonObject(0);
@@ -447,6 +446,8 @@ public class FileManager implements AppFileComponent {
         toAdd.setClassNameText(jsonDiagram.getString(DIAGRAM_NAME));
         //setting the parent name
         toAdd.setParentName(jsonDiagram.getString(PARENT));
+        //render the diagram 
+        diagramController.manageParentNameChange("", jsonDiagram.getString(PARENT), dataManager, toAdd);
 
         int rootContainerWidth = dimensionsJsonObject.getInt(ROOT_CONTAINER_WIDTH);
         int rootContainerHeight = dimensionsJsonObject.getInt(ROOT_CONTAINER_HEIGHT);
@@ -457,25 +458,25 @@ public class FileManager implements AppFileComponent {
         int packageContainerHeight = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_HEIGHT);
         toAdd.getPackageContainer().setMinSize(packageContainerWidth, packageContainerHeight);
         
-         int variablesContainerWidth = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_WIDTH);
+        //int variablesContainerWidth = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_WIDTH);
         int variablesContainerHeight = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_HEIGHT);
         toAdd.getVariablesContainer().setMinHeight(variablesContainerHeight);
-       //toAdd.getVariablesContainer().setPrefHeight(variablesContainerHeight);
 
-        int methodsContainerWidth = dimensionsJsonObject.getInt(METHODS_CONTAINER_WIDTH);
+        //int methodsContainerWidth = dimensionsJsonObject.getInt(METHODS_CONTAINER_WIDTH);
         int methodsContainerHeight = dimensionsJsonObject.getInt(METHODS_CONTAINER_HEIGHT);
         toAdd.getMethodsContainer().setMinHeight(methodsContainerHeight);
-       // toAdd.getMethodsContainer().setPrefHeight(methodsContainerHeight);
 
-       
-
-//        //ALL THE EXTERNAL INTERFACES OF THE CLASS
+ 
+        //ALL THE EXTERNAL INTERFACES OF THE CLASS
         JsonArray externalInterfacesArray = jsonDiagram.getJsonArray(JSON_EXTERNAL_INTERFACES_IMPLEMENTED);
         for (int i = 0; i < externalInterfacesArray.size(); i++) {
             JsonObject current = externalInterfacesArray.getJsonObject(i);
             String interfaceName = current.getString(EXTERNAL_INTERFACE_NAME);
-            //add the external interface to the list of external interfaces
+            //add to the list of external interfaces
             toAdd.addExternalInterface(interfaceName);
+            //render the box
+            diagramController.addExternalInterfaceBox(toAdd, interfaceName, dataManager, canvas);
+            
         }
 
 //         //ALL THE LOCAL INTERFACES OF THE CLASS
@@ -508,7 +509,7 @@ public class FileManager implements AppFileComponent {
 
             VariableObject varToAdd = new VariableObject(name, variableType, isStatic, isFinal, access);
             //add the variable and render the thing
-            diagramController.addVariable(toAdd, varToAdd, dataManager);
+            diagramController.addVariable(toAdd, varToAdd, dataManager, canvas);
         }
 
         //ALL THE METHODS OF THE CLASS
@@ -539,7 +540,6 @@ public class FileManager implements AppFileComponent {
             MethodObject methodToAdd = new MethodObject(name, isStatic, isAbstract, arguments, returnType, access);
             toAdd.getMethods().add(methodToAdd);
         }
-        System.out.println("THE TOTAL METHOD " + toAdd.toStringPlusPlus());
         return toAdd;
     }
 
