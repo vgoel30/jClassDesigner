@@ -75,6 +75,11 @@ public class DataManager implements AppDataComponent {
     public ArrayList<String> externalDataTypes = new ArrayList<>();
     //all the external data type boxes on canvas
     public ArrayList<ExternalDataType> externalDataTypesOnCanvas = new ArrayList<>();
+    
+    //all the non-primitive data types that the class will use (for the uses relationship)
+    public ArrayList<String> externalUseTypes = new ArrayList<>();
+    //all the external use type boxes on canvas
+    public ArrayList<ExternalUseType> externalUseTypesOnCanvas = new ArrayList<>();
 
     //all the packages to be imported
     public ArrayList<String> packageNames = new ArrayList<>();
@@ -296,6 +301,10 @@ public class DataManager implements AppDataComponent {
         });
     }
 
+    /**
+     * Event handlers for the external data type box (has-a relationship)
+     * @param diagram 
+     */
     public void attachExternalDataTypeBoxHandlers(ExternalDataType diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
 

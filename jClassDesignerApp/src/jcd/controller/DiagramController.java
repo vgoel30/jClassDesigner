@@ -411,29 +411,7 @@ public class DiagramController {
                     break;
                 }
             }
-        }
-
-        //this will get rid of any old lines that needn't be there
-        ArrayList<InheritanceLine> linesToRemove = new ArrayList<>();
-
-        for (InheritanceLine inheritanceLineOut : diagram.inheritanceLinesOut) {
-            if (inheritanceLineOut.getEndDiagram() instanceof ExternalParent) {
-                ExternalParent endDiagram = (ExternalParent) inheritanceLineOut.getEndDiagram();
-                if (!diagram.getExternalInterfaces().contains(endDiagram.getName())) {
-                    inheritanceLineOut.removeFromCanvas(canvas);
-                    endDiagram.children.remove(diagram);
-                    endDiagram.parentalLines.remove(inheritanceLineOut);
-                    linesToRemove.add(inheritanceLineOut);
-                    if (endDiagram.children.isEmpty()) {
-                        canvas.getChildren().remove(endDiagram.getRootContainer());
-                        dataManager.externalParentsOnCanvas.remove(endDiagram);
-                        dataManager.externalParents.remove(endDiagram.toString());
-                    }
-                }
-            }
-        }
-        //remove all the unnecessary lines
-        diagram.inheritanceLinesOut.removeAll(linesToRemove);
+        } 
     }
 
 }

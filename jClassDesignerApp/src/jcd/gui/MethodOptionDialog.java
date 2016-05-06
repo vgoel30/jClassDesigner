@@ -201,6 +201,8 @@ public class MethodOptionDialog extends Stage {
             String access = accessChoiceBox.getValue();
 
             ArrayList<ArgumentObject> arguments = new ArrayList<>();
+            
+            ArrayList<String> argumentTypes = new ArrayList<>();
 
             //get all the arguments
             for (int i = 0; i < argumentContainers.size(); i++) {
@@ -210,6 +212,11 @@ public class MethodOptionDialog extends Stage {
                 if (!argumentNameToAdd.equals("") || !argumentTypeToAdd.equals("")) {
                     ArgumentObject argumentToAdd = new ArgumentObject(argumentNameToAdd, argumentTypeToAdd);
                     arguments.add(argumentToAdd);
+                    
+                    //add the argument to the list of arguments
+                    if(!argumentTypes.contains(argumentTypeToAdd)){
+                        argumentTypes.add(argumentTypeToAdd);
+                    }
                 }
             }
 

@@ -21,16 +21,16 @@ public class StandardLine extends ConnectorLine {
     public StandardLine() {
     }
 
-    public StandardLine(Diagram startDiagram, double endX, double endY, Pane canvas) {
-        this.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
-        this.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
-
-        this.setEndX(endX);
-        this.setEndY(endY);
-
-        putOnCanvas(canvas);
-        initStyle();
-    }
+//    public StandardLine(Diagram startDiagram, double endX, double endY, Pane canvas) {
+//        this.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
+//        this.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
+//
+//        this.setEndX(endX);
+//        this.setEndY(endY);
+//
+//        putOnCanvas(canvas);
+//        initStyle();
+//    }
 
     public StandardLine(Diagram startDiagram, ConnectorLine parentLine, Pane canvas) {
 
@@ -115,10 +115,15 @@ public class StandardLine extends ConnectorLine {
         
 
         putOnCanvas(canvas);
-        initStyle();
+        initStyle(parentLine);
     }
 
-    private void initStyle() {
+    private void initStyle(ConnectorLine parentLine) {
+        //if it's a dependency line, we want dashed lines
+        if(parentLine instanceof DependencyLine){
+            this.getStrokeDashArray().addAll(2d, 21d);
+        }
+        
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(4);
         connectionPoint.setFill(Color.WHITE);

@@ -9,25 +9,25 @@ import java.util.ArrayList;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import jcd.connector_lines.AggregateLine;
+import jcd.connector_lines.DependencyLine;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINERS;
 import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
 
 /**
- *
+ *Data object for the 'uses' relationship
  * @author varungoel
  */
-public class ExternalDataType extends Diagram{
-    String type;
+public class ExternalUseType extends Diagram{
+   String type;
     Text nameText;
     
     //all the classes which use this data type
     public ArrayList<ClassDiagramObject> usedBy = new ArrayList<>();
     //lines emitted
-    public ArrayList<AggregateLine> emittedLines = new ArrayList<>();
-   
-    public ExternalDataType(String nameToSet){
-        type = "external_data_type";
+    public ArrayList<DependencyLine> emittedLines = new ArrayList<>();
+    
+    public ExternalUseType(String nameToSet){
+        type = "external_use_type";
         rootContainer = new VBox();
         nameText = new Text("\n" + "       "+nameToSet +"      "+"\n");
         this.name = nameToSet;

@@ -59,6 +59,7 @@ import static jcd.PropertyType.ZOOM_IN_ICON;
 import static jcd.PropertyType.ZOOM_IN_TOOLTIP;
 import static jcd.PropertyType.ZOOM_OUT_ICON;
 import static jcd.PropertyType.ZOOM_OUT_TOOLTIP;
+import jcd.connector_lines.DependencyLine;
 import jcd.connector_lines.InheritanceLine;
 import jcd.controller.DiagramController;
 import jcd.controller.GridEditController;
