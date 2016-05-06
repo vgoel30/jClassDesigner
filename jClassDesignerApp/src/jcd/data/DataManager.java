@@ -27,6 +27,7 @@ import jcd.actions.ResizeLeft;
 import jcd.actions.ResizeRight;
 import jcd.connector_lines.AggregateLine;
 import jcd.connector_lines.ConnectorLine;
+import jcd.connector_lines.DependencyLine;
 import jcd.connector_lines.InheritanceLine;
 import jcd.connector_lines.StandardLine;
 import jcd.controller.ActionController;
@@ -362,6 +363,67 @@ public class DataManager implements AppDataComponent {
             }
         });
     }
+    
+    /**
+     * External use type box's handlers (uses-a relationship) 
+     */
+    public void attachExternalUseTypeBoxHandlers(ExternalUseType diagram) {
+       Workspace workspace = (Workspace) app.getWorkspaceComponent();
+
+        //if the diagram has been clicked
+        diagram.getRootContainer().setOnMouseClicked((MouseEvent mouseClicked) -> {
+            if (workspace.selectionActive) {
+                if (selectedClassDiagram != null) {
+                    if (selectedClassDiagram instanceof ClassDiagramObject) {
+                        restoreSelectedProperties((ClassDiagramObject) selectedClassDiagram);
+                    }
+                }
+                if (selectedConnectorLine != null) {
+                    selectedConnectorLine.setStroke(Color.BLACK);
+                    selectedConnectorLine = null;
+                }
+                selectedClassDiagram = diagram;
+                workspace.disableButtons(true);
+                boolean isUsed = diagram.emittedLines.size() > 0;
+                //disable the delete button if it is being used
+                workspace.removeButton.setDisable(isUsed);
+
+            }
+        });
+
+        //FOR MOVING THE diagram
+        diagram.getRootContainer().setOnMouseDragged(rectangleDraggedEvent -> {
+            if (selectedClassDiagram != null) {
+                if (selectedClassDiagram.equals(diagram) && workspace.selectionActive) {
+                    workspace.drawingActive = false;
+                    diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getSceneY() - 50);
+                    diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX() - 450);
+
+                    double x = diagram.getRootContainer().getLayoutX();
+                    double y = diagram.getRootContainer().getLayoutY();
+
+                    Pane canvas = getRenderingPane();
+                    ScrollPane scrollPane = getRenderingScrollPane();
+
+                    //dynamic scrolling 
+                    if (x > canvas.getWidth() - 150) {
+                        canvas.setMinWidth(canvas.getWidth() + 500);
+                        canvas.setPrefWidth(canvas.getWidth() + 500);
+                        if (workspace.gridIsActive()) {
+                            gridEditController.renderGridLines(canvas);
+                        }
+                    }
+                    if (y > canvas.getHeight() - 300) {
+                        canvas.setMinHeight(canvas.getHeight() + 500);
+                        canvas.setPrefHeight(canvas.getHeight() + 500);
+                        if (workspace.gridIsActive()) {
+                            gridEditController.renderGridLines(canvas);
+                        }
+                    }
+                }
+            }
+        });
+    }
 
     /**
      * Restores the appearance of the selected diagram after it has been
@@ -535,7 +597,7 @@ public class DataManager implements AppDataComponent {
             Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
             VariableRemoveDialog newDialog = new VariableRemoveDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassObject, workspace.variablesTable, undoStack);
+            newDialog.init(app.getGUI().getWindow(), selectedClassObject, workspace.variablesTable, this, undoStack);
             newDialog.show();
         }
     }
@@ -711,6 +773,28 @@ public class DataManager implements AppDataComponent {
                 }
             });
         }
+        else if(connectorLine instanceof DependencyLine){
+            DependencyLine dependencyLine = (DependencyLine) connectorLine;
+
+            dependencyLine.setOnMouseClicked(e -> {
+                ((Workspace) app.getWorkspaceComponent()).disableButtons(true);
+                ((Workspace) app.getWorkspaceComponent()).removeButton.setDisable(false);
+                if (selectedClassDiagram != null && selectedClassDiagram instanceof ClassDiagramObject) {
+                    restoreSelectedProperties((ClassDiagramObject) selectedClassDiagram);
+                }
+                if (selectedConnectorLine != null) {
+                    selectedConnectorLine.setStroke(Color.BLACK);
+                }
+                selectedClassDiagram = null;
+                selectedConnectorLine = dependencyLine;
+
+                dependencyLine.setStroke(Color.web("#22A7F0"));
+
+                if (e.getClickCount() == 2) {
+                    dependencyLine.handleDoubleClick(((Workspace) app.getWorkspaceComponent()).getCanvas());
+                }
+            });
+        }
     }
 
     /**
@@ -786,5 +870,7 @@ public class DataManager implements AppDataComponent {
 
         //RIGHT LINE EVENT HANDLERS DONE
     }
+
+    
 
 }

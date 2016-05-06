@@ -80,6 +80,12 @@ public class AggregateLine extends ConnectorLine {
         if (rectangleHead != null) {
             canvas.getChildren().remove(this.rectangleHead);
         }
+        if(standardChildLine != null){
+            canvas.getChildren().remove(this.standardChildLine);
+        }
+        if(aggregateChildLine != null){
+            canvas.getChildren().remove(this.aggregateChildLine);
+        }
         canvas.getChildren().remove(this);
 
     }

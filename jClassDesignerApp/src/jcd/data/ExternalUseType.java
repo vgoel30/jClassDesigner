@@ -29,7 +29,7 @@ public class ExternalUseType extends Diagram{
     public ExternalUseType(String nameToSet){
         type = "external_use_type";
         rootContainer = new VBox();
-        nameText = new Text("\n" + "       "+nameToSet +"      "+"\n");
+       nameText = new Text("       "+nameToSet +"      ");
         this.name = nameToSet;
         rootContainer.getChildren().add(nameText);
         initStyle();

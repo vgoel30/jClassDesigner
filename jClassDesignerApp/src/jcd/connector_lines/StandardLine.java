@@ -21,16 +21,6 @@ public class StandardLine extends ConnectorLine {
     public StandardLine() {
     }
 
-//    public StandardLine(Diagram startDiagram, double endX, double endY, Pane canvas) {
-//        this.startXProperty().bind(startDiagram.getRootContainer().layoutXProperty());
-//        this.startYProperty().bind(startDiagram.getRootContainer().layoutYProperty());
-//
-//        this.setEndX(endX);
-//        this.setEndY(endY);
-//
-//        putOnCanvas(canvas);
-//        initStyle();
-//    }
 
     public StandardLine(Diagram startDiagram, ConnectorLine parentLine, Pane canvas) {
 
@@ -74,6 +64,16 @@ public class StandardLine extends ConnectorLine {
                     aggregateLine.aggregateChildLine = null;
                     //restore the original parent line
                     aggregateLine.setVisible(true);
+                } else if (parentLine instanceof DependencyLine) {
+                    DependencyLine dependencyLine = (DependencyLine) parentLine;
+
+                    dependencyLine.standardChildLine.removeFromCanvas(canvas);
+                    dependencyLine.dependencyChildLine.removeFromCanvas(canvas);
+
+                    dependencyLine.standardChildLine = null;
+                    dependencyLine.dependencyChildLine = null;
+                    //restore the original parent line
+                    dependencyLine.setVisible(true);
                 }
             }
 
@@ -95,7 +95,7 @@ public class StandardLine extends ConnectorLine {
 
                 inheritanceParentLine.inheritanceChildLine.setStartX(e.getX());
                 inheritanceParentLine.inheritanceChildLine.setStartY(e.getY());
-                
+
             } else if (parentLine instanceof AggregateLine) {
                 AggregateLine aggregateLine = (AggregateLine) parentLine;
 
@@ -110,9 +110,23 @@ public class StandardLine extends ConnectorLine {
 
                 aggregateLine.aggregateChildLine.setStartX(e.getX());
                 aggregateLine.aggregateChildLine.setStartY(e.getY());
+
+            } else if (parentLine instanceof DependencyLine) {
+                DependencyLine dependencyLine = (DependencyLine) parentLine;
+
+                dependencyLine.standardChildLine.endXProperty().unbind();
+                dependencyLine.standardChildLine.endYProperty().unbind();
+
+                dependencyLine.standardChildLine.setEndX(e.getX());
+                dependencyLine.standardChildLine.setEndY(e.getY());
+
+                dependencyLine.dependencyChildLine.startXProperty().unbind();
+                dependencyLine.dependencyChildLine.startYProperty().unbind();
+
+                dependencyLine.dependencyChildLine.setStartX(e.getX());
+                dependencyLine.dependencyChildLine.setStartY(e.getY());
             }
         });
-        
 
         putOnCanvas(canvas);
         initStyle(parentLine);
@@ -120,10 +134,10 @@ public class StandardLine extends ConnectorLine {
 
     private void initStyle(ConnectorLine parentLine) {
         //if it's a dependency line, we want dashed lines
-        if(parentLine instanceof DependencyLine){
+        if (parentLine instanceof DependencyLine) {
             this.getStrokeDashArray().addAll(2d, 21d);
         }
-        
+
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(4);
         connectionPoint.setFill(Color.WHITE);

@@ -24,6 +24,7 @@ import jcd.actions.Action;
 import jcd.actions.RemoveVariable;
 import jcd.controller.DiagramController;
 import jcd.data.ClassDiagramObject;
+import jcd.data.DataManager;
 import jcd.data.VariableObject;
 
 /**
@@ -62,7 +63,7 @@ public class VariableRemoveDialog extends Stage {
         return singleton;
     }
 
-    public void init(Stage primaryStage, ClassDiagramObject diagram, TableView variablesTable, Stack<Action> undoStack) {
+    public void init(Stage primaryStage, ClassDiagramObject diagram, TableView variablesTable, DataManager dataManager,Stack<Action> undoStack) {
         DiagramController diagramController = new DiagramController();
 
         // MAKE THIS DIALOG MODAL, MEANING OTHERS WILL WAIT
@@ -109,7 +110,7 @@ public class VariableRemoveDialog extends Stage {
           undoStack.push(removeVariableMove);
 
             //removes the variable from the list of variables and shows the change  on the diagram
-            diagramController.removeVariable(diagram, toRemove);
+            diagramController.removeVariable(diagram, toRemove, dataManager);
 
             //update the list of variables
             diagramController.updateVariablesTable(diagram, variablesTable);

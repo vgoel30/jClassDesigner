@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import jcd.connector_lines.AggregateLine;
+import jcd.connector_lines.DependencyLine;
 import jcd.connector_lines.InheritanceLine;
 import jcd.data.ArgumentObject;
 import jcd.data.ClassDiagramObject;
@@ -21,6 +22,7 @@ import jcd.data.DataManager;
 import jcd.data.Diagram;
 import jcd.data.ExternalDataType;
 import jcd.data.ExternalParent;
+import jcd.data.ExternalUseType;
 import jcd.data.MethodObject;
 import jcd.data.VariableObject;
 
@@ -140,7 +142,8 @@ public class DiagramController {
         boolean isPrimitive = variableDataType.equals("byte") || variableDataType.equals("short")
                 || variableDataType.equals("int") || variableDataType.equals("long")
                 || variableDataType.equals("float") || variableDataType.equals("double")
-                || variableDataType.equals("boolean") || variableDataType.equals("char");
+                || variableDataType.equals("boolean") || variableDataType.equals("char")
+                || variableDataType.substring(variableDataType.length() - 2, variableDataType.length()).equals("[]");
 
         //if the data type is non primitive and isn't already there in the data manager
         if (!isPrimitive && !dataManager.externalDataTypes.contains(variableDataType)) {
@@ -155,7 +158,7 @@ public class DiagramController {
             //attach the event handlers for the box
             dataManager.attachExternalDataTypeBoxHandlers(dataTypeToAdd);
             //make the aggregate line object
-            AggregateLine aggregateLineToAdd = new AggregateLine(diagram, dataTypeToAdd, canvas);
+            AggregateLine aggregateLineToAdd = new AggregateLine(dataTypeToAdd, diagram, canvas);
 
             //attach the event handlers for the line
             dataManager.attachConnectorLineHandlers(aggregateLineToAdd);
@@ -166,21 +169,23 @@ public class DiagramController {
             dataTypeToAdd.usedBy.add(diagram);
         } //non-primitive data type but already there on canvas
         else if (!isPrimitive && dataManager.externalDataTypes.contains(variableDataType)) {
+
             //iterate over all the external data type
             for (ExternalDataType externalDataType : dataManager.externalDataTypesOnCanvas) {
                 //if the box's name matches the name that is to be added
                 if (externalDataType.getName().equals(variableDataType)) {
-                    //make a new line
-                    AggregateLine aggregateLineToAdd = new AggregateLine(diagram, externalDataType, canvas);
+                    // make a new line if the diagram isn't already being used
+                    if (!externalDataType.usedBy.contains(diagram)) {
+                        AggregateLine aggregateLineToAdd = new AggregateLine(externalDataType, diagram, canvas);
 
-                    //attach event handlers for the line (splitting and stuff)
-                    dataManager.attachConnectorLineHandlers(aggregateLineToAdd);
+                        // attach event handlers for the line (splitting and stuff)
+                        dataManager.attachConnectorLineHandlers(aggregateLineToAdd);
 
-                    //lines emitted by the the external data type box
-                    externalDataType.emittedLines.add(aggregateLineToAdd);
-                    //the data type is used by the current selected diagram
-                    externalDataType.usedBy.add(diagram);
-                    break;
+                        // lines emitted by the the external data type box
+                        externalDataType.emittedLines.add(aggregateLineToAdd);
+                        // the data type is used by the current selected diagram
+                        externalDataType.usedBy.add(diagram);
+                    }
                 }
             }
         }
@@ -192,8 +197,45 @@ public class DiagramController {
      * @param diagram
      * @param toRemove
      */
-    public void removeVariable(ClassDiagramObject diagram, VariableObject toRemove) {
+    public void removeVariable(ClassDiagramObject diagram, VariableObject toRemove, DataManager dataManager) {
         VariableObject toRemoveTemp = new VariableObject();
+        
+        String variableType = toRemove.getType();
+
+        boolean needToRemoveLine = true;
+        
+        int counter = 0;
+
+        for (int i = 0; i < diagram.getVariables().size(); i++) {
+            if (diagram.getVariables().get(i).getType().equals(variableType)) {
+                counter++;
+            }
+        }
+        
+        //if more than one integer has this type, no need to remove this line
+        if(counter > 1)
+            needToRemoveLine = false;
+        
+        if (needToRemoveLine) {
+            for (int i = 0; i < dataManager.externalDataTypesOnCanvas.size(); i++) {
+                if (dataManager.externalDataTypesOnCanvas.get(i).nameText.getText().trim().equals(variableType)) {
+                    ExternalDataType concernedDataType = dataManager.externalDataTypesOnCanvas.get(i);
+                    
+                    for(int j = 0; j < concernedDataType.emittedLines.size(); j++){
+                        if(concernedDataType.emittedLines.get(j).getEndDiagram().equals(diagram)){
+                            System.out.println();
+                            concernedDataType.emittedLines.get(j).removeFromCanvas(dataManager.getRenderingPane());
+                            concernedDataType.emittedLines.remove(concernedDataType.emittedLines.get(j));
+                            concernedDataType.usedBy.remove(diagram);
+                            break;
+                        }
+                    }
+                    if(concernedDataType.emittedLines.isEmpty()){
+                        concernedDataType.removeFromCanvas(dataManager.getRenderingPane());
+                    }
+                }
+            }
+        }
 
         for (VariableObject variable : diagram.getVariables()) {
             if (variable.equals(toRemove)) {
@@ -380,7 +422,7 @@ public class DiagramController {
      * @param dataManager
      */
     public void addExternalInterfaceBox(ClassDiagramObject diagram, String externalInterfaceToAdd, DataManager dataManager, Pane canvas) {
-        
+
         //if the external parent doesn't exist yet
         if (!dataManager.externalParents.contains(externalInterfaceToAdd)) {
             //create the external parent object
@@ -411,7 +453,69 @@ public class DiagramController {
                     break;
                 }
             }
-        } 
+        }
     }
 
+    /**
+     * Renders the box (if required) and the connector line
+     *
+     * @param diagram
+     * @param externalUseTypeToAdd
+     * @param dataManager
+     * @param canvas
+     */
+    public void addExternalUseType(ClassDiagramObject diagram, String externalUseTypeToAdd, DataManager dataManager, Pane canvas) {
+        String variableDataType = externalUseTypeToAdd;
+
+        //check to see if it is primitive or not
+        boolean isPrimitive = variableDataType.equals("byte") || variableDataType.equals("short")
+                || variableDataType.equals("int") || variableDataType.equals("long")
+                || variableDataType.equals("float") || variableDataType.equals("double")
+                || variableDataType.equals("boolean") || variableDataType.equals("char")
+                || variableDataType.substring(variableDataType.length() - 2, variableDataType.length()).equals("[]");
+
+        //if the data type is non primitive and isn't already there in the data manager
+        if (!isPrimitive && !dataManager.externalUseTypes.contains(variableDataType)) {
+            //make a new box
+            ExternalUseType useTypeToAdd = new ExternalUseType(variableDataType);
+            //render it on the canvas
+            useTypeToAdd.putOnCanvas(canvas);
+            //add the external data type to list of external data types
+            dataManager.externalUseTypes.add(variableDataType);
+            //add the diagram box to the list of external data type diargams on canvas
+            dataManager.externalUseTypesOnCanvas.add(useTypeToAdd);
+            //attach the event handlers for the box
+            dataManager.attachExternalUseTypeBoxHandlers(useTypeToAdd);
+            //make the dependency line object
+            DependencyLine dependencyLineToAdd = new DependencyLine(diagram, useTypeToAdd, canvas);
+
+            //attach the event handlers for the line
+            dataManager.attachConnectorLineHandlers(dependencyLineToAdd);
+
+            //lines emitted by the the external data type box
+            useTypeToAdd.emittedLines.add(dependencyLineToAdd);
+            //the data type is used by the current selected diagram
+            useTypeToAdd.usedBy.add(diagram);
+        } //non-primitive data type but already there on canvas
+        else if (!isPrimitive && dataManager.externalUseTypes.contains(variableDataType)) {
+            //iterate over all the external data type
+            for (ExternalUseType externalUseType : dataManager.externalUseTypesOnCanvas) {
+                //if the box's name matches the name that is to be added
+                if (externalUseType.getName().equals(variableDataType)) {
+                    //make a new line
+                    DependencyLine dependencyLineToAdd = new DependencyLine(diagram, externalUseType, canvas);
+
+                    //attach event handlers for the line (splitting and stuff)
+                    dataManager.attachConnectorLineHandlers(dependencyLineToAdd);
+
+                    //lines emitted by the the external data type box
+                    externalUseType.emittedLines.add(dependencyLineToAdd);
+                    //the data type is used by the current selected diagram
+                    externalUseType.usedBy.add(diagram);
+                    break;
+                }
+            }
+        }
+
+    }
 }

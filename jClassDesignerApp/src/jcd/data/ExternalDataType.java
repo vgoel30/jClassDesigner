@@ -19,7 +19,7 @@ import static maf.components.AppStyleArbiter.DIAGRAM_TEXT_FIELD;
  */
 public class ExternalDataType extends Diagram{
     String type;
-    Text nameText;
+    public Text nameText;
     
     //all the classes which use this data type
     public ArrayList<ClassDiagramObject> usedBy = new ArrayList<>();
@@ -29,7 +29,7 @@ public class ExternalDataType extends Diagram{
     public ExternalDataType(String nameToSet){
         type = "external_data_type";
         rootContainer = new VBox();
-        nameText = new Text("\n" + "       "+nameToSet +"      "+"\n");
+        nameText = new Text("       "+nameToSet +"      ");
         this.name = nameToSet;
         rootContainer.getChildren().add(nameText);
         initStyle();
@@ -45,6 +45,10 @@ public class ExternalDataType extends Diagram{
         rootContainer.setLayoutX(x);
         rootContainer.setLayoutY(y);
         canvas.getChildren().add(rootContainer);
+    }
+    
+    public void removeFromCanvas(Pane canvas){
+        canvas.getChildren().remove(rootContainer);
     }
 
     public String getType() {

@@ -28,7 +28,7 @@ public class ExternalParent extends Diagram{
     public ExternalParent(String nameToSet){
         type = "external_parent";
         rootContainer = new VBox();
-        nameText = new Text("\n" + "       "+nameToSet +"      "+"\n");
+        nameText = new Text("       "+nameToSet +"      ");
         this.name = nameToSet;
         rootContainer.getChildren().add(nameText);
         initStyle();

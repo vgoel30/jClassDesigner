@@ -216,9 +216,16 @@ public class MethodOptionDialog extends Stage {
                     //add the argument to the list of arguments
                     if(!argumentTypes.contains(argumentTypeToAdd)){
                         argumentTypes.add(argumentTypeToAdd);
+                        //adds the external use type
+                        diagramController.addExternalUseType(diagram, argumentTypeToAdd, dataManager, dataManager.getRenderingPane());
                     }
                 }
             }
+            
+//            //go over all the argument types
+//            for(int i = 0; i < argumentTypes.size(); i++){
+//                
+//            }
 
             //create the method object to add
             if (!name.equals("")) {
