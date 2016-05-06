@@ -29,7 +29,6 @@ import jcd.connector_lines.AggregateLine;
 import jcd.connector_lines.ConnectorLine;
 import jcd.connector_lines.DependencyLine;
 import jcd.connector_lines.InheritanceLine;
-import jcd.connector_lines.StandardLine;
 import jcd.controller.ActionController;
 import jcd.controller.DiagramController;
 import jcd.controller.GridEditController;
@@ -238,7 +237,7 @@ public class DataManager implements AppDataComponent {
      *
      * @param diagram
      */
-    public void attachExternalDiagramHandlers(ExternalParent diagram) {
+    public void attachExternalParentDiagramHandlers(ExternalParent diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
         //if the diagram has been clicked
@@ -255,7 +254,6 @@ public class DataManager implements AppDataComponent {
                 }
                 selectedClassDiagram = diagram;
                 workspace.disableButtons(true);
-                workspace.removeButton.setDisable(false);
 
             }
         });
@@ -367,6 +365,7 @@ public class DataManager implements AppDataComponent {
 
     /**
      * External use type box's handlers (uses-a relationship)
+     * @param diagram
      */
     public void attachExternalUseTypeBoxHandlers(ExternalUseType diagram) {
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
@@ -712,6 +711,16 @@ public class DataManager implements AppDataComponent {
             externalParents.remove(parentToRemove.name);
             //remove from canvas
             workspace.getCanvas().getChildren().remove(parentToRemove.getRootContainer());
+        }
+        
+        else if(selectedClassDiagram instanceof ExternalDataType){
+            ExternalDataType dataTypeToRemove = (ExternalDataType) selectedClassDiagram;
+            dataTypeToRemove.removeFromCanvas(workspace.getCanvas());
+        }
+        
+        else if(selectedClassDiagram instanceof ExternalUseType){
+            ExternalUseType useTypeToRemove = (ExternalUseType) selectedClassDiagram;
+            useTypeToRemove.removeFromCanvas(workspace.getCanvas());
         }
     }
 

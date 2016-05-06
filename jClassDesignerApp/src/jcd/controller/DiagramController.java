@@ -140,6 +140,8 @@ public class DiagramController {
         variableText.toFront();
 
         String variableDataType = toAdd.getType();
+        
+        //boolean isLocal = dataManager.classNames.contains(variableDataType);
 
         boolean isPrimitive = variableDataType.equals("byte") || variableDataType.equals("short")
                 || variableDataType.equals("int") || variableDataType.equals("long")
@@ -325,7 +327,8 @@ public class DiagramController {
             //add the argument to the list of arguments
             if (!argumentTypes.contains(argumentType)) {
                 argumentTypes.add(argumentType);
-               addExternalUseType(diagram, argumentType, dataManager, dataManager.getRenderingPane());
+                //renders the diagram for the box
+                addExternalUseType(diagram, argumentType, dataManager, dataManager.getRenderingPane());
             }
         }
 
@@ -373,7 +376,7 @@ public class DiagramController {
                     dataManager.externalParents.add(t1);
                     ExternalParent externalParent = new ExternalParent(t1);
                     externalParent.putOnCanvas(canvas);
-                    dataManager.attachExternalDiagramHandlers(externalParent);
+                    dataManager.attachExternalParentDiagramHandlers(externalParent);
                     dataManager.externalParentsOnCanvas.add(externalParent);
                     InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
                     externalParent.parentalLines.add(myLine);
@@ -473,7 +476,7 @@ public class DiagramController {
             parentToAdd.parentalLines.add(inheritanceLine);
             diagram.inheritanceLinesOut.add(inheritanceLine);
             //attach the event handlers
-            dataManager.attachExternalDiagramHandlers(parentToAdd);
+            dataManager.attachExternalParentDiagramHandlers(parentToAdd);
             dataManager.attachConnectorLineHandlers(inheritanceLine);
 
             dataManager.externalParents.add(externalInterfaceToAdd);

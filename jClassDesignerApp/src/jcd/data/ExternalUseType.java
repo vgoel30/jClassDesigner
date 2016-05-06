@@ -46,6 +46,10 @@ public class ExternalUseType extends Diagram{
         rootContainer.setLayoutY(y);
         canvas.getChildren().add(rootContainer);
     }
+    
+     public void removeFromCanvas(Pane canvas){
+        canvas.getChildren().remove(rootContainer);
+    }
 
     public String getType() {
         return type;
@@ -73,4 +77,6 @@ public class ExternalUseType extends Diagram{
         nameText.getStyleClass().add(DIAGRAM_TEXT_FIELD);
         rootContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
     }
+
+    
 }

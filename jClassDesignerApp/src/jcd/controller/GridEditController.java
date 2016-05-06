@@ -102,12 +102,13 @@ public class GridEditController {
      * @param name
      * @param type
      * @param canvas 
+     * @return  
      */
     public ExternalParent renderExternalDiagramBox(String name, String type, Pane canvas){
        // if(type.equals(EXTERNAL_PARENT)){
             ExternalParent externalParent = new ExternalParent(name);
             externalParent.putOnCanvas(canvas);
-            dataManager.attachExternalDiagramHandlers(externalParent);
+            dataManager.attachExternalParentDiagramHandlers(externalParent);
             return externalParent;
         //}
     }
