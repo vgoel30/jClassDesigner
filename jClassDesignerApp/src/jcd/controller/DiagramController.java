@@ -173,6 +173,9 @@ public class DiagramController {
 
             //attach the event handlers for the line
             dataManager.attachConnectorLineHandlers(aggregateLineToAdd);
+            
+            diagram.aggregateLinesOut.add(aggregateLineToAdd);
+            diagram.externalDataTypesUsed.add(variableDataType);
 
             //lines emitted by the the external data type box
             dataTypeToAdd.emittedLines.add(aggregateLineToAdd);
@@ -334,6 +337,7 @@ public class DiagramController {
             //add the argument to the list of arguments
             if (!argumentTypes.contains(argumentType)) {
                 argumentTypes.add(argumentType);
+                //make the external use type box if required
                 addExternalUseType(diagram, argumentType, dataManager, dataManager.getRenderingPane());
             }
         }
@@ -536,6 +540,9 @@ public class DiagramController {
 
             //attach the event handlers for the line
             dataManager.attachConnectorLineHandlers(dependencyLineToAdd);
+            
+            diagram.dependencyLinesOut.add(dependencyLineToAdd);
+            diagram.externalUseTypesUsed.add(variableDataType);
 
             //lines emitted by the the external data type box
             useTypeToAdd.emittedLines.add(dependencyLineToAdd);

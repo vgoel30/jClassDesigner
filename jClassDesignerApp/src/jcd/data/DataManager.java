@@ -711,10 +711,9 @@ public class DataManager implements AppDataComponent {
             externalParents.remove(parentToRemove.name);
             //remove from canvas
             workspace.getCanvas().getChildren().remove(parentToRemove.getRootContainer());
-        } else if (selectedClassDiagram instanceof ExternalDataType) {
-            ExternalDataType dataTypeToRemove = (ExternalDataType) selectedClassDiagram;
-            dataTypeToRemove.removeFromCanvas(workspace.getCanvas());
-        } else if (selectedClassDiagram instanceof ExternalUseType) {
+        } 
+        //if the user wants to remove an external use type
+        else if (selectedClassDiagram instanceof ExternalUseType) {
             ExternalUseType useTypeToRemove = (ExternalUseType) selectedClassDiagram;
 
             for (DependencyLine dependencyLine : useTypeToRemove.emittedLines) {
@@ -722,6 +721,9 @@ public class DataManager implements AppDataComponent {
             }
 
             useTypeToRemove.removeFromCanvas(workspace.getCanvas());
+            //remove from the list of external use types
+            externalUseTypes.remove(selectedClassDiagram.name);
+            externalUseTypesOnCanvas.remove(useTypeToRemove);
         }
     }
 

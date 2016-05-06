@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import jcd.connector_lines.AggregateLine;
+import jcd.connector_lines.DependencyLine;
 import jcd.connector_lines.InheritanceLine;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINER;
 import static maf.components.AppStyleArbiter.DIAGRAM_CONTAINERS;
@@ -46,6 +47,11 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     public ArrayList<String> externalDataTypesUsed = new ArrayList<>();
     //list of all the aggregate lines originating out of this diagram
     public ArrayList<AggregateLine> aggregateLinesOut = new ArrayList<>();
+    
+     //list of all the data types this class 'uses'
+    public ArrayList<String> externalUseTypesUsed = new ArrayList<>();
+    //list of all the dependency lines originating out of this diagram
+    public ArrayList<DependencyLine> dependencyLinesOut = new ArrayList<>();
 
     VBox packageContainer;
 
