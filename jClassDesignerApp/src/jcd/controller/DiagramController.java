@@ -141,7 +141,14 @@ public class DiagramController {
 
         String variableDataType = toAdd.getType();
         
-        //boolean isLocal = dataManager.classNames.contains(variableDataType);
+        boolean isLocal = false;
+        
+        for(ClassDiagramObject classOnCanvas: dataManager.classesOnCanvas){
+            if(classOnCanvas.getName().equals(variableDataType)){
+                isLocal = true;
+                break;
+            }
+        }
 
         boolean isPrimitive = variableDataType.equals("byte") || variableDataType.equals("short")
                 || variableDataType.equals("int") || variableDataType.equals("long")
@@ -150,7 +157,7 @@ public class DiagramController {
                 || variableDataType.substring(variableDataType.length() - 2, variableDataType.length()).equals("[]");
 
         //if the data type is non primitive and isn't already there in the data manager
-        if (!isPrimitive && !dataManager.externalDataTypes.contains(variableDataType)) {
+        if (!isLocal && !isPrimitive && !dataManager.externalDataTypes.contains(variableDataType)) {
             //make a new box
             ExternalDataType dataTypeToAdd = new ExternalDataType(variableDataType);
             //render it on the canvas

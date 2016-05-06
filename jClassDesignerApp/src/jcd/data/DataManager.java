@@ -62,7 +62,7 @@ public class DataManager implements AppDataComponent {
     //THE CURRENT SELECTED LINE OBJECT
     public ConnectorLine selectedConnectorLine = null;
 
-    public ArrayList<String> classNames = new ArrayList<>();
+    
     //this will keep track of all the classes currently on the canvas
     public ArrayList<ClassDiagramObject> classesOnCanvas = new ArrayList<>();
 
@@ -112,7 +112,6 @@ public class DataManager implements AppDataComponent {
 
     public void addClassDiagram(ClassDiagramObject diagramToAdd) {
         classesOnCanvas.add(diagramToAdd);
-        classNames.add(diagramToAdd.getClassNameText().getText());
         packageNames.add(diagramToAdd.getPackageNameText().getText());
         classPackageCombos.add(diagramToAdd.getClassNameText().getText() + ":" + diagramToAdd.getPackageNameText().getText());
 
@@ -439,7 +438,6 @@ public class DataManager implements AppDataComponent {
 
     public void validateNameOfClass(String oldValue, String newValue) {
         if (selectedClassDiagram instanceof ClassDiagramObject) {
-            classNames.remove(oldValue);
             ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
 
             selectedClassObject.getClassNameText().setText(newValue);
@@ -457,8 +455,6 @@ public class DataManager implements AppDataComponent {
                     }
                 }
             }
-
-            classNames.add(newValue);
             classPackageCombos.add(newValue + ":" + selectedClassObject.getPackageNameText().getText());
         }
     }
@@ -730,7 +726,6 @@ public class DataManager implements AppDataComponent {
         selectedConnectorLine = null;
         //remove all the children
         classesOnCanvas.clear();
-        classNames.clear();
         packageNames.clear();
         classPackageCombos.clear();
         //remove all the actions from the undo stack
