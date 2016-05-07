@@ -234,7 +234,7 @@ public final class Workspace extends AppWorkspaceComponent {
         toolbarButtons.add(removeButton);
         undoButton = gui.initChildButton(toolBarPane, UNDO_ICON.toString(), UNDO_TOOLTIP.toString(), false);
         toolbarButtons.add(undoButton);
-        redoButton = gui.initChildButton(toolBarPane, REDO_ICON.toString(), REDO_TOOLTIP.toString(), true);
+        redoButton = gui.initChildButton(toolBarPane, REDO_ICON.toString(), REDO_TOOLTIP.toString(), false);
         toolbarButtons.add(redoButton);
         zoomInButton = gui.initChildButton(toolBarPane, ZOOM_IN_ICON.toString(), ZOOM_IN_TOOLTIP.toString(), false);
         toolbarButtons.add(zoomInButton);
@@ -464,6 +464,12 @@ public final class Workspace extends AppWorkspaceComponent {
             drawingActive = false;
             selectionActive = false;
             dataManager.handleUndo();
+        });
+        
+        redoButton.setOnAction(undoButtonClicked -> {
+            drawingActive = false;
+            selectionActive = false;
+            dataManager.handleRedo();
         });
 
         removeButton.setOnAction(removeButtonClicked -> {

@@ -34,7 +34,7 @@ public class ActionController {
         diagram.getRootContainer().setPrefWidth(initialWidth);
     }
 
-    public void handleResizeRightUndo(double initialWidth, double initialX, ClassDiagramObject diagram) {
+    public void handleResizeLeftUndo(double initialWidth, double initialX, ClassDiagramObject diagram) {
         diagram.getRootContainer().setPrefWidth(initialWidth);
         diagram.getRootContainer().setLayoutX(initialX);
     }
@@ -44,12 +44,9 @@ public class ActionController {
         diagram.getRootContainer().setLayoutY(initialPositionY);
     }
 
-    
-
-    public void handleRemoveMethodUndo(ClassDiagramObject diagram, MethodObject removedMethod) {
-        Workspace workspace = (Workspace) app.getWorkspaceComponent();
-       // diagramController.addMethod(diagram, removedMethod);
-        diagramController.updateMethodsTable(diagram, workspace.methodsTable);
+    public void handleResizeRightRedo(double finalWidth, ClassDiagramObject diagram) {
+        diagram.getRootContainer().setPrefWidth(finalWidth);
     }
+    
 
 }
