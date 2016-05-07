@@ -154,8 +154,13 @@ public class DiagramController {
                 || variableDataType.equals("int") || variableDataType.equals("long")
                 || variableDataType.equals("float") || variableDataType.equals("double")
                 || variableDataType.equals("boolean") || variableDataType.equals("char")
-                || variableDataType.substring(variableDataType.length() - 2, variableDataType.length()).equals("[]");
+                || variableDataType.equals("")
+                ;
 
+        if(variableDataType.length() > 2){
+            isPrimitive = isPrimitive || variableDataType.substring(variableDataType.length() - 2, variableDataType.length()).equals("[]");
+        }
+        
         //if the data type is non primitive and isn't already there in the data manager
         if (!isLocal && !isPrimitive && !dataManager.externalDataTypes.contains(variableDataType)) {
             //make a new box
@@ -552,7 +557,12 @@ public class DiagramController {
                 || variableDataType.equals("int") || variableDataType.equals("long")
                 || variableDataType.equals("float") || variableDataType.equals("double")
                 || variableDataType.equals("boolean") || variableDataType.equals("char")
-                || variableDataType.substring(variableDataType.length() - 2, variableDataType.length()).equals("[]");
+                || variableDataType.equals("")
+                ;
+
+        if(variableDataType.length() > 2){
+            isPrimitive = isPrimitive || variableDataType.substring(variableDataType.length() - 2, variableDataType.length()).equals("[]");
+        }
 
         //if the data type is non primitive and isn't already there in the data manager
         if (!isPrimitive && !dataManager.externalUseTypes.contains(variableDataType)) {

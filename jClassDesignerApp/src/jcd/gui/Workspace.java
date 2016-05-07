@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -345,6 +346,8 @@ public final class Workspace extends AppWorkspaceComponent {
         //adding all the columns
         variablesTable.getColumns().setAll(nameCol, typeCol, staticCol, accessCol, finalCol);
 
+        
+
         ScrollPane variableScroll = new ScrollPane(variablesTable);
         fourthRow.getChildren().add(variableScroll);
         variablesTable.setMinWidth(400);
@@ -465,7 +468,7 @@ public final class Workspace extends AppWorkspaceComponent {
             selectionActive = false;
             dataManager.handleUndo();
         });
-        
+
         redoButton.setOnAction(undoButtonClicked -> {
             drawingActive = false;
             selectionActive = false;
@@ -532,6 +535,25 @@ public final class Workspace extends AppWorkspaceComponent {
                 gridEditController.zoomOut(canvas);
             }
         });
+        
+        //the event handler for editing variables
+        variablesTable.setRowFactory(tv -> {
+            TableRow<VariableObject> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    VariableObject selectedVariable = row.getItem();
+                    System.out.println(selectedVariable);
+                    
+                    VariableEditDialog variableEditDialog = new VariableEditDialog();
+                    //show the variable edit box
+                    variableEditDialog.init(app.getGUI().getWindow(), (ClassDiagramObject)dataManager.selectedClassDiagram, 
+                            variablesTable, dataManager, canvas, selectedVariable);
+                    variableEditDialog.show();
+                }
+            });
+            return row;
+            
+        });
 
         //testing the event handler for text field
         classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -550,10 +572,10 @@ public final class Workspace extends AppWorkspaceComponent {
         parentNamePicker.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue ov, String t, String t1) {
-                diagramController.manageParentNameChange(t, t1, dataManager,(ClassDiagramObject) dataManager.selectedClassDiagram);
+                diagramController.manageParentNameChange(t, t1, dataManager, (ClassDiagramObject) dataManager.selectedClassDiagram);
             }
         });
-        
+
         //the user wants to add a package to the class
         addPackageButton.setOnAction(e -> {
             ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;

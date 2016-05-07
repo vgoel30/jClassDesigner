@@ -31,10 +31,10 @@ import jcd.data.VariableObject;
  *
  * @author varungoel
  */
-public class VariableOptionDialog extends Stage {
+public class VariableEditDialog extends Stage {
 
     // HERE'S THE SINGLETON
-    static VariableOptionDialog singleton;
+    static VariableEditDialog singleton;
 
     static final String PRIVATE = "private";
     static final String PUBLIC = "public";
@@ -68,7 +68,7 @@ public class VariableOptionDialog extends Stage {
 
     Button doneButton;
 
-    public VariableOptionDialog() {
+    public VariableEditDialog() {
     }
 
     /**
@@ -76,18 +76,19 @@ public class VariableOptionDialog extends Stage {
      *
      * @return The singleton object for this type.
      */
-    public static VariableOptionDialog getSingleton() {
+    public static VariableEditDialog getSingleton() {
         if (singleton == null) {
-            singleton = new VariableOptionDialog();
+            singleton = new VariableEditDialog();
         }
         return singleton;
     }
 
-    public void init(Stage primaryStage, ClassDiagramObject diagram, TableView variablesTable, DataManager dataManager, Pane canvas) {
+    public void init(Stage primaryStage, ClassDiagramObject diagram, TableView variablesTable, DataManager dataManager, Pane canvas, VariableObject variableToEdit) {
        boolean isInterface = diagram.isInterface();
         
         DiagramController diagramController = new DiagramController();
-
+        
+     
         // MAKE THIS DIALOG MODAL, MEANING OTHERS WILL WAIT
         // FOR IT WHEN IT IS DISPLAYED
         initModality(Modality.WINDOW_MODAL);
@@ -98,6 +99,7 @@ public class VariableOptionDialog extends Stage {
         nameContainer = new HBox(10);
         nameLabel = new Label("Name");
         nameField = new TextField();
+        nameField.setText(variableToEdit.getName());
         nameContainer.getChildren().add(nameLabel);
         nameContainer.getChildren().add(nameField);
         mainPane.getChildren().add(nameContainer);
@@ -105,6 +107,7 @@ public class VariableOptionDialog extends Stage {
         typeContainer = new HBox(10);
         typeLabel = new Label("Type ");
         typeField = new TextField();
+        typeField.setText(variableToEdit.getType());
         typeContainer.getChildren().add(typeLabel);
         typeContainer.getChildren().add(typeField);
         mainPane.getChildren().add(typeContainer);
@@ -112,10 +115,8 @@ public class VariableOptionDialog extends Stage {
         staticContainer = new HBox(10);
         staticLabel = new Label("Static");
         staticCheckBox = new CheckBox();
-        if(isInterface){
-            staticCheckBox.setSelected(true);
-        }
         staticCheckBox.setDisable(isInterface);
+        staticCheckBox.setSelected(variableToEdit.getIsStatic());
         staticContainer.getChildren().add(staticLabel);
         staticContainer.getChildren().add(staticCheckBox);
         mainPane.getChildren().add(staticContainer);
@@ -123,10 +124,8 @@ public class VariableOptionDialog extends Stage {
         finalContainer = new HBox(10);
         finalLabel = new Label("Final ");
         finalCheckBox = new CheckBox();
-        if(isInterface){
-            finalCheckBox.setSelected(true);
-        }
         finalCheckBox.setDisable(isInterface);
+        finalCheckBox.setSelected(variableToEdit.getIsFinal());
         finalContainer.getChildren().add(finalLabel);
         finalContainer.getChildren().add(finalCheckBox);
         mainPane.getChildren().add(finalContainer);
@@ -138,13 +137,15 @@ public class VariableOptionDialog extends Stage {
         accessChoiceBox.getItems().add(PUBLIC);
         accessChoiceBox.getItems().add(DEFAULT);
         accessChoiceBox.getItems().add(PROTECTED);
-        accessChoiceBox.getSelectionModel().selectFirst();
+        accessChoiceBox.getSelectionModel().select(variableToEdit.getAccess());
 
         accessContainer.getChildren().add(accessLabel);
         accessContainer.getChildren().add(accessChoiceBox);
         mainPane.getChildren().add(accessContainer);
+        
+        
 
-        doneButton = new Button("Add Variable");
+        doneButton = new Button("Edit Variable");
         mainPane.getChildren().add(doneButton);
 
         EventHandler doneHandler = (EventHandler<ActionEvent>) (ActionEvent ae) -> {
@@ -152,11 +153,19 @@ public class VariableOptionDialog extends Stage {
             String type = typeField.getText();
 
             boolean isStatic;
-            isStatic = staticCheckBox.isSelected();
+            if (staticCheckBox.isSelected()) {
+                isStatic = true;
+            } else {
+                isStatic = false;
+            }
 
             boolean isFinal;
-            isFinal = finalCheckBox.isSelected();
-            
+            if (finalCheckBox.isSelected()) {
+                isFinal = true;
+            } else {
+                isFinal = false;
+            }
+
             String access = accessChoiceBox.getValue();
 
             VariableObject toAdd = new VariableObject(name, type, isStatic, isFinal, access);
@@ -174,7 +183,7 @@ public class VariableOptionDialog extends Stage {
                     alert.showAndWait();
                     break;
                 }
-                VariableOptionDialog.this.hide();
+                VariableEditDialog.this.hide();
 
             }
 
@@ -182,13 +191,14 @@ public class VariableOptionDialog extends Stage {
             if (!alreadyExists) {
                 //adds the variable to the list of variables and renders it on the diagram
                 diagramController.addVariable(diagram, toAdd,dataManager, dataManager.getRenderingPane());
-                
-                
+                diagramController.removeVariable(diagram, variableToEdit, dataManager);
                 //update the table of variables
                 diagramController.updateVariablesTable(diagram, variablesTable);
+                
+                
             }
 
-            VariableOptionDialog.this.hide();
+            VariableEditDialog.this.hide();
         };
 
         doneButton.setOnAction(doneHandler);

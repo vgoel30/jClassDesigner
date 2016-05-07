@@ -83,8 +83,6 @@ public class DataManager implements AppDataComponent {
     //all the packages to be imported
     public ArrayList<String> packageNames = new ArrayList<>();
 
-    public ArrayList<String> classPackageCombos = new ArrayList<>();
-
     public Stack<Action> undoStack = new Stack<>();
     public Stack<Action> redoStack = new Stack<>();
 
@@ -101,6 +99,7 @@ public class DataManager implements AppDataComponent {
      *
      *
      * @param initApp The application within which this data manager is serving.
+     * @throws java.lang.Exception
      */
     public DataManager(AppTemplate initApp) throws Exception {
         // KEEP THE APP FOR LATER
@@ -113,7 +112,6 @@ public class DataManager implements AppDataComponent {
     public void addClassDiagram(ClassDiagramObject diagramToAdd) {
         classesOnCanvas.add(diagramToAdd);
         packageNames.add(diagramToAdd.getPackageNameText().getText());
-        classPackageCombos.add(diagramToAdd.getClassNameText().getText() + ":" + diagramToAdd.getPackageNameText().getText());
 
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
         Pane canvas = workspace.getCanvas();
@@ -128,9 +126,7 @@ public class DataManager implements AppDataComponent {
         packageNames.add(packageName);
     }
 
-    public void addClassPackageCombo(String name) {
-        classPackageCombos.add(name);
-    }
+    
 
     public Pane getRenderingPane() {
         return ((Workspace) app.getWorkspaceComponent()).getCanvas();
@@ -442,7 +438,6 @@ public class DataManager implements AppDataComponent {
             ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
 
             selectedClassObject.getClassNameText().setText(newValue);
-            classPackageCombos.remove(oldValue + ":" + selectedClassObject.getPackageNameText().getText());
 
             for (ClassDiagramObject diagram : classesOnCanvas) {
                 if (diagram != selectedClassObject) {
@@ -472,7 +467,6 @@ public class DataManager implements AppDataComponent {
             ClassDiagramObject selectedClassObject = (ClassDiagramObject) selectedClassDiagram;
             if (selectedClassObject != null) {
                 selectedClassObject.getPackageNameText().setText(newValue);
-                classPackageCombos.remove(selectedClassObject.getClassNameText().getText() + ":" + oldValue);
 
                 for (ClassDiagramObject diagram : classesOnCanvas) {
                     if (diagram != selectedClassObject) {
@@ -481,7 +475,7 @@ public class DataManager implements AppDataComponent {
                             Alert alert = new Alert(Alert.AlertType.ERROR);
                             alert.setTitle("Package name error");
                             alert.setHeaderText(null);
-                            alert.setContentText("Package already exists in this package!");
+                            alert.setContentText("Class already exists in this package!");
                             alert.showAndWait();
                         }
                     }
@@ -843,7 +837,6 @@ public class DataManager implements AppDataComponent {
         //remove all the children
         classesOnCanvas.clear();
         packageNames.clear();
-        classPackageCombos.clear();
         //remove all the actions from the undo stack
         undoStack.clear();
         redoStack.clear();
