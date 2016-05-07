@@ -6,7 +6,6 @@
 package jcd.data;
 
 import java.util.ArrayList;
-import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -219,6 +218,12 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         canvas.getChildren().add(rightLine);
         canvas.getChildren().add(leftLine);
     }
+    
+    public void removeFromCanvas(Pane canvas){
+        canvas.getChildren().remove(rootContainer);
+        canvas.getChildren().remove(rightLine);
+        canvas.getChildren().remove(leftLine);
+    }
 
     public double getEndPoint() {
         return rootContainer.getLayoutX() + rootContainer.getWidth();
@@ -416,7 +421,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     }
 
     public String toString() {
-        return this.classNameText.getText() + ": " + this.packageNameText.getText();
+        return this.classNameText.getText() + ":" + this.packageNameText.getText();
     }
 
     public String toStringCode() {

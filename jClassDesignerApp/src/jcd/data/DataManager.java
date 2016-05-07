@@ -323,6 +323,7 @@ public class DataManager implements AppDataComponent {
                 }
                 selectedClassDiagram = diagram;
                 workspace.disableButtons(true);
+                workspace.removeButton.setDisable(false);
                 reflectChangesForExternalBoxDiagrams(workspace, selectedClassDiagram);
 
             }
@@ -456,7 +457,7 @@ public class DataManager implements AppDataComponent {
                 }
             }
 
-            }
+        }
     }
 
     /**
@@ -758,7 +759,7 @@ public class DataManager implements AppDataComponent {
             externalParents.remove(parentToRemove.name);
             //remove from canvas
             workspace.getCanvas().getChildren().remove(parentToRemove.getRootContainer());
-        } //if the user wants to remove an external use type
+        } //if the user wants to remove an external use type. It's on the user to make up
         else if (selectedClassDiagram instanceof ExternalUseType) {
             ExternalUseType useTypeToRemove = (ExternalUseType) selectedClassDiagram;
 
@@ -770,7 +771,69 @@ public class DataManager implements AppDataComponent {
             //remove from the list of external use types
             externalUseTypes.remove(selectedClassDiagram.name);
             externalUseTypesOnCanvas.remove(useTypeToRemove);
+        } else if (selectedClassDiagram instanceof ExternalDataType) {
+            ExternalDataType dataTypeToRemove = (ExternalDataType) selectedClassDiagram;
+
+            if (dataTypeToRemove.usedBy.isEmpty()) {
+                dataTypeToRemove.removeFromCanvas(workspace.getCanvas());
+                //remove from the list of external use types
+                externalDataTypes.remove(selectedClassDiagram.name);
+                externalDataTypesOnCanvas.remove(dataTypeToRemove);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Removal Error");
+                alert.setHeaderText(null);
+                alert.setContentText("This data type is being used and can't be removed");
+
+                alert.showAndWait();
+            }
+        } //if we want to remove a class diagram object
+        else if (selectedClassDiagram instanceof ClassDiagramObject) {
+
+            ClassDiagramObject classDiagramObjectToRemove = (ClassDiagramObject) selectedClassDiagram;
+            classesOnCanvas.remove(classDiagramObjectToRemove);
+
+            //any classes which use this class as a parent
+            for (ClassDiagramObject classOnCanvas : classesOnCanvas) {
+                if (classOnCanvas.parent.equals(classDiagramObjectToRemove.toString())) {
+                    classOnCanvas.setParentName("");
+                }
+                //if any class have this class as a child
+                classOnCanvas.getChildren().remove(classDiagramObjectToRemove);
+            }
+            //remove all the lines coming out
+            for (InheritanceLine inheritanceLine : classDiagramObjectToRemove.inheritanceLinesOut) {
+                inheritanceLine.removeFromCanvas(getRenderingPane());
+            }
+            //remove all the lines point towards it (inheritance lines)
+            for (InheritanceLine inheritanceLine : classDiagramObjectToRemove.linesPointingTowards) {
+                inheritanceLine.removeFromCanvas(getRenderingPane());
+            }
+            //remove all the aggregate lines out
+            for (AggregateLine aggregateLine : classDiagramObjectToRemove.aggregateLinesOut) {
+                aggregateLine.removeFromCanvas(getRenderingPane());
+            }
+            //remove all the dependency line
+            for (DependencyLine dependencyLine : classDiagramObjectToRemove.dependencyLinesOut) {
+                dependencyLine.removeFromCanvas(getRenderingPane());
+            }
+
+            //for all the data types which show that they are being used by this class
+            for (ExternalDataType externalDataType : externalDataTypesOnCanvas) {
+                externalDataType.usedBy.remove(classDiagramObjectToRemove);
+            }
+
+            //for all the use types which show that they are being used by this class
+            for (ExternalUseType externalUseType : externalUseTypesOnCanvas) {
+                externalUseType.usedBy.remove(classDiagramObjectToRemove);
+            }
+
+            //removes the diagram from the canvas
+            classDiagramObjectToRemove.removeFromCanvas(getRenderingPane());
         }
+
+        selectedClassDiagram = null;
+        workspace.disableButtons(true);
     }
 
     @Override

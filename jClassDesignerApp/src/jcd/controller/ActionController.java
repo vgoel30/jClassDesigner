@@ -7,9 +7,6 @@ package jcd.controller;
 
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
-import jcd.data.MethodObject;
-import jcd.data.VariableObject;
-import jcd.gui.Workspace;
 import maf.AppTemplate;
 
 /**
