@@ -455,8 +455,8 @@ public class DataManager implements AppDataComponent {
                     }
                 }
             }
-            classPackageCombos.add(newValue + ":" + selectedClassObject.getPackageNameText().getText());
-        }
+
+            }
     }
 
     /**
@@ -485,8 +485,6 @@ public class DataManager implements AppDataComponent {
                         }
                     }
                 }
-                packageNames.add(newValue);
-                classPackageCombos.add(selectedClassObject.getClassNameText().getText() + ":" + newValue);
             }
         }
     }

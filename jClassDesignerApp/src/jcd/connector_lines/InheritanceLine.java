@@ -9,6 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import jcd.data.DataManager;
 import jcd.data.Diagram;
 
 /**
@@ -135,7 +136,6 @@ public class InheritanceLine extends ConnectorLine {
             this.setVisible(false);
 
         } else {
-            System.out.println("OPTION2");
             this.standardChildLine.removeFromCanvas(canvas);
           this.inheritanceChildLine.removeFromCanvas(canvas);
             this.standardChildLine = null;
