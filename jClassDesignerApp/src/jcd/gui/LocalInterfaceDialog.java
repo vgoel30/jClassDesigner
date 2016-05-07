@@ -128,7 +128,7 @@ public class LocalInterfaceDialog extends Stage {
             for (InheritanceLine inheritanceLineOut : diagram.inheritanceLinesOut) {
                 if (inheritanceLineOut.getEndDiagram() instanceof ClassDiagramObject) {
                     ClassDiagramObject endDiagram = (ClassDiagramObject) inheritanceLineOut.getEndDiagram();
-                    if (!diagram.getLocalInterfaces().contains(endDiagram.getDiagramName())) {
+                    if (!diagram.getLocalInterfaces().contains(endDiagram.getDiagramName()) && !diagram.getParentName().equals(endDiagram.toString())) {
 
                         if (inheritanceLineOut.standardChildLine != null) {
                             inheritanceLineOut.standardChildLine.removeFromCanvas(dataManager.getRenderingPane());
