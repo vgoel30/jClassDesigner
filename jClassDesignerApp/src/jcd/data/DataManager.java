@@ -641,6 +641,7 @@ public class DataManager implements AppDataComponent {
                 actionController.handleMoveDiagramUndo(moveDiagramAction.getInitialPositionX(), moveDiagramAction.getInitialPositionY(), diagram);
             } else if (undoStack.peek().getActionType().equals(RESIZE_LEFT)) {
                 ResizeLeft resizeLeftMove = (ResizeLeft) undoStack.pop();
+                redoStack.push(resizeLeftMove);
                 ClassDiagramObject diagram = resizeLeftMove.getDiagram();
                 actionController.handleResizeLeftUndo(resizeLeftMove.getInitialWidth(), resizeLeftMove.getInitialX(), diagram);
             } //if the user wants to undo the removal of a variable
@@ -686,6 +687,12 @@ public class DataManager implements AppDataComponent {
                 redoStack.push(resizeRightMove);
                 ClassDiagramObject diagram = resizeRightMove.getDiagram();
                 actionController.handleResizeRightRedo(resizeRightMove.getFinalWidth(), diagram);
+            }
+            else if (redoStack.peek().getActionType().equals(RESIZE_LEFT)) {
+                ResizeLeft resizeLeftMove = (ResizeLeft) redoStack.pop();
+                redoStack.push(resizeLeftMove);
+                ClassDiagramObject diagram = resizeLeftMove.getDiagram();
+                actionController.handleResizeLeftRedo(resizeLeftMove.getFinalWidth(), resizeLeftMove.getFinalX(), diagram);
             }
         }
     }

@@ -48,5 +48,9 @@ public class ActionController {
         diagram.getRootContainer().setPrefWidth(finalWidth);
     }
     
+    public void handleResizeLeftRedo(double finalWidth, double finalX, ClassDiagramObject diagram) {
+        diagram.getRootContainer().setPrefWidth(finalWidth);
+        diagram.getRootContainer().setLayoutX(finalX);
+    }
 
 }
