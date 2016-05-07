@@ -26,7 +26,6 @@ import jcd.data.ArgumentObject;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
 import jcd.data.MethodObject;
-import jcd.data.VariableObject;
 
 /**
  * Custom dialog box for when the user wants to add a variable
@@ -132,6 +131,8 @@ public class MethodOptionDialog extends Stage {
         abstractContainer = new HBox(10);
         abstractLabel = new Label("Abstract ");
         abstractCheckBox = new CheckBox();
+        abstractCheckBox.setSelected(diagram.isInterface());
+        abstractCheckBox.setDisable(diagram.isInterface());
         abstractContainer.getChildren().add(abstractLabel);
         abstractContainer.getChildren().add(abstractCheckBox);
         mainPane.getChildren().add(abstractContainer);
