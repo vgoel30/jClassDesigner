@@ -60,14 +60,10 @@ import static jcd.PropertyType.ZOOM_IN_ICON;
 import static jcd.PropertyType.ZOOM_IN_TOOLTIP;
 import static jcd.PropertyType.ZOOM_OUT_ICON;
 import static jcd.PropertyType.ZOOM_OUT_TOOLTIP;
-import jcd.connector_lines.DependencyLine;
-import jcd.connector_lines.InheritanceLine;
 import jcd.controller.DiagramController;
 import jcd.controller.GridEditController;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
-import jcd.data.Diagram;
-import jcd.data.ExternalParent;
 import jcd.data.MethodObject;
 import jcd.data.VariableObject;
 import maf.AppTemplate;
@@ -346,8 +342,6 @@ public final class Workspace extends AppWorkspaceComponent {
         //adding all the columns
         variablesTable.getColumns().setAll(nameCol, typeCol, staticCol, accessCol, finalCol);
 
-        
-
         ScrollPane variableScroll = new ScrollPane(variablesTable);
         fourthRow.getChildren().add(variableScroll);
         variablesTable.setMinWidth(400);
@@ -535,7 +529,7 @@ public final class Workspace extends AppWorkspaceComponent {
                 gridEditController.zoomOut(canvas);
             }
         });
-        
+
         //the event handler for editing variables
         variablesTable.setRowFactory(tv -> {
             TableRow<VariableObject> row = new TableRow<>();
@@ -543,16 +537,16 @@ public final class Workspace extends AppWorkspaceComponent {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     VariableObject selectedVariable = row.getItem();
                     System.out.println(selectedVariable);
-                    
+
                     VariableEditDialog variableEditDialog = new VariableEditDialog();
                     //show the variable edit box
-                    variableEditDialog.init(app.getGUI().getWindow(), (ClassDiagramObject)dataManager.selectedClassDiagram, 
+                    variableEditDialog.init(app.getGUI().getWindow(), (ClassDiagramObject) dataManager.selectedClassDiagram,
                             variablesTable, dataManager, canvas, selectedVariable);
                     variableEditDialog.show();
                 }
             });
             return row;
-            
+
         });
 
         //testing the event handler for text field
@@ -572,35 +566,43 @@ public final class Workspace extends AppWorkspaceComponent {
         parentNamePicker.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue ov, String t, String t1) {
-                diagramController.manageParentNameChange(t, t1, dataManager, (ClassDiagramObject) dataManager.selectedClassDiagram);
+                if (dataManager.selectedClassDiagram instanceof ClassDiagramObject) {
+                    diagramController.manageParentNameChange(t, t1, dataManager, (ClassDiagramObject) dataManager.selectedClassDiagram);
+                }
             }
         });
 
         //the user wants to add a package to the class
         addPackageButton.setOnAction(e -> {
-            ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
-            selectedClassObject.getJavaAPI_Packages().remove("");
-            AppOptionDialog newDialog = new AppOptionDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassObject);
-            newDialog.show();
+            if (dataManager.selectedClassDiagram instanceof ClassDiagramObject) {
+                ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
+                selectedClassObject.getJavaAPI_Packages().remove("");
+                AppOptionDialog newDialog = new AppOptionDialog();
+                newDialog.init(app.getGUI().getWindow(), selectedClassObject);
+                newDialog.show();
+            }
         });
 
         //the user wants to add an external interface to the class
         externalInterfaceButton.setOnAction(e -> {
-            ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
-            selectedClassObject.getExternalInterfaces().remove("");
-            ExternalInterfaceDialog newDialog = new ExternalInterfaceDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager, canvas);
-            newDialog.show();
+            if (dataManager.selectedClassDiagram instanceof ClassDiagramObject) {
+                ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
+                selectedClassObject.getExternalInterfaces().remove("");
+                ExternalInterfaceDialog newDialog = new ExternalInterfaceDialog();
+                newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager, canvas);
+                newDialog.show();
+            }
         });
 
         //the user wants to add a local interface
         localInterfaceButton.setOnAction(e -> {
-            ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
-            selectedClassObject.getLocalInterfaces().remove("");
-            LocalInterfaceDialog newDialog = new LocalInterfaceDialog();
-            newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager, canvas);
-            newDialog.show();
+            if (dataManager.selectedClassDiagram instanceof ClassDiagramObject) {
+                ClassDiagramObject selectedClassObject = (ClassDiagramObject) dataManager.selectedClassDiagram;
+                selectedClassObject.getLocalInterfaces().remove("");
+                LocalInterfaceDialog newDialog = new LocalInterfaceDialog();
+                newDialog.init(app.getGUI().getWindow(), selectedClassObject, dataManager, canvas);
+                newDialog.show();
+            }
         });
 
     }

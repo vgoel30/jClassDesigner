@@ -154,7 +154,7 @@ public class DiagramController {
                 || variableDataType.equals("int") || variableDataType.equals("long")
                 || variableDataType.equals("float") || variableDataType.equals("double")
                 || variableDataType.equals("boolean") || variableDataType.equals("char")
-                || variableDataType.equals("")
+                || variableDataType.equals("")|| variableDataType.equals("null")
                 ;
 
         if(variableDataType.length() > 2){
@@ -557,7 +557,8 @@ public class DiagramController {
                 || variableDataType.equals("int") || variableDataType.equals("long")
                 || variableDataType.equals("float") || variableDataType.equals("double")
                 || variableDataType.equals("boolean") || variableDataType.equals("char")
-                || variableDataType.equals("")
+                || variableDataType.equals("")|| variableDataType.equals("void")
+                || variableDataType.equals("null")
                 ;
 
         if(variableDataType.length() > 2){

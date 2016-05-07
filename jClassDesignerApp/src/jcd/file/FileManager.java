@@ -42,6 +42,10 @@ import maf.components.AppFileComponent;
 public class FileManager implements AppFileComponent {
 
     //FOR JSON LOADING
+    static final String JSON_EXTERNAL_DATA_TYPES_LIST = "external_data_type_list";
+    static final String JSON_EXTERNAL_USE_TYPES_LIST = "external_use_type_list";
+    static final String JSON_EXTERNAL_PARENT_TYPES_LIST = "external_parent_type_list";
+
     static final String JSON_DIAGRAMS_LIST = "diagrams_list";
 
     //Class or Interface
@@ -105,56 +109,32 @@ public class FileManager implements AppFileComponent {
     static final String CANVAS_WIDTH = "canvas_width";
     static final String CANVAS_HEIGHT = "canvas_height";
 
-    public void testSaveData(ArrayList<ClassDiagramObject> classDiagramObjects, String filePath) throws FileNotFoundException {
-        StringWriter sw = new StringWriter();
-
-        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-        fillArrayWithDiagrams(classDiagramObjects, arrayBuilder);
-
-        JsonArray diagramsArray = arrayBuilder.build();
-
-        int canvasWidth = 500;
-        int canvasHeight = 500;
-
-        // THEN PUT IT ALL TOGETHER IN A JsonObject
-        JsonObject dataManagerJSO = Json.createObjectBuilder()
-                .add(JSON_DIAGRAMS_LIST, diagramsArray)
-                .add(CANVAS_WIDTH, canvasWidth)
-                .add(CANVAS_HEIGHT, canvasHeight)
-                .build();
-
-        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
-        Map<String, Object> properties = new HashMap<>(1);
-        properties.put(JsonGenerator.PRETTY_PRINTING, true);
-        JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
-        JsonWriter jsonWriter = writerFactory.createWriter(sw);
-        jsonWriter.writeObject(dataManagerJSO);
-        jsonWriter.close();
-
-        // INIT THE WRITER
-        OutputStream os = new FileOutputStream(filePath);
-        JsonWriter jsonFileWriter = Json.createWriter(os);
-        jsonFileWriter.writeObject(dataManagerJSO);
-        String prettyPrinted = sw.toString();
-        PrintWriter pw = new PrintWriter(filePath);
-        pw.write(prettyPrinted);
-        pw.close();
-    }
-
     @Override
     public void saveData(AppDataComponent data, String filePath) throws IOException {
         StringWriter sw = new StringWriter();
 
         DataManager dataManager = (DataManager) data;
+        
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         fillArrayWithDiagrams(dataManager.classesOnCanvas, arrayBuilder);
         JsonArray diagramsArray = arrayBuilder.build();
+        
+        JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
+        fillArrayWithDiagrams(dataManager.classesOnCanvas, arrayBuilder2);
+        JsonArray externalDataTypesList = arrayBuilder2.build();
+
+        System.out.println("dataManager.externalParentsOnCanvas " + dataManager.externalParentsOnCanvas);
+        System.out.println("dataManager.externalDataTypesOnCanvas " + dataManager.externalDataTypesOnCanvas);
+        System.out.println("dataManager.externalUseTypesOnCanvas " + dataManager.externalUseTypesOnCanvas);
 
         int canvasWidth = (int) dataManager.getRenderingPane().getWidth();
         int canvasHeight = (int) dataManager.getRenderingPane().getHeight();
 
         // THEN PUT IT ALL TOGETHER IN A JsonObject
         JsonObject dataManagerJSO = Json.createObjectBuilder()
+                .add(JSON_EXTERNAL_DATA_TYPES_LIST, diagramsArray)
+                .add(JSON_EXTERNAL_PARENT_TYPES_LIST, diagramsArray)
+                .add(JSON_EXTERNAL_USE_TYPES_LIST, diagramsArray)
                 .add(JSON_DIAGRAMS_LIST, diagramsArray)
                 .add(CANVAS_WIDTH, canvasWidth)
                 .add(CANVAS_HEIGHT, canvasHeight)
@@ -231,8 +211,9 @@ public class FileManager implements AppFileComponent {
 
     /**
      * Builds and returns an array of all the imported packages
+     *
      * @param diagram
-     * @return 
+     * @return
      */
     private JsonArray makeImportedPackagesJsonArray(ClassDiagramObject diagram) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
@@ -292,8 +273,6 @@ public class FileManager implements AppFileComponent {
         JsonArray jA = arrayBuilder.build();
         return jA;
     }
-    
-  
 
     /**
      * Builds and returns the dimension array for a diagram object
@@ -399,8 +378,6 @@ public class FileManager implements AppFileComponent {
         return jA;
     }
 
-   
-
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
         DataManager dataManager = (DataManager) data;
@@ -426,7 +403,7 @@ public class FileManager implements AppFileComponent {
     public ClassDiagramObject loadClassDiagram(JsonObject jsonDiagram, AppDataComponent data) {
         DiagramController diagramController = new DiagramController();
         DataManager dataManager = (DataManager) data;
-        
+
         Pane canvas = dataManager.getRenderingPane();
 
         JsonArray dimensionsArray = jsonDiagram.getJsonArray(JSON_DIAGRAM_DIMENSIONS);
@@ -457,7 +434,7 @@ public class FileManager implements AppFileComponent {
         int packageContainerWidth = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_WIDTH);
         int packageContainerHeight = dimensionsJsonObject.getInt(PACKAGE_CONTAINER_HEIGHT);
         toAdd.getPackageContainer().setMinSize(packageContainerWidth, packageContainerHeight);
-        
+
         //int variablesContainerWidth = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_WIDTH);
         int variablesContainerHeight = dimensionsJsonObject.getInt(VARIABLES_CONTAINER_HEIGHT);
         toAdd.getVariablesContainer().setMinHeight(variablesContainerHeight);
@@ -466,7 +443,6 @@ public class FileManager implements AppFileComponent {
         int methodsContainerHeight = dimensionsJsonObject.getInt(METHODS_CONTAINER_HEIGHT);
         toAdd.getMethodsContainer().setMinHeight(methodsContainerHeight);
 
- 
         //ALL THE EXTERNAL INTERFACES OF THE CLASS
         JsonArray externalInterfacesArray = jsonDiagram.getJsonArray(JSON_EXTERNAL_INTERFACES_IMPLEMENTED);
         for (int i = 0; i < externalInterfacesArray.size(); i++) {
@@ -476,7 +452,7 @@ public class FileManager implements AppFileComponent {
             toAdd.addExternalInterface(interfaceName);
             //render the box
             diagramController.addExternalInterfaceBox(toAdd, interfaceName, dataManager, canvas);
-            
+
         }
 
 //         //ALL THE LOCAL INTERFACES OF THE CLASS
@@ -487,7 +463,7 @@ public class FileManager implements AppFileComponent {
             //add the external interface to the list of external interfaces
             toAdd.addLocalInterface(interfaceName);
         }
-        
+
         //ALL THE PACKAGES TO BE IMPORTED
         JsonArray packagesArray = jsonDiagram.getJsonArray(JSON_IMPORTED_PACKAGES);
         for (int i = 0; i < packagesArray.size(); i++) {
