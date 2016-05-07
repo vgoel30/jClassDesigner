@@ -637,6 +637,7 @@ public class DataManager implements AppDataComponent {
             else if (undoStack.peek().getActionType().equals(MOVE_DIAGRAM)) {
                 System.out.println("MOVE DIAGRAM UNDO");
                 MoveDiagram moveDiagramAction = (MoveDiagram) undoStack.pop();
+                redoStack.push(moveDiagramAction);
                 ClassDiagramObject diagram = moveDiagramAction.getDiagram();
                 actionController.handleMoveDiagramUndo(moveDiagramAction.getInitialPositionX(), moveDiagramAction.getInitialPositionY(), diagram);
             } else if (undoStack.peek().getActionType().equals(RESIZE_LEFT)) {
@@ -648,7 +649,7 @@ public class DataManager implements AppDataComponent {
             else if (undoStack.peek().getActionType().equals(REMOVE_VARIABLE)) {
                 RemoveVariable removeVariableMove = (RemoveVariable) undoStack.pop();
                 ClassDiagramObject diagram = removeVariableMove.getDiagram();
-
+                redoStack.push(removeVariableMove);
                 //adds the variable to the list of variables and renders it on the diagram
                 diagramController.addVariable(diagram, removeVariableMove.getRemovedVariable(), this, getRenderingPane());
                 //updates the variables table
@@ -680,20 +681,29 @@ public class DataManager implements AppDataComponent {
         }
         selectedClassDiagram = null;
         ((Workspace) app.getWorkspaceComponent()).disableButtons(true);
-        
-        if(redoStack.size() > 0){
+
+        if (redoStack.size() > 0) {
             if (redoStack.peek().getActionType().equals(RESIZE_RIGHT)) {
                 ResizeRight resizeRightMove = (ResizeRight) redoStack.pop();
                 redoStack.push(resizeRightMove);
                 ClassDiagramObject diagram = resizeRightMove.getDiagram();
                 actionController.handleResizeRightRedo(resizeRightMove.getFinalWidth(), diagram);
-            }
-            else if (redoStack.peek().getActionType().equals(RESIZE_LEFT)) {
+            } else if (redoStack.peek().getActionType().equals(RESIZE_LEFT)) {
                 ResizeLeft resizeLeftMove = (ResizeLeft) redoStack.pop();
                 redoStack.push(resizeLeftMove);
                 ClassDiagramObject diagram = resizeLeftMove.getDiagram();
                 actionController.handleResizeLeftRedo(resizeLeftMove.getFinalWidth(), resizeLeftMove.getFinalX(), diagram);
+            } else if (redoStack.peek().getActionType().equals(MOVE_DIAGRAM)) {
+                MoveDiagram moveDiagramAction = (MoveDiagram) redoStack.pop();
+                ClassDiagramObject diagram = moveDiagramAction.getDiagram();
+                actionController.handleMoveDiagramRedo(moveDiagramAction.getFinalPositionX(), moveDiagramAction.getFinalPositionY(), diagram);
+            } else if (redoStack.peek().getActionType().equals(REMOVE_VARIABLE)) {
+                RemoveVariable removeVariableMove = (RemoveVariable) redoStack.pop();
+                ClassDiagramObject diagram = removeVariableMove.getDiagram();
+                VariableObject toRemove = removeVariableMove.getRemovedVariable();
+                diagramController.removeVariable(diagram, toRemove, this);
             }
+
         }
     }
 

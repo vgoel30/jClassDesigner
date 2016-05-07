@@ -33,6 +33,8 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     String diagramType;
 
     String parent;
+    
+    boolean isAbstract;
 
     ArrayList<String> localInterfaces = new ArrayList<>();
     ArrayList<String> externalInterfaces = new ArrayList<>();
@@ -66,6 +68,10 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
 
     //the class name text
     Text classNameText;
+    
+    //the diagram type text
+    Text classTypeText;
+    
     //the variables name text
     Text variablesNameText;
     //the methods text
@@ -125,6 +131,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         rootContainer = new VBox();
 
         diagramType = type;
+        isAbstract = false;
 
         packageNameText = new Text("");
         packageContainer = new VBox(packageNameText);
@@ -176,8 +183,9 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         packageContainer = new VBox(packageNameText);
 
         //The first container which has the class name
+        classTypeText = new Text(type.toUpperCase());
         classNameText = new Text(diagramType + counter);
-        nameContainer = new VBox(classNameText);
+        nameContainer = new VBox(classTypeText,classNameText);
 
         //The second container which has all the variables and stuff
         variablesNameText = new Text("Variables");
@@ -214,6 +222,11 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
 
     public double getEndPoint() {
         return rootContainer.getLayoutX() + rootContainer.getWidth();
+    }
+    
+    public void makeAbstract(){
+        isAbstract = true;
+        classTypeText.setText("ABSTRACT " + diagramType.toUpperCase());
     }
 
     /**
@@ -267,30 +280,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         rightLine.setStrokeWidth(5);
         rightLine.setVisible(false);
 
-        //setting up the bottom line
-//        bottomLine.startXProperty().bind(rootContainer.layoutXProperty());
-//        bottomLine.startYProperty().bind(rootContainer.layoutYProperty().add(rootContainer.heightProperty()));
-//
-//        bottomLine.endXProperty().bind(bottomLine.startXProperty().add(rootContainer.widthProperty()));
-//        bottomLine.endYProperty().bind(bottomLine.startYProperty());
-//
-//        bottomLine.setStroke(Color.WHITE);
-//        bottomLine.setStrokeWidth(5);
-//        bottomLine.setVisible(false);
-//
-//        //bottom line set up done
-//        //setting up the middle line (in between the methods and variables container)
-//        middleLine.startXProperty().bind(rootContainer.layoutXProperty().add(10));
-//        middleLine.startYProperty().bind(rootContainer.layoutYProperty().add(packageContainer.heightProperty()).add(methodsContainer.heightProperty()).add(variablesContainer.heightProperty()));
-//
-//        middleLine.endXProperty().bind(middleLine.startXProperty().add(rootContainer.widthProperty()).subtract(30));
-//        middleLine.endYProperty().bind(middleLine.startYProperty());
-//
-//        middleLine.setStroke(Color.WHITE);
-//        middleLine.setOpacity(0);
-//        middleLine.setStrokeWidth(1);
-//        middleLine.setVisible(false);
-        //middle line set up done
+        
         packageContainer.setMinHeight(10);
         packageContainer.setMinWidth(100);
         packageContainer.setMaxWidth(100);
@@ -413,6 +403,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         methodsContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
 
         packageNameText.getStyleClass().add(DIAGRAM_TEXT_FIELD);
+        classTypeText.getStyleClass().add(DIAGRAM_TEXT_FIELD);
         classNameText.getStyleClass().add(DIAGRAM_TEXT_FIELD);
         methodsNameText.getStyleClass().add(DIAGRAM_TEXT_FIELD);
         variablesNameText.getStyleClass().add(DIAGRAM_TEXT_FIELD);

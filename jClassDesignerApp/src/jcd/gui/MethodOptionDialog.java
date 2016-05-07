@@ -184,25 +184,18 @@ public class MethodOptionDialog extends Stage {
                 type = "void";
             }
 
-            boolean isStatic;
-            if (staticCheckBox.isSelected()) {
-                isStatic = true;
-            } else {
-                isStatic = false;
-            }
+            boolean isStatic = staticCheckBox.isSelected();
 
-            boolean isAbstract;
-            if (abstractCheckBox.isSelected()) {
-                isAbstract = true;
-            } else {
-                isAbstract = false;
-            }
+            boolean isAbstract = abstractCheckBox.isSelected();
 
             String access = accessChoiceBox.getValue();
 
             ArrayList<ArgumentObject> arguments = new ArrayList<>();
             
-            ArrayList<String> argumentTypes = new ArrayList<>();
+            //if we have a abstract method, make the class abstract
+           if(isAbstract){
+               diagram.makeAbstract();
+           }
 
             //get all the arguments
             for (int i = 0; i < argumentContainers.size(); i++) {

@@ -53,4 +53,9 @@ public class ActionController {
         diagram.getRootContainer().setLayoutX(finalX);
     }
 
+    public void handleMoveDiagramRedo(double finalPositionX, double finalPositionY, ClassDiagramObject diagram) {
+        diagram.getRootContainer().setLayoutX(finalPositionX);
+        diagram.getRootContainer().setLayoutY(finalPositionY);
+    }
+
 }
