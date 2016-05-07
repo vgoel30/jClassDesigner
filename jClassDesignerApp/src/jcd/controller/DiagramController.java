@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -154,13 +155,12 @@ public class DiagramController {
                 || variableDataType.equals("int") || variableDataType.equals("long")
                 || variableDataType.equals("float") || variableDataType.equals("double")
                 || variableDataType.equals("boolean") || variableDataType.equals("char")
-                || variableDataType.equals("")|| variableDataType.equals("null")
-                ;
+                || variableDataType.equals("") || variableDataType.equals("null");
 
-        if(variableDataType.length() > 2){
+        if (variableDataType.length() > 2) {
             isPrimitive = isPrimitive || variableDataType.substring(variableDataType.length() - 2, variableDataType.length()).equals("[]");
         }
-        
+
         //if the data type is non primitive and isn't already there in the data manager
         if (!isLocal && !isPrimitive && !dataManager.externalDataTypes.contains(variableDataType)) {
             //make a new box
@@ -370,8 +370,6 @@ public class DiagramController {
             if (t1.equals("NONE") || t1.equals("")) {
                 selectedClassObject.setParentName("");
             } else {
-                selectedClassObject.setParentName(t1);
-
                 boolean isLocal = false;
                 boolean alreadyExists = false;
                 //check if it's a local parent
@@ -398,6 +396,8 @@ public class DiagramController {
                     externalParent.children.add(selectedClassObject);
                     selectedClassObject.inheritanceLinesOut.add(myLine);
 
+                    selectedClassObject.setParentName(t1);
+
                     dataManager.attachConnectorLineHandlers(myLine);
                 } //if the external Parent already exists
                 else if (!isLocal) {
@@ -408,6 +408,7 @@ public class DiagramController {
                             externalParent.children.add(selectedClassObject);
                             selectedClassObject.inheritanceLinesOut.add(myLine);
                             dataManager.attachConnectorLineHandlers(myLine);
+                            selectedClassObject.setParentName(t1);
                             break;
                         }
                     }
@@ -420,6 +421,7 @@ public class DiagramController {
                             localClass.getChildren().add(selectedClassObject);
                             selectedClassObject.inheritanceLinesOut.add(myLine);
                             dataManager.attachConnectorLineHandlers(myLine);
+                            selectedClassObject.setParentName(t1);
                             break;
                         }
                     }
@@ -557,11 +559,10 @@ public class DiagramController {
                 || variableDataType.equals("int") || variableDataType.equals("long")
                 || variableDataType.equals("float") || variableDataType.equals("double")
                 || variableDataType.equals("boolean") || variableDataType.equals("char")
-                || variableDataType.equals("")|| variableDataType.equals("void")
-                || variableDataType.equals("null")
-                ;
+                || variableDataType.equals("") || variableDataType.equals("void")
+                || variableDataType.equals("null");
 
-        if(variableDataType.length() > 2){
+        if (variableDataType.length() > 2) {
             isPrimitive = isPrimitive || variableDataType.substring(variableDataType.length() - 2, variableDataType.length()).equals("[]");
         }
 

@@ -31,7 +31,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     //class or interface
     String diagramType;
 
-    String parent;
+    String parent = "";
     
     boolean isAbstract;
 

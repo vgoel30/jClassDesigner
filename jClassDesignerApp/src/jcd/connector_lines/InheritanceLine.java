@@ -7,9 +7,7 @@ package jcd.connector_lines;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
-import jcd.data.DataManager;
 import jcd.data.Diagram;
 
 /**

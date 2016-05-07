@@ -30,6 +30,9 @@ import jcd.controller.DiagramController;
 import jcd.data.ArgumentObject;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
+import jcd.data.ExternalDataType;
+import jcd.data.ExternalParent;
+import jcd.data.ExternalUseType;
 import jcd.data.MethodObject;
 import jcd.data.VariableObject;
 import maf.components.AppDataComponent;
@@ -114,27 +117,36 @@ public class FileManager implements AppFileComponent {
         StringWriter sw = new StringWriter();
 
         DataManager dataManager = (DataManager) data;
-        
+
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         fillArrayWithDiagrams(dataManager.classesOnCanvas, arrayBuilder);
         JsonArray diagramsArray = arrayBuilder.build();
-        
+
+        //for all the external data types
         JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
-        fillArrayWithDiagrams(dataManager.classesOnCanvas, arrayBuilder2);
+        fillArrayWithExternalDataTypes(dataManager.externalDataTypesOnCanvas, arrayBuilder2);
         JsonArray externalDataTypesList = arrayBuilder2.build();
 
-        System.out.println("dataManager.externalParentsOnCanvas " + dataManager.externalParentsOnCanvas);
-        System.out.println("dataManager.externalDataTypesOnCanvas " + dataManager.externalDataTypesOnCanvas);
-        System.out.println("dataManager.externalUseTypesOnCanvas " + dataManager.externalUseTypesOnCanvas);
+        //for all the external parents on canvas
+        JsonArrayBuilder arrayBuilder3 = Json.createArrayBuilder();
+        fillArrayWithExternalParentTypes(dataManager.externalParentsOnCanvas, arrayBuilder3);
+        JsonArray externalParentTypesList = arrayBuilder3.build();
+
+        //for all the external use types on canvas
+        JsonArrayBuilder arrayBuilder4 = Json.createArrayBuilder();
+        fillArrayWithExternalUseTypes(dataManager.externalUseTypesOnCanvas, arrayBuilder4);
+        JsonArray externalUseTypesList = arrayBuilder4.build();
+
+        
 
         int canvasWidth = (int) dataManager.getRenderingPane().getWidth();
         int canvasHeight = (int) dataManager.getRenderingPane().getHeight();
 
         // THEN PUT IT ALL TOGETHER IN A JsonObject
         JsonObject dataManagerJSO = Json.createObjectBuilder()
-                .add(JSON_EXTERNAL_DATA_TYPES_LIST, diagramsArray)
-                .add(JSON_EXTERNAL_PARENT_TYPES_LIST, diagramsArray)
-                .add(JSON_EXTERNAL_USE_TYPES_LIST, diagramsArray)
+                .add(JSON_EXTERNAL_DATA_TYPES_LIST, externalDataTypesList)
+                .add(JSON_EXTERNAL_PARENT_TYPES_LIST, externalParentTypesList)
+                .add(JSON_EXTERNAL_USE_TYPES_LIST, externalUseTypesList)
                 .add(JSON_DIAGRAMS_LIST, diagramsArray)
                 .add(CANVAS_WIDTH, canvasWidth)
                 .add(CANVAS_HEIGHT, canvasHeight)
@@ -167,12 +179,101 @@ public class FileManager implements AppFileComponent {
      */
     private void fillArrayWithDiagrams(ArrayList<ClassDiagramObject> classesOnCanvas, JsonArrayBuilder arrayBuilder) {
         int totalClasses = classesOnCanvas.size();
-
         for (int i = 0; i < totalClasses; i++) {
             ClassDiagramObject diagram = classesOnCanvas.get(i);
             JsonObject diagramObject = makeClassDiagramJsonObject(diagram);
             arrayBuilder.add(diagramObject);
         }
+    }
+
+    /**
+     * Fills the array with external data types
+     *
+     * @param externalDataTypesOnCanvas
+     * @param arrayBuilder
+     */
+    private void fillArrayWithExternalDataTypes(ArrayList<ExternalDataType> externalDataTypesOnCanvas, JsonArrayBuilder arrayBuilder) {
+        int totalClasses = externalDataTypesOnCanvas.size();
+        for (int i = 0; i < totalClasses; i++) {
+            ExternalDataType externalDataType = externalDataTypesOnCanvas.get(i);
+            JsonObject diagramObject = makeExternalDataTypeJsonObject(externalDataType);
+            arrayBuilder.add(diagramObject);
+        }
+    }
+
+    /**
+     * Fills array with external parent types
+     *
+     * @param externalParentTypesOnCanvas
+     * @param arrayBuilder
+     */
+    private void fillArrayWithExternalParentTypes(ArrayList<ExternalParent> externalParentTypesOnCanvas, JsonArrayBuilder arrayBuilder) {
+        int totalClasses = externalParentTypesOnCanvas.size();
+        for (int i = 0; i < totalClasses; i++) {
+            ExternalParent externalParent = externalParentTypesOnCanvas.get(i);
+            JsonObject diagramObject = makeExternalParentTypeJsonObject(externalParent);
+            arrayBuilder.add(diagramObject);
+        }
+    }
+
+    private void fillArrayWithExternalUseTypes(ArrayList<ExternalUseType> externalUseTypesOnCanvas, JsonArrayBuilder arrayBuilder) {
+        int totalClasses = externalUseTypesOnCanvas.size();
+        for (int i = 0; i < totalClasses; i++) {
+            ExternalUseType externalUseType = externalUseTypesOnCanvas.get(i);
+            JsonObject diagramObject = makeExternalUseTypeJsonObject(externalUseType);
+            arrayBuilder.add(diagramObject);
+        }
+    }
+
+    /**
+     * Makes a JSON object for external data types with their name, x and y
+     * coordinates
+     *
+     * @param diagram
+     * @return
+     */
+    private JsonObject makeExternalDataTypeJsonObject(ExternalDataType diagram) {
+        JsonObject jso = Json.createObjectBuilder()
+                .add(DIAGRAM_NAME, diagram.getName())
+                .add(DIAGRAM_X, diagram.getRootContainer().getLayoutX())
+                .add(DIAGRAM_Y, diagram.getRootContainer().getLayoutY())
+                .build();
+
+        return jso;
+    }
+
+    /**
+     * Makes a JSON object for external parent types with their name, x and y
+     * coordinates
+     *
+     * @param diagram
+     * @return
+     */
+    private JsonObject makeExternalParentTypeJsonObject(ExternalParent diagram) {
+        JsonObject jso = Json.createObjectBuilder()
+                .add(DIAGRAM_NAME, diagram.getName())
+                .add(DIAGRAM_X, diagram.getRootContainer().getLayoutX())
+                .add(DIAGRAM_Y, diagram.getRootContainer().getLayoutY())
+                .build();
+
+        return jso;
+    }
+
+    /**
+     * Makes a JSON object for external parent types with their name, x and y
+     * coordinates
+     *
+     * @param diagram
+     * @return
+     */
+    private JsonObject makeExternalUseTypeJsonObject(ExternalUseType diagram) {
+        JsonObject jso = Json.createObjectBuilder()
+                .add(DIAGRAM_NAME, diagram.getName())
+                .add(DIAGRAM_X, diagram.getRootContainer().getLayoutX())
+                .add(DIAGRAM_Y, diagram.getRootContainer().getLayoutY())
+                .build();
+
+        return jso;
     }
 
     /**

@@ -18,7 +18,7 @@ public class GridLine extends Line{
         initStyle();
     }
     
-    public void initStyle(){
+    private void initStyle(){
         this.setStroke(Color.web("#BDC3C7", 0.2));
         this.setStrokeWidth(2);
     }
