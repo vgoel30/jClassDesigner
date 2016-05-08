@@ -137,8 +137,6 @@ public class FileManager implements AppFileComponent {
         fillArrayWithExternalUseTypes(dataManager.externalUseTypesOnCanvas, arrayBuilder4);
         JsonArray externalUseTypesList = arrayBuilder4.build();
 
-        
-
         int canvasWidth = (int) dataManager.getRenderingPane().getWidth();
         int canvasHeight = (int) dataManager.getRenderingPane().getHeight();
 
@@ -486,18 +484,41 @@ public class FileManager implements AppFileComponent {
         dataManager.reset();
         System.out.println("LOAD DATA CALLED");
         JsonObject json = loadJSONFile(filePath);
-        
-               
+
         //LOAD ALL THE EXTERNAL DATA TYPES LIST
         JsonArray jsonExternalDataTypesArray = json.getJsonArray(JSON_EXTERNAL_DATA_TYPES_LIST);
-        for(int i = 0; i < jsonExternalDataTypesArray.size(); i++){
+        for (int i = 0; i < jsonExternalDataTypesArray.size(); i++) {
             JsonObject jsonExternalDataType = jsonExternalDataTypesArray.getJsonObject(i);
-            ExternalDataType externalDataType = loadExternalDataType(jsonExternalDataType, data);
+            ExternalDataType externalDataType = loadExternalDataType(jsonExternalDataType);
             dataManager.attachExternalDataTypeBoxHandlers(externalDataType);
             dataManager.externalDataTypes.add(externalDataType.getName());
             dataManager.externalDataTypesOnCanvas.add(externalDataType);
             //render the thing
             externalDataType.putOnCanvasAfterLoading(dataManager.getRenderingPane());
+        }
+
+        //LAOD ALL THE EXTERNAL PARENTS
+        JsonArray jsonExternalParentsArray = json.getJsonArray(JSON_EXTERNAL_PARENT_TYPES_LIST);
+        for (int i = 0; i < jsonExternalParentsArray.size(); i++) {
+            JsonObject jsonExternalParent = jsonExternalParentsArray.getJsonObject(i);
+            ExternalParent externalParent = loadExternalParent(jsonExternalParent);
+            dataManager.attachExternalParentDiagramHandlers(externalParent);
+            dataManager.externalParents.add(externalParent.getName());
+            dataManager.externalParentsOnCanvas.add(externalParent);
+            //render the thing
+            externalParent.putOnCanvasAfterLoading(dataManager.getRenderingPane());
+        }
+
+        //LOAD ALL THE EXTERNAL USE TYPES
+        JsonArray jsonExternalUseTypesArray = json.getJsonArray(JSON_EXTERNAL_USE_TYPES_LIST);
+        for (int i = 0; i < jsonExternalUseTypesArray.size(); i++) {
+            JsonObject jsonExternalUseType = jsonExternalUseTypesArray.getJsonObject(i);
+            ExternalUseType externalUseType = loadExternalUseType(jsonExternalUseType);
+            dataManager.attachExternalUseTypeBoxHandlers(externalUseType);
+            dataManager.externalUseTypes.add(externalUseType.getName());
+            dataManager.externalUseTypesOnCanvas.add(externalUseType);
+            //render the thing
+            externalUseType.putOnCanvasAfterLoading(dataManager.getRenderingPane());
         }
 
         // AND NOW GET ALL THE SHAPES
@@ -510,46 +531,83 @@ public class FileManager implements AppFileComponent {
             dataManager.classesOnCanvas.add(classDiagram);
             classDiagram.putOnCanvas(dataManager.getRenderingPane());
         }
-        
+
         //MAKE ALL THE PARENT RELATION LINES
-        for(ClassDiagramObject classDiagramObject: dataManager.classesOnCanvas){
+        for (ClassDiagramObject classDiagramObject : dataManager.classesOnCanvas) {
             diagramController.setParentNameForLoadedDiagram(classDiagramObject.getParentName(), dataManager, classDiagramObject);
         }
-        
+
         //setting the canvas dimensions
         int canvasWidth = json.getInt(CANVAS_WIDTH);
         int canvasHeight = json.getInt(CANVAS_HEIGHT);
         dataManager.getRenderingPane().minWidth(canvasWidth);
         dataManager.getRenderingPane().minHeight(canvasHeight);
     }
-    
-    public ExternalDataType loadExternalDataType(JsonObject jsonExternalDataType, AppDataComponent data){
-        DiagramController diagramController = new DiagramController();
-        DataManager dataManager = (DataManager) data;
 
-        Pane canvas = dataManager.getRenderingPane();
-        
+    public ExternalUseType loadExternalUseType(JsonObject jsonExternalUseType) {
         //get the diagram's name
-        String name = jsonExternalDataType.getString(DIAGRAM_NAME);
-        
-        ExternalDataType toAdd = new ExternalDataType(name);
-        
+        String name = jsonExternalUseType.getString(DIAGRAM_NAME);
+
+        ExternalUseType toAdd = new ExternalUseType(name);
+
         //get the coordinates
-        int x = jsonExternalDataType.getInt(DIAGRAM_X);
-        int y = jsonExternalDataType.getInt(DIAGRAM_Y);
-        
+        int x = jsonExternalUseType.getInt(DIAGRAM_X);
+        int y = jsonExternalUseType.getInt(DIAGRAM_Y);
+
         //put on the coordinates
         toAdd.getRootContainer().setLayoutX(x);
         toAdd.getRootContainer().setLayoutY(y);
-        
+
+        return toAdd;
+    }
+
+    public ExternalDataType loadExternalDataType(JsonObject jsonExternalDataType) {
+        //get the diagram's name
+        String name = jsonExternalDataType.getString(DIAGRAM_NAME);
+
+        ExternalDataType toAdd = new ExternalDataType(name);
+
+        //get the coordinates
+        int x = jsonExternalDataType.getInt(DIAGRAM_X);
+        int y = jsonExternalDataType.getInt(DIAGRAM_Y);
+
+        //put on the coordinates
+        toAdd.getRootContainer().setLayoutX(x);
+        toAdd.getRootContainer().setLayoutY(y);
+
+        return toAdd;
+    }
+
+    /**
+     * Loads an external parent
+     *
+     * @param jsonExternalParent
+     * @param data
+     * @return
+     */
+    public ExternalParent loadExternalParent(JsonObject jsonExternalParent) {
+        //get the diagram's name
+        String name = jsonExternalParent.getString(DIAGRAM_NAME);
+
+        ExternalParent toAdd = new ExternalParent(name);
+
+        //get the coordinates
+        int x = jsonExternalParent.getInt(DIAGRAM_X);
+        int y = jsonExternalParent.getInt(DIAGRAM_Y);
+
+        //put on the coordinates
+        toAdd.getRootContainer().setLayoutX(x);
+        toAdd.getRootContainer().setLayoutY(y);
+
         return toAdd;
     }
 
     /**
      * Loads a class diagram object
+     *
      * @param jsonDiagram
      * @param data
-     * @return 
+     * @return
      */
     public ClassDiagramObject loadClassDiagram(JsonObject jsonDiagram, AppDataComponent data) {
         DiagramController diagramController = new DiagramController();
@@ -575,7 +633,7 @@ public class FileManager implements AppFileComponent {
         //setting the parent name
         toAdd.setParentName(jsonDiagram.getString(PARENT));
         //render the diagram 
-       // diagramController.setParentNameForLoadedDiagram(jsonDiagram.getString(PARENT), dataManager, toAdd);
+        // diagramController.setParentNameForLoadedDiagram(jsonDiagram.getString(PARENT), dataManager, toAdd);
         System.out.println("AP : " + jsonDiagram.getString(PARENT));
 
         int rootContainerWidth = dimensionsJsonObject.getInt(ROOT_CONTAINER_WIDTH);
