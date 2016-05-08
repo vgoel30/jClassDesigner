@@ -336,7 +336,6 @@ public class DiagramController {
         ArrayList<String> argumentTypes = new ArrayList<>();
 
         for (ArgumentObject methodArgument : methodArguments) {
-            String argumentName = methodArgument.getName();
             String argumentType = methodArgument.getType();
 
             //add the argument to the list of arguments

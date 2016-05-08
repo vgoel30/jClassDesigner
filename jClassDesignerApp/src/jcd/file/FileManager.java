@@ -724,7 +724,8 @@ public class FileManager implements AppFileComponent {
                 arguments.add(argumentToAdd);
             }
             MethodObject methodToAdd = new MethodObject(name, isStatic, isAbstract, arguments, returnType, access);
-            toAdd.getMethods().add(methodToAdd);
+            //add the method and render the thing
+            diagramController.addMethod(toAdd, methodToAdd, dataManager);
         }
         return toAdd;
     }
