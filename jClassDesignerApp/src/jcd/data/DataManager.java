@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
 import jcd.actions.Action;
+import jcd.actions.EditVariable;
 import jcd.actions.MoveDiagram;
 import jcd.actions.RemoveMethod;
 import jcd.actions.RemoveVariable;
@@ -52,6 +53,7 @@ public class DataManager implements AppDataComponent {
     public static final String MOVE_DIAGRAM = "move_diagram";
     public static final String REMOVE_VARIABLE = "remove_variable";
     public static final String REMOVE_METHOD = "remove_method";
+    public static final String EDIT_VARIABLE = "edit_variable";
 
     // THIS IS A SHARED REFERENCE TO THE APPLICATION
     AppTemplate app;
@@ -660,6 +662,21 @@ public class DataManager implements AppDataComponent {
                 //updates the method table
                 diagramController.updateMethodsTable(diagram, workspace.methodsTable);
             }
+            else if (undoStack.peek().getActionType().equals(EDIT_VARIABLE)) {
+                EditVariable editVariableMove = (EditVariable) undoStack.pop();
+                ClassDiagramObject diagram = editVariableMove.getDiagram();
+                
+                VariableObject originalVariable = editVariableMove.getOriginalVariable();
+                VariableObject editedVariable = editVariableMove.getEditedVariable();
+                
+                //adds the method
+                diagramController.addVariable(diagram, originalVariable, this, getRenderingPane());
+                diagramController.removeVariable(diagram, editedVariable, this);
+                
+                redoStack.push(editVariableMove);
+                //updates the variable table
+                diagramController.updateVariablesTable(diagram, workspace.variablesTable);
+            }
         }
 
     }
@@ -698,6 +715,20 @@ public class DataManager implements AppDataComponent {
                 ClassDiagramObject diagram = removeVariableMove.getDiagram();
                 VariableObject toRemove = removeVariableMove.getRemovedVariable();
                 diagramController.removeVariable(diagram, toRemove, this);
+            }
+            else if (redoStack.peek().getActionType().equals(EDIT_VARIABLE)) {
+                EditVariable editVariableMove = (EditVariable) redoStack.pop();
+                ClassDiagramObject diagram = editVariableMove.getDiagram();
+                
+                VariableObject originalVariable = editVariableMove.getOriginalVariable();
+                VariableObject editedVariable = editVariableMove.getEditedVariable();
+                
+                //adds the method
+                diagramController.addVariable(diagram, editedVariable, this, getRenderingPane());
+                diagramController.removeVariable(diagram, originalVariable, this);
+                
+                //updates the variable table
+                diagramController.updateVariablesTable(diagram, workspace.variablesTable);
             }
 
         }

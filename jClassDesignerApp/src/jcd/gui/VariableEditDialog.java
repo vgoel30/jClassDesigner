@@ -21,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import jcd.actions.EditVariable;
 import jcd.controller.DiagramController;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
@@ -197,6 +198,10 @@ public class VariableEditDialog extends Stage {
                 
                 
             }
+            
+            //push the edit variable move on the stack
+            EditVariable editVariableMove = new EditVariable(diagram, variableToEdit, toAdd);
+            dataManager.undoStack.push(editVariableMove);
 
             VariableEditDialog.this.hide();
         };

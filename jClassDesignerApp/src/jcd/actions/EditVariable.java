@@ -19,9 +19,26 @@ public class EditVariable extends Action{
     
     ClassDiagramObject diagram;
     
-    public EditVariable(ClassDiagramObject diagram){
+    public EditVariable(ClassDiagramObject diagram, VariableObject originalVariable, VariableObject editedVariable){
         this.diagram = diagram;
         this.actionType = "edit_variable";
+        
+        this.originalVariable = originalVariable;
+        this.editedVariable = editedVariable;
     }
+
+    public VariableObject getOriginalVariable() {
+        return originalVariable;
+    }
+
+    public VariableObject getEditedVariable() {
+        return editedVariable;
+    }
+
+    public ClassDiagramObject getDiagram() {
+        return diagram;
+    }
+    
+    
     
 }
