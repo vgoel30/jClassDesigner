@@ -35,6 +35,10 @@ public class ExternalParent extends Diagram{
         initStyle();
     }
     
+    public void putOnCanvasAfterLoading(Pane canvas) {
+       canvas.getChildren().add(rootContainer); 
+    }
+    
     public void putOnCanvas(Pane canvas){
         rootContainer.setLayoutX(5);
         rootContainer.setLayoutY(5);

@@ -490,4 +490,6 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         return this.compareTo(o) == 0;
     }
 
+    
+
 }

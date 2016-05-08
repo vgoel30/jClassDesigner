@@ -470,6 +470,82 @@ public class DiagramController {
     }
 
     /**
+     * Sets the parent name and draws lines for parental relations
+     * @param t1
+     * @param dataManager
+     * @param selectedClassDiagram 
+     */
+    public void setParentNameForLoadedDiagram(String t1, DataManager dataManager, ClassDiagramObject selectedClassDiagram) {
+        ClassDiagramObject selectedClassObject = selectedClassDiagram;
+        Pane canvas = dataManager.getRenderingPane();
+
+        if (t1 == null || t1.equals("NONE") || t1.equals("")) {
+            selectedClassObject.setParentName("");
+        } else if (t1 != null) {
+            boolean isLocal = false;
+            boolean alreadyExists = false;
+            //check if it's a local parent
+            for (ClassDiagramObject classOnCanvas : dataManager.classesOnCanvas) {
+                if (classOnCanvas.toString().equals(t1)) {
+                    isLocal = true;
+                    break;
+                }
+            }
+            //check if it is already a parent to another class
+            if (dataManager.externalParents.contains(t1)) {
+                alreadyExists = true;
+            }
+
+            //if it isn't local and doesn't already exist, make a external parent box for it
+            if (!isLocal && !alreadyExists) {
+                System.out.println("IS 1");
+                dataManager.externalParents.add(t1);
+                ExternalParent externalParent = new ExternalParent(t1);
+                externalParent.putOnCanvas(canvas);
+                dataManager.attachExternalParentDiagramHandlers(externalParent);
+                dataManager.externalParentsOnCanvas.add(externalParent);
+                InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
+                externalParent.parentalLines.add(myLine);
+                externalParent.children.add(selectedClassObject);
+                selectedClassObject.inheritanceLinesOut.add(myLine);
+
+                selectedClassObject.setParentName(t1);
+
+                dataManager.attachConnectorLineHandlers(myLine);
+            } //if the external Parent already exists
+            else if (!isLocal) {
+                System.out.println("IS 2");
+                for (ExternalParent externalParent : dataManager.externalParentsOnCanvas) {
+                    if (externalParent.getName().equals(t1)) {
+                        InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
+                        externalParent.parentalLines.add(myLine);
+                        externalParent.children.add(selectedClassObject);
+                        selectedClassObject.inheritanceLinesOut.add(myLine);
+                        dataManager.attachConnectorLineHandlers(myLine);
+                        selectedClassObject.setParentName(t1);
+                        break;
+                    }
+                }
+            } //for adding a local parent
+            else if (isLocal) {
+                System.out.println("IS LOCAL");
+                for (ClassDiagramObject localClass : dataManager.classesOnCanvas) {
+                    if (localClass.toString().equals(t1)) {
+                        InheritanceLine myLine = new InheritanceLine(localClass, selectedClassObject, canvas);
+                        localClass.linesPointingTowards.add(myLine);
+                        localClass.getChildren().add(selectedClassObject);
+                        selectedClassObject.inheritanceLinesOut.add(myLine);
+                        dataManager.attachConnectorLineHandlers(myLine);
+                        selectedClassObject.setParentName(t1);
+                        break;
+                    }
+                }
+            }
+
+        }
+    }
+
+    /**
      * Renders the external interface dialog box
      *
      * @param diagram

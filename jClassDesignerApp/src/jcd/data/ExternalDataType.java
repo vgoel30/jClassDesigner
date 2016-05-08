@@ -35,6 +35,10 @@ public class ExternalDataType extends Diagram{
         initStyle();
     }
     
+    public void putOnCanvasAfterLoading(Pane canvas) {
+       canvas.getChildren().add(rootContainer); 
+    }
+    
     public void putOnCanvas(Pane canvas){
         rootContainer.setLayoutX(5);
         rootContainer.setLayoutY(5);
@@ -77,4 +81,6 @@ public class ExternalDataType extends Diagram{
         nameText.getStyleClass().add(DIAGRAM_TEXT_FIELD);
         rootContainer.getStyleClass().add(DIAGRAM_CONTAINERS);
     }
+
+    
 }

@@ -141,13 +141,7 @@ public class VariableObject implements Comparable<VariableObject> {
      */
     @Override
     public int compareTo(VariableObject o) {
-        int x = this.getName().compareTo(o.getName());
-        //if the names are not the same, we can be sure that the methods aren't the same
-        if (x != 0) {
-            return x;
-        }
-        //two methods might have the same name but different types
-        return this.getType().compareTo(o.getType());
+        return this.getName().compareTo(o.getName());
     }
     
     /**

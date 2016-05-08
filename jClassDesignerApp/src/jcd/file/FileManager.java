@@ -482,12 +482,27 @@ public class FileManager implements AppFileComponent {
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
         DataManager dataManager = (DataManager) data;
+        DiagramController diagramController = new DiagramController();
         dataManager.reset();
         System.out.println("LOAD DATA CALLED");
         JsonObject json = loadJSONFile(filePath);
+        
+               
+        //LOAD ALL THE EXTERNAL DATA TYPES LIST
+        JsonArray jsonExternalDataTypesArray = json.getJsonArray(JSON_EXTERNAL_DATA_TYPES_LIST);
+        for(int i = 0; i < jsonExternalDataTypesArray.size(); i++){
+            JsonObject jsonExternalDataType = jsonExternalDataTypesArray.getJsonObject(i);
+            ExternalDataType externalDataType = loadExternalDataType(jsonExternalDataType, data);
+            dataManager.attachExternalDataTypeBoxHandlers(externalDataType);
+            dataManager.externalDataTypes.add(externalDataType.getName());
+            dataManager.externalDataTypesOnCanvas.add(externalDataType);
+            //render the thing
+            externalDataType.putOnCanvasAfterLoading(dataManager.getRenderingPane());
+        }
 
-        // AND NOW LOAD ALL THE SHAPES
+        // AND NOW GET ALL THE SHAPES
         JsonArray jsonDiagramsArray = json.getJsonArray(JSON_DIAGRAMS_LIST);
+        //LOAD ALL THE SHAPES
         for (int i = 0; i < jsonDiagramsArray.size(); i++) {
             JsonObject jsonDiagram = jsonDiagramsArray.getJsonObject(i);
             ClassDiagramObject classDiagram = loadClassDiagram(jsonDiagram, data);
@@ -495,12 +510,47 @@ public class FileManager implements AppFileComponent {
             dataManager.classesOnCanvas.add(classDiagram);
             classDiagram.putOnCanvas(dataManager.getRenderingPane());
         }
+        
+        //MAKE ALL THE PARENT RELATION LINES
+        for(ClassDiagramObject classDiagramObject: dataManager.classesOnCanvas){
+            diagramController.setParentNameForLoadedDiagram(classDiagramObject.getParentName(), dataManager, classDiagramObject);
+        }
+        
+        //setting the canvas dimensions
         int canvasWidth = json.getInt(CANVAS_WIDTH);
         int canvasHeight = json.getInt(CANVAS_HEIGHT);
         dataManager.getRenderingPane().minWidth(canvasWidth);
         dataManager.getRenderingPane().minHeight(canvasHeight);
     }
+    
+    public ExternalDataType loadExternalDataType(JsonObject jsonExternalDataType, AppDataComponent data){
+        DiagramController diagramController = new DiagramController();
+        DataManager dataManager = (DataManager) data;
 
+        Pane canvas = dataManager.getRenderingPane();
+        
+        //get the diagram's name
+        String name = jsonExternalDataType.getString(DIAGRAM_NAME);
+        
+        ExternalDataType toAdd = new ExternalDataType(name);
+        
+        //get the coordinates
+        int x = jsonExternalDataType.getInt(DIAGRAM_X);
+        int y = jsonExternalDataType.getInt(DIAGRAM_Y);
+        
+        //put on the coordinates
+        toAdd.getRootContainer().setLayoutX(x);
+        toAdd.getRootContainer().setLayoutY(y);
+        
+        return toAdd;
+    }
+
+    /**
+     * Loads a class diagram object
+     * @param jsonDiagram
+     * @param data
+     * @return 
+     */
     public ClassDiagramObject loadClassDiagram(JsonObject jsonDiagram, AppDataComponent data) {
         DiagramController diagramController = new DiagramController();
         DataManager dataManager = (DataManager) data;
@@ -525,7 +575,8 @@ public class FileManager implements AppFileComponent {
         //setting the parent name
         toAdd.setParentName(jsonDiagram.getString(PARENT));
         //render the diagram 
-        diagramController.manageParentNameChange("", jsonDiagram.getString(PARENT), dataManager, toAdd);
+       // diagramController.setParentNameForLoadedDiagram(jsonDiagram.getString(PARENT), dataManager, toAdd);
+        System.out.println("AP : " + jsonDiagram.getString(PARENT));
 
         int rootContainerWidth = dimensionsJsonObject.getInt(ROOT_CONTAINER_WIDTH);
         int rootContainerHeight = dimensionsJsonObject.getInt(ROOT_CONTAINER_HEIGHT);

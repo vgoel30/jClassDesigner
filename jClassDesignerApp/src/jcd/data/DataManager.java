@@ -840,7 +840,6 @@ public class DataManager implements AppDataComponent {
         //remove all the actions from the undo stack
         undoStack.clear();
         redoStack.clear();
-        ClassDiagramObject.counter = 0;
 
         externalParents.clear();
         externalParentsOnCanvas.clear();
