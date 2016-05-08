@@ -472,7 +472,7 @@ public class DiagramController {
      * Sets the parent name and draws lines for parental relations
      * @param t1
      * @param dataManager
-     * @param selectedClassDiagram 
+     * @param selectedClassDiagram
      */
     public void setParentNameForLoadedDiagram(String t1, DataManager dataManager, ClassDiagramObject selectedClassDiagram) {
         ClassDiagramObject selectedClassObject = selectedClassDiagram;

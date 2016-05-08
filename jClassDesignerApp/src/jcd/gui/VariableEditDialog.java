@@ -174,7 +174,7 @@ public class VariableEditDialog extends Stage {
 
             //see if the variable already exists
             for (VariableObject variable : diagram.getVariables()) {
-                if (variable.equals(toAdd)) {
+                if (variable.equals(toAdd) && !variable.equals(variableToEdit)) {
                     alreadyExists = true;
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Variable name error");
