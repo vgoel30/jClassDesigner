@@ -751,6 +751,11 @@ public class DataManager implements AppDataComponent {
                 //set the parent to null
                 parentToRemove.children.get(i).setParentName("");
             }
+
+            for (ClassDiagramObject classDiagramObject : classesOnCanvas) {
+                classDiagramObject.getExternalInterfaces().remove(selectedClassDiagram.getName());
+            }
+
             //remove the external parent from the list
             externalParentsOnCanvas.remove(parentToRemove);
             externalParents.remove(parentToRemove.name);
