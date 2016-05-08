@@ -32,7 +32,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     String diagramType;
 
     String parent = "";
-    
+
     boolean isAbstract;
 
     ArrayList<String> localInterfaces = new ArrayList<>();
@@ -48,8 +48,8 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     public ArrayList<String> externalDataTypesUsed = new ArrayList<>();
     //list of all the aggregate lines originating out of this diagram
     public ArrayList<AggregateLine> aggregateLinesOut = new ArrayList<>();
-    
-     //list of all the data types this class 'uses'
+
+    //list of all the data types this class 'uses'
     public ArrayList<String> externalUseTypesUsed = new ArrayList<>();
     //list of all the dependency lines originating out of this diagram
     public ArrayList<DependencyLine> dependencyLinesOut = new ArrayList<>();
@@ -67,10 +67,10 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
 
     //the class name text
     Text classNameText;
-    
+
     //the diagram type text
     Text classTypeText;
-    
+
     //the variables name text
     Text variablesNameText;
     //the methods text
@@ -171,7 +171,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         methodsContainer = new VBox();
 
         diagramType = type;
-        
+
         parent = "";
 
         //set the desired x and y coordinates
@@ -184,7 +184,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         //The first container which has the class name
         classTypeText = new Text(type.toUpperCase());
         classNameText = new Text(diagramType + counter);
-        nameContainer = new VBox(classTypeText,classNameText);
+        nameContainer = new VBox(classTypeText, classNameText);
 
         //The second container which has all the variables and stuff
         variablesNameText = new Text("Variables");
@@ -211,15 +211,15 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     /**
      * Puts the diagram on the canvas with the resizing lines
      *
-     * @param root
+     * @param canvas
      */
     public void putOnCanvas(Pane canvas) {
         canvas.getChildren().add(rootContainer);
         canvas.getChildren().add(rightLine);
         canvas.getChildren().add(leftLine);
     }
-    
-    public void removeFromCanvas(Pane canvas){
+
+    public void removeFromCanvas(Pane canvas) {
         canvas.getChildren().remove(rootContainer);
         canvas.getChildren().remove(rightLine);
         canvas.getChildren().remove(leftLine);
@@ -228,8 +228,8 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     public double getEndPoint() {
         return rootContainer.getLayoutX() + rootContainer.getWidth();
     }
-    
-    public void makeAbstract(){
+
+    public void makeAbstract() {
         isAbstract = true;
         classTypeText.setText("ABSTRACT " + diagramType.toUpperCase());
     }
@@ -285,7 +285,6 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         rightLine.setStrokeWidth(5);
         rightLine.setVisible(false);
 
-        
         packageContainer.setMinHeight(10);
         packageContainer.setMinWidth(100);
         packageContainer.setMaxWidth(100);
@@ -319,6 +318,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
 
     }
 
+    @Override
     public VBox getRootContainer() {
         return this.rootContainer;
     }
@@ -420,6 +420,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         return diagramType + ": " + this.classNameText.getText() + " Methods : " + this.methods + " Variables : " + this.variables;
     }
 
+    @Override
     public String toString() {
         return this.classNameText.getText() + ":" + this.packageNameText.getText();
     }
@@ -435,7 +436,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         }
 
         toReturn += "\npublic " + getDiagramType() + " " + this.getClassNameText().getText();// + "{\n\n ";
-        
+
         //adding parent stuff
         if (getParentName() != null && !getParentName().equals("")) {
             String potentialName = getParentName();
@@ -446,15 +447,29 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         }
 
         ArrayList<String> interfacesToAdd = new ArrayList<>();
-        if (localInterfaces.size() > 0 || externalInterfaces.size() > 0) {
+        if (localInterfaces.size() > 0) {
             interfacesToAdd.addAll(localInterfaces);
+        }
+        if (externalInterfaces.size() > 0) {
             interfacesToAdd.addAll(externalInterfaces);
         }
 
+//        System.out.println();
+        System.out.println("getParentName " + interfacesToAdd.size());
+
         if (interfacesToAdd.size() == 1) {
-            toReturn += ", implements " + interfacesToAdd.get(0) + " {\n\n ";
+            if (getParentName() != null && !getParentName().equals("")) {
+                toReturn += ", implements " + interfacesToAdd.get(0) + " {\n\n ";
+            } else {
+                toReturn += " implements " + interfacesToAdd.get(0) + " {\n\n ";
+            }
         } else if (interfacesToAdd.size() > 1) {
-            toReturn += ", implements ";
+
+            if (getParentName() != null && !getParentName().equals("")) {
+                toReturn += ", implements ";
+            } else {
+                toReturn += " implements ";
+            }
             for (int i = 0; i < interfacesToAdd.size() - 1; i++) {
                 toReturn += interfacesToAdd.get(i) + ", ";
             }
@@ -489,7 +504,5 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
     public boolean equals(ClassDiagramObject o) {
         return this.compareTo(o) == 0;
     }
-
-    
 
 }
