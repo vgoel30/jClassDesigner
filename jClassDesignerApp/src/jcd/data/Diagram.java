@@ -23,6 +23,12 @@ public abstract class Diagram {
         return name;
     }
     
-    
+    public double getX() {
+        return rootContainer.getLayoutX();
+    }
+
+    public double getY() {
+        return rootContainer.getLayoutY();
+    }
     
 }

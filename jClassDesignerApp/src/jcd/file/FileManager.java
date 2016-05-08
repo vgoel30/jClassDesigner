@@ -6,7 +6,6 @@
 package jcd.file;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +15,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javax.json.Json;
 import javax.json.JsonArray;

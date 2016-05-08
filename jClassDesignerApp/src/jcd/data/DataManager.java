@@ -126,8 +126,6 @@ public class DataManager implements AppDataComponent {
         packageNames.add(packageName);
     }
 
-    
-
     public Pane getRenderingPane() {
         return ((Workspace) app.getWorkspaceComponent()).getCanvas();
     }
@@ -182,7 +180,7 @@ public class DataManager implements AppDataComponent {
                     diagram.getRootContainer().setLayoutY(rectangleDraggedEvent.getSceneY() - 50);
                     diagram.getRootContainer().setLayoutX(rectangleDraggedEvent.getSceneX() - 450);
 
-                    if (workspace.gridIsActive()) {
+                    if (workspace.snapIsActive()) {
                         gridEditController.snapToGrid(classesOnCanvas);
                     }
 
@@ -190,7 +188,6 @@ public class DataManager implements AppDataComponent {
                     double y = diagram.getRootContainer().getLayoutY();
 
                     Pane canvas = getRenderingPane();
-                    ScrollPane scrollPane = getRenderingScrollPane();
 
                     //dynamic scrolling 
                     if (x > canvas.getWidth() - 150) {
@@ -266,8 +263,11 @@ public class DataManager implements AppDataComponent {
                     double x = diagram.getRootContainer().getLayoutX();
                     double y = diagram.getRootContainer().getLayoutY();
 
+                    if (workspace.snapIsActive()) {
+                        gridEditController.snapToGrid(classesOnCanvas);
+                    }
+
                     Pane canvas = getRenderingPane();
-                    ScrollPane scrollPane = getRenderingScrollPane();
 
                     //dynamic scrolling 
                     if (x > canvas.getWidth() - 150) {
@@ -337,7 +337,9 @@ public class DataManager implements AppDataComponent {
                     double y = diagram.getRootContainer().getLayoutY();
 
                     Pane canvas = getRenderingPane();
-                    ScrollPane scrollPane = getRenderingScrollPane();
+                    if (workspace.snapIsActive()) {
+                        gridEditController.snapToGrid(classesOnCanvas);
+                    }
 
                     //dynamic scrolling 
                     if (x > canvas.getWidth() - 150) {
@@ -398,8 +400,11 @@ public class DataManager implements AppDataComponent {
                     double x = diagram.getRootContainer().getLayoutX();
                     double y = diagram.getRootContainer().getLayoutY();
 
+                    if (workspace.snapIsActive()) {
+                        gridEditController.snapToGrid(classesOnCanvas);
+                    }
+
                     Pane canvas = getRenderingPane();
-                    ScrollPane scrollPane = getRenderingScrollPane();
 
                     //dynamic scrolling 
                     if (x > canvas.getWidth() - 150) {
@@ -556,8 +561,6 @@ public class DataManager implements AppDataComponent {
             VariableOptionDialog newDialog = new VariableOptionDialog();
             newDialog.init(app.getGUI().getWindow(), selectedClassObject, workspace.variablesTable, this, workspace.getCanvas());
             newDialog.show();
-
-            System.out.println("VARIABLES : " + selectedClassObject.getVariables());
         }
     }
 

@@ -17,7 +17,6 @@ import javafx.scene.layout.Pane;
 import javax.imageio.ImageIO;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
-import jcd.data.ExternalParent;
 import jcd.gui.GridLine;
 import jcd.gui.Workspace;
 import maf.AppTemplate;
@@ -27,11 +26,6 @@ import maf.AppTemplate;
  * @author varungoel
  */
 public class GridEditController {
-    
-    public static final String EXTERNAL_PARENT = "external_parent";
-    public static final String EXTERNAL_INTERFACE = "external_interface";
-    public static final String EXTERNAL_PACKAGE = "external_package";
-
     AppTemplate app;
 
     DataManager dataManager;
@@ -95,22 +89,6 @@ public class GridEditController {
             snapToGrid(dataManager.classesOnCanvas);
         }
         
-    }
-    
-    /**
-     * Renders and external class/package/interface box on canvas
-     * @param name
-     * @param type
-     * @param canvas 
-     * @return  
-     */
-    public ExternalParent renderExternalDiagramBox(String name, String type, Pane canvas){
-       // if(type.equals(EXTERNAL_PARENT)){
-            ExternalParent externalParent = new ExternalParent(name);
-            externalParent.putOnCanvas(canvas);
-            dataManager.attachExternalParentDiagramHandlers(externalParent);
-            return externalParent;
-        //}
     }
 
     public void processSnapshot() {

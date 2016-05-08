@@ -388,13 +388,7 @@ public class ClassDiagramObject extends Diagram implements Comparable<ClassDiagr
         rootContainer.setLayoutY(Y);
     }
 
-    public double getX() {
-        return rootContainer.getLayoutX();
-    }
-
-    public double getY() {
-        return rootContainer.getLayoutY();
-    }
+    
 
     public String getDiagramType() {
         return diagramType;

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -331,7 +330,6 @@ public class DiagramController {
 //        //add to the list of methods for the class
         if (!diagram.getMethods().contains(toAdd)) {
             diagram.getMethods().add(toAdd);
-            System.out.println("METHOD NOT ADDED BECAUSE ALREADY EXISTS");
         }
 
         //all the argument object
@@ -349,7 +347,13 @@ public class DiagramController {
                 addExternalUseType(diagram, argumentType, dataManager, dataManager.getRenderingPane());
             }
         }
-
+        
+        String returnType = toAdd.getReturnType();
+        
+        if(!argumentTypes.contains(returnType)){
+            addExternalUseType(diagram, returnType, dataManager, dataManager.getRenderingPane());
+        }
+        
         Label variableText = new Label(toAdd.toString());
         variableText.getStyleClass().add("diagram_text_field");
         diagram.getMethodsContainer().getChildren().add(variableText);
@@ -502,7 +506,6 @@ public class DiagramController {
 
             //if it isn't local and doesn't already exist, make a external parent box for it
             if (!isLocal && !alreadyExists) {
-                System.out.println("IS 1");
                 dataManager.externalParents.add(t1);
                 ExternalParent externalParent = new ExternalParent(t1);
                 externalParent.putOnCanvas(canvas);
@@ -518,7 +521,6 @@ public class DiagramController {
                 dataManager.attachConnectorLineHandlers(myLine);
             } //if the external Parent already exists
             else if (!isLocal) {
-                System.out.println("IS 2");
                 for (ExternalParent externalParent : dataManager.externalParentsOnCanvas) {
                     if (externalParent.getName().equals(t1)) {
                         InheritanceLine myLine = new InheritanceLine(externalParent, selectedClassObject, canvas);
@@ -532,7 +534,6 @@ public class DiagramController {
                 }
             } //for adding a local parent
             else if (isLocal) {
-                System.out.println("IS LOCAL");
                 for (ClassDiagramObject localClass : dataManager.classesOnCanvas) {
                     if (localClass.toString().equals(t1)) {
                         InheritanceLine myLine = new InheritanceLine(localClass, selectedClassObject, canvas);
