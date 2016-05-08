@@ -215,6 +215,7 @@ public class MethodOptionDialog extends Stage {
                 MethodObject toAdd = new MethodObject(name, isStatic, isAbstract, arguments, type, access);
                 System.out.println("METHOD TO ADD : " + toAdd.toStringCode());
                 //this will add the method to the class's list of methods and render it
+                diagram.getMethods().add(toAdd);
                 diagramController.addMethod(diagram, toAdd, dataManager);
                 //this will update the method table
                 diagramController.updateMethodsTable(diagram, methodsTable);

@@ -532,9 +532,27 @@ public class FileManager implements AppFileComponent {
             classDiagram.putOnCanvas(dataManager.getRenderingPane());
         }
 
-        //MAKE ALL THE PARENT RELATION LINES
+        //NOW THAT THE DIAGRAMS ARE LOADED, BUILD ALL THE LINES
         for (ClassDiagramObject classDiagramObject : dataManager.classesOnCanvas) {
+            //MAKE ALL THE PARENT RELATION LINES
             diagramController.setParentNameForLoadedDiagram(classDiagramObject.getParentName(), dataManager, classDiagramObject);
+            //ALL THE EXTERNAL INTERFACE BOXES
+            for (String externalInterfaceToAdd : classDiagramObject.getExternalInterfaces()) {
+                diagramController.addExternalInterfaceBox(classDiagramObject, externalInterfaceToAdd, dataManager, dataManager.getRenderingPane());
+            }
+            //ALL THE VARIABLE RELATION LINES
+            for (VariableObject variable : classDiagramObject.getVariables()) {
+                //render the variable box and line
+                diagramController.addVariable(classDiagramObject, variable, dataManager, dataManager.getRenderingPane());
+            }
+            //ALL THE METHOD RELATIONS 
+            for (MethodObject method : classDiagramObject.getMethods()) {
+                diagramController.addMethod(classDiagramObject, method, dataManager);
+            }
+            //ALL THE LOCAL INTERFACE RELATION LINES
+            for (String localInterface : classDiagramObject.getLocalInterfaces()) {
+                diagramController.manageLocalInterfaceAddition(classDiagramObject, localInterface, dataManager, dataManager.getRenderingPane());
+            }
         }
 
         //setting the canvas dimensions
@@ -582,7 +600,6 @@ public class FileManager implements AppFileComponent {
      * Loads an external parent
      *
      * @param jsonExternalParent
-     * @param data
      * @return
      */
     public ExternalParent loadExternalParent(JsonObject jsonExternalParent) {
@@ -610,11 +627,9 @@ public class FileManager implements AppFileComponent {
      * @return
      */
     public ClassDiagramObject loadClassDiagram(JsonObject jsonDiagram, AppDataComponent data) {
-        DiagramController diagramController = new DiagramController();
-        DataManager dataManager = (DataManager) data;
+        
 
-        Pane canvas = dataManager.getRenderingPane();
-
+        // Pane canvas = dataManager.getRenderingPane();
         JsonArray dimensionsArray = jsonDiagram.getJsonArray(JSON_DIAGRAM_DIMENSIONS);
         JsonObject dimensionsJsonObject = dimensionsArray.getJsonObject(0);
 
@@ -633,8 +648,7 @@ public class FileManager implements AppFileComponent {
         //setting the parent name
         toAdd.setParentName(jsonDiagram.getString(PARENT));
         //render the diagram 
-        // diagramController.setParentNameForLoadedDiagram(jsonDiagram.getString(PARENT), dataManager, toAdd);
-        System.out.println("AP : " + jsonDiagram.getString(PARENT));
+       
 
         int rootContainerWidth = dimensionsJsonObject.getInt(ROOT_CONTAINER_WIDTH);
         int rootContainerHeight = dimensionsJsonObject.getInt(ROOT_CONTAINER_HEIGHT);
@@ -660,8 +674,6 @@ public class FileManager implements AppFileComponent {
             String interfaceName = current.getString(EXTERNAL_INTERFACE_NAME);
             //add to the list of external interfaces
             toAdd.addExternalInterface(interfaceName);
-            //render the box
-            diagramController.addExternalInterfaceBox(toAdd, interfaceName, dataManager, canvas);
 
         }
 
@@ -694,8 +706,8 @@ public class FileManager implements AppFileComponent {
             String access = current.getString(VARIABLE_ACCESS);
 
             VariableObject varToAdd = new VariableObject(name, variableType, isStatic, isFinal, access);
-            //add the variable and render the thing
-            diagramController.addVariable(toAdd, varToAdd, dataManager, canvas);
+            //add to the list of variables
+            toAdd.getVariables().add(varToAdd);
         }
 
         //ALL THE METHODS OF THE CLASS
@@ -723,9 +735,9 @@ public class FileManager implements AppFileComponent {
                 ArgumentObject argumentToAdd = new ArgumentObject(argName, argType);
                 arguments.add(argumentToAdd);
             }
+            //add the method
             MethodObject methodToAdd = new MethodObject(name, isStatic, isAbstract, arguments, returnType, access);
-            //add the method and render the thing
-            diagramController.addMethod(toAdd, methodToAdd, dataManager);
+            toAdd.getMethods().add(methodToAdd);
         }
         return toAdd;
     }

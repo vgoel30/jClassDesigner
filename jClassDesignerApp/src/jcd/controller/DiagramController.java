@@ -131,8 +131,9 @@ public class DiagramController {
      */
     public void addVariable(ClassDiagramObject diagram, VariableObject toAdd, DataManager dataManager, Pane canvas) {
         //add to the list of variables for the class
-        diagram.getVariables().add(toAdd);
-
+        if (!diagram.getVariables().contains(toAdd)) {
+            diagram.getVariables().add(toAdd);
+        }
         //renders it on the diagram
         Label variableText = new Label(toAdd.toString());
         variableText.getStyleClass().add("diagram_text_field");
@@ -327,8 +328,11 @@ public class DiagramController {
      * @param dataManager
      */
     public void addMethod(ClassDiagramObject diagram, MethodObject toAdd, DataManager dataManager) {
-        //add to the list of methods for the class
-        diagram.getMethods().add(toAdd);
+//        //add to the list of methods for the class
+        if (!diagram.getMethods().contains(toAdd)) {
+            diagram.getMethods().add(toAdd);
+            System.out.println("METHOD NOT ADDED BECAUSE ALREADY EXISTS");
+        }
 
         //all the argument object
         ArrayList<ArgumentObject> methodArguments = toAdd.getArguments();
@@ -470,6 +474,7 @@ public class DiagramController {
 
     /**
      * Sets the parent name and draws lines for parental relations
+     *
      * @param t1
      * @param dataManager
      * @param selectedClassDiagram

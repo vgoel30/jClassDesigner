@@ -449,9 +449,7 @@ public final class Workspace extends AppWorkspaceComponent {
             dataManager.handleMethodDecrement();
         });
 
-        //when the resize button is clicked
-        resizeButton.setOnAction(resizeButtonClicked -> {
-        });
+       
 
         codeButton.setOnAction(codeButtonClicked -> {
             dataManager.handleExportCode(gui.getWindow());
