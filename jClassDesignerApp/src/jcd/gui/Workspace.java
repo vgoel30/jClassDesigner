@@ -302,7 +302,7 @@ public final class Workspace extends AppWorkspaceComponent {
         interfaceSelectionContainer.getChildren().add(externalInterfaceButton);
         buttonsInEditBar.add(externalInterfaceButton);
 
-        addPackageButton = new Button("Package");
+        addPackageButton = new Button("Import");
         addPackageButton.setDisable(true);
         interfaceSelectionContainer.getChildren().add(addPackageButton);
         buttonsInEditBar.add(addPackageButton);

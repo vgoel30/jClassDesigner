@@ -14,6 +14,8 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
 import jcd.data.ClassDiagramObject;
 import jcd.data.DataManager;
@@ -92,11 +94,21 @@ public class GridEditController {
     }
 
     public void processSnapshot() {
-
         Workspace workspace = (Workspace) app.getWorkspaceComponent();
+        
+        if(dataManager.selectedClassDiagram != null){
+            dataManager.restoreSelectedProperties((ClassDiagramObject) dataManager.selectedClassDiagram);       
+            dataManager.selectedClassDiagram = null;
+        }
+        
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Save screenshot");
+        File directory = directoryChooser.showDialog(app.getGUI().getWindow());
+        File file = new File(directory.getPath() + "//Pose.png");
+        
         Pane canvas = workspace.getCanvas();
+        
         WritableImage image = canvas.snapshot(new SnapshotParameters(), null);
-        File file = new File("Pose.png");
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
         } catch (IOException ioe) {
