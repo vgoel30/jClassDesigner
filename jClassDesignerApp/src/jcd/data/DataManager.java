@@ -698,28 +698,37 @@ public class DataManager implements AppDataComponent {
         if (redoStack.size() > 0) {
             if (redoStack.peek().getActionType().equals(RESIZE_RIGHT)) {
                 ResizeRight resizeRightMove = (ResizeRight) redoStack.pop();
-                redoStack.push(resizeRightMove);
+                undoStack.push(resizeRightMove);
                 ClassDiagramObject diagram = resizeRightMove.getDiagram();
                 actionController.handleResizeRightRedo(resizeRightMove.getFinalWidth(), diagram);
             } else if (redoStack.peek().getActionType().equals(RESIZE_LEFT)) {
                 ResizeLeft resizeLeftMove = (ResizeLeft) redoStack.pop();
-                redoStack.push(resizeLeftMove);
+                undoStack.push(resizeLeftMove);
                 ClassDiagramObject diagram = resizeLeftMove.getDiagram();
                 actionController.handleResizeLeftRedo(resizeLeftMove.getFinalWidth(), resizeLeftMove.getFinalX(), diagram);
             } else if (redoStack.peek().getActionType().equals(MOVE_DIAGRAM)) {
                 MoveDiagram moveDiagramAction = (MoveDiagram) redoStack.pop();
+                undoStack.push(moveDiagramAction);
                 ClassDiagramObject diagram = moveDiagramAction.getDiagram();
                 actionController.handleMoveDiagramRedo(moveDiagramAction.getFinalPositionX(), moveDiagramAction.getFinalPositionY(), diagram);
             } else if (redoStack.peek().getActionType().equals(REMOVE_VARIABLE)) {
                 RemoveVariable removeVariableMove = (RemoveVariable) redoStack.pop();
+                undoStack.push(removeVariableMove);
                 ClassDiagramObject diagram = removeVariableMove.getDiagram();
                 VariableObject toRemove = removeVariableMove.getRemovedVariable();
                 diagramController.removeVariable(diagram, toRemove, this);
             }
+            else if (redoStack.peek().getActionType().equals(REMOVE_METHOD)) {
+                RemoveMethod removeMethodMove = (RemoveMethod) redoStack.pop();
+                undoStack.push(removeMethodMove);
+                ClassDiagramObject diagram = removeMethodMove.getDiagram();
+                MethodObject toRemove = removeMethodMove.getRemovedMethod();
+                diagramController.removeMethod(diagram, toRemove);
+            }
             else if (redoStack.peek().getActionType().equals(EDIT_VARIABLE)) {
                 EditVariable editVariableMove = (EditVariable) redoStack.pop();
                 ClassDiagramObject diagram = editVariableMove.getDiagram();
-                
+                undoStack.push(editVariableMove);
                 VariableObject originalVariable = editVariableMove.getOriginalVariable();
                 VariableObject editedVariable = editVariableMove.getEditedVariable();
                 
